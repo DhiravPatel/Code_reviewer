@@ -12,6 +12,7 @@ import { Footer } from '@/components/footer'
 import { Particles } from '@/components/particles'
 
 export default function Home() {
+  console.log('Hello')
   return (
     <main className="relative min-h-screen bg-background text-foreground overflow-hidden">
       <Particles />
