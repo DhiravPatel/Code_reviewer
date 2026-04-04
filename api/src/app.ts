@@ -46,6 +46,26 @@ export const buildApp = async () => {
     scope: ['profile', 'email']
   });
 
+  // Register GitHub OAuth2
+  await fastify.register(require('@fastify/oauth2'), {
+    name: 'githubOAuth2',
+    scope: ['repo', 'user'],
+    credentials: {
+      client: {
+        id: env.GITHUB_CLIENT_ID,
+        secret: env.GITHUB_CLIENT_SECRET
+      },
+      auth: {
+        authorizeHost: 'https://github.com',
+        authorizePath: '/login/oauth/authorize',
+        tokenHost: 'https://github.com',
+        tokenPath: '/login/oauth/access_token'
+      }
+    },
+    // Omitting startRedirectPath so we can define the protected endpoint manually
+    callbackUri: env.GITHUB_REDIRECT_URI
+  });
+
   // Default root route
   fastify.get('/', async () => {
     return { status: 'CodeReview API is running.' };

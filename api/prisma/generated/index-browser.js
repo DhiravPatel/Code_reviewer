@@ -136,6 +136,16 @@ exports.Prisma.Sample_testingScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.GithubIntegrationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  githubId: 'githubId',
+  username: 'username',
+  accessToken: 'accessToken',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -154,7 +164,8 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  sample_testing: 'sample_testing'
+  sample_testing: 'sample_testing',
+  GithubIntegration: 'GithubIntegration'
 };
 
 /**

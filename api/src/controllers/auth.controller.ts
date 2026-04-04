@@ -45,7 +45,7 @@ export const googleCallback = async (request: FastifyRequest, reply: FastifyRepl
       path: '/',
       secure: env.IS_PRODUCTION,
       httpOnly: true,
-      sameSite: true,
+      sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 7, // 7 days
     });
 

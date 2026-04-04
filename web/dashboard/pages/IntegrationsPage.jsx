@@ -27,7 +27,10 @@ export default function IntegrationsPage() {
           <p className="t-text-secondary text-sm mb-6 flex-1">
             Connect your GitHub account to sync repositories and automatically analyze pull requests.
           </p>
-          <button className="w-full py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-medium shadow-sm shadow-brand-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+          <button 
+            onClick={() => window.location.href = `${import.meta.env.VITE_API_URL}/integrations/github/connect`}
+            className="w-full py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-medium shadow-sm shadow-brand-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+          >
             <Plus size={16} />
             Connect GitHub
           </button>
