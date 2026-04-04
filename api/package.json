@@ -1,0 +1,23 @@
+{
+  "name": "api",
+  "main": "src/server.ts",
+  "scripts": {
+    "dev": "~/.bun/bin/bun run --watch src/server.ts",
+    "start": "~/.bun/bin/bun run src/server.ts"
+  },
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prisma": "^7.6.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.2.0",
+    "@prisma/client": "^7.6.0",
+    "@supabase/supabase-js": "^2.101.1",
+    "fastify": "^5.8.4"
+  }
+}
