@@ -18,6 +18,13 @@ export const buildApp = async () => {
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
+  // Add rawBody support for webhook signature verification
+  await fastify.register(require('fastify-raw-body'), {
+    field: 'rawBody',
+    global: false,
+    runFirst: true,
+  });
+
   // Register cookie and JWT plugins
   await fastify.register(require('@fastify/cookie'), {
     secret: env.JWT_SECRET,
@@ -46,9 +53,12 @@ export const buildApp = async () => {
     scope: ['profile', 'email'],
   });
 
-  // NOTE: GitHub OAuth is handled manually in integration.controller.ts
-  // because the callback redirect from github.com won't carry our JWT cookie.
-  // We use a custom state token to identify the user instead.
+  // Convert BigInt values to strings before JSON serialization
+  fastify.addHook('preSerialization', async (_request, _reply, payload) => {
+    return JSON.parse(JSON.stringify(payload, (_key, value) =>
+      typeof value === 'bigint' ? value.toString() : value
+    ));
+  });
 
   // Default root route
   fastify.get('/', async () => {

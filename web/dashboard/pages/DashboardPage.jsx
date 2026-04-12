@@ -2,9 +2,12 @@ import { Activity, Bug, Lightbulb, GitBranch, ArrowUpRight } from 'lucide-react'
 import StatsCard from '../components/StatsCard'
 import PRTable from '../components/PRTable'
 import { mockPullRequests } from '../../shared/data'
+import { useAuth } from '../../shared/context/AuthContext'
 
 export default function DashboardPage() {
+  const { user } = useAuth()
   const recentPRs = mockPullRequests.slice(0, 4)
+  const firstName = user?.name?.split(' ')[0] || 'there'
 
   return (
     <div className="p-6 lg:p-8 max-w-7xl animate-fade-in">
@@ -19,7 +22,7 @@ export default function DashboardPage() {
             </span>
           </div>
         </div>
-        <p className="t-text-muted">Welcome back, Dhirav! Here's your code review summary.</p>
+        <p className="t-text-muted">Welcome back, {firstName}! Here's your code review summary.</p>
       </div>
 
       {/* Stats Cards */}

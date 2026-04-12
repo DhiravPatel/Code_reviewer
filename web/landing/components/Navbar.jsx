@@ -38,22 +38,6 @@ export default function Navbar() {
             </span>
           </div>
 
-          {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-surface-400 hover:text-white transition-colors text-sm font-medium">
-              Features
-            </a>
-            <a href="#how-it-works" className="text-surface-400 hover:text-white transition-colors text-sm font-medium">
-              How it Works
-            </a>
-            <a href="#pricing" className="text-surface-400 hover:text-white transition-colors text-sm font-medium">
-              Pricing
-            </a>
-            <a href="#" className="text-surface-400 hover:text-white transition-colors text-sm font-medium">
-              Docs
-            </a>
-          </div>
-
           {/* Right side */}
           <div className="hidden md:flex items-center gap-3">
             <button
@@ -85,20 +69,6 @@ export default function Navbar() {
         {/* Mobile Menu */}
         {isOpen && (
           <div className="md:hidden pb-6 animate-fade-in-down">
-            <div className="flex flex-col gap-1 mb-4">
-              <a href="#features" className="px-4 py-3 text-surface-300 hover:text-white hover:bg-surface-800/50 rounded-xl transition-all text-sm">
-                Features
-              </a>
-              <a href="#how-it-works" className="px-4 py-3 text-surface-300 hover:text-white hover:bg-surface-800/50 rounded-xl transition-all text-sm">
-                How it Works
-              </a>
-              <a href="#pricing" className="px-4 py-3 text-surface-300 hover:text-white hover:bg-surface-800/50 rounded-xl transition-all text-sm">
-                Pricing
-              </a>
-              <a href="#" className="px-4 py-3 text-surface-300 hover:text-white hover:bg-surface-800/50 rounded-xl transition-all text-sm">
-                Docs
-              </a>
-            </div>
             <button onClick={handleLogin} className="btn-primary w-full text-sm">
               Get Started Free
             </button>

@@ -3,6 +3,7 @@
   "main": "src/server.ts",
   "scripts": {
     "dev": "bun run --watch src/server.ts",
+    "dev:ngrok": "bun run src/ngrok.ts",
     "start": "bun run src/server.ts",
     "postinstall": "prisma generate"
   },
@@ -25,6 +26,8 @@
     "@prisma/client": "^7.6.0",
     "@supabase/supabase-js": "^2.101.1",
     "fastify": "^5.8.4",
+    "fastify-raw-body": "^5.0.0",
+    "groq-sdk": "^1.1.2",
     "pg": "^8.20.0"
   }
 }

@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
   output   = "../prisma/generated"
@@ -22,6 +17,8 @@ model User {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   githubIntegration GithubIntegration?
+  enabledRepos      EnabledRepository[]
+  prReviews         PrReview[]
 
   @@map("users")
 }
@@ -40,4 +37,57 @@ model GithubIntegration {
 
   @@index([userId])
   @@map("github_integrations")
+}
+
+model EnabledRepository {
+  id            String   @id @default(uuid())
+  userId        String   @map("user_id")
+  githubRepoId  Int      @map("github_repo_id")
+  fullName      String   @map("full_name")
+  name          String
+  owner         String
+  language      String?
+  description   String?
+  isPrivate     Boolean  @default(false) @map("is_private")
+  defaultBranch String   @default("main") @map("default_branch")
+  webhookId     Int?     @map("webhook_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prReviews PrReview[]
+
+  @@unique([userId, githubRepoId])
+  @@index([userId])
+  @@map("enabled_repositories")
+}
+
+model PrReview {
+  id              String    @id @default(uuid())
+  userId          String    @map("user_id")
+  repoId          String    @map("repo_id")
+  prNumber        Int       @map("pr_number")
+  prTitle         String    @map("pr_title")
+  prAuthor        String    @map("pr_author")
+  prBranch        String    @map("pr_branch")
+  additions       Int       @default(0)
+  deletions       Int       @default(0)
+  filesChanged    Int       @default(0) @map("files_changed")
+  status          String    @default("pending") // pending, reviewing, completed, failed
+  score           Int?
+  verdict         String? // approved, changes_requested
+  summary         Json? // { criticalIssues, warnings, suggestions }
+  reviewComments  Json?     @map("review_comments") // array of AI review comments
+  githubCommentId BigInt?   @map("github_comment_id")
+  reviewedAt      DateTime? @map("reviewed_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  user User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  repo EnabledRepository @relation(fields: [repoId], references: [id], onDelete: Cascade)
+
+  @@unique([repoId, prNumber])
+  @@index([userId])
+  @@index([repoId])
+  @@map("pr_reviews")
 }

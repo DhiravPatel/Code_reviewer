@@ -23,6 +23,16 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  * 
  */
 export type GithubIntegration = $Result.DefaultSelection<Prisma.$GithubIntegrationPayload>
+/**
+ * Model EnabledRepository
+ * 
+ */
+export type EnabledRepository = $Result.DefaultSelection<Prisma.$EnabledRepositoryPayload>
+/**
+ * Model PrReview
+ * 
+ */
+export type PrReview = $Result.DefaultSelection<Prisma.$PrReviewPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -164,6 +174,26 @@ export class PrismaClient<
     * ```
     */
   get githubIntegration(): Prisma.GithubIntegrationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.enabledRepository`: Exposes CRUD operations for the **EnabledRepository** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more EnabledRepositories
+    * const enabledRepositories = await prisma.enabledRepository.findMany()
+    * ```
+    */
+  get enabledRepository(): Prisma.EnabledRepositoryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.prReview`: Exposes CRUD operations for the **PrReview** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PrReviews
+    * const prReviews = await prisma.prReview.findMany()
+    * ```
+    */
+  get prReview(): Prisma.PrReviewDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -599,7 +629,9 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
-    GithubIntegration: 'GithubIntegration'
+    GithubIntegration: 'GithubIntegration',
+    EnabledRepository: 'EnabledRepository',
+    PrReview: 'PrReview'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -615,7 +647,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "githubIntegration"
+      modelProps: "user" | "githubIntegration" | "enabledRepository" | "prReview"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -767,6 +799,154 @@ export namespace Prisma {
           }
         }
       }
+      EnabledRepository: {
+        payload: Prisma.$EnabledRepositoryPayload<ExtArgs>
+        fields: Prisma.EnabledRepositoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.EnabledRepositoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnabledRepositoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.EnabledRepositoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnabledRepositoryPayload>
+          }
+          findFirst: {
+            args: Prisma.EnabledRepositoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnabledRepositoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.EnabledRepositoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnabledRepositoryPayload>
+          }
+          findMany: {
+            args: Prisma.EnabledRepositoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnabledRepositoryPayload>[]
+          }
+          create: {
+            args: Prisma.EnabledRepositoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnabledRepositoryPayload>
+          }
+          createMany: {
+            args: Prisma.EnabledRepositoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.EnabledRepositoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnabledRepositoryPayload>[]
+          }
+          delete: {
+            args: Prisma.EnabledRepositoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnabledRepositoryPayload>
+          }
+          update: {
+            args: Prisma.EnabledRepositoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnabledRepositoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.EnabledRepositoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.EnabledRepositoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.EnabledRepositoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnabledRepositoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.EnabledRepositoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EnabledRepositoryPayload>
+          }
+          aggregate: {
+            args: Prisma.EnabledRepositoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateEnabledRepository>
+          }
+          groupBy: {
+            args: Prisma.EnabledRepositoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<EnabledRepositoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.EnabledRepositoryCountArgs<ExtArgs>
+            result: $Utils.Optional<EnabledRepositoryCountAggregateOutputType> | number
+          }
+        }
+      }
+      PrReview: {
+        payload: Prisma.$PrReviewPayload<ExtArgs>
+        fields: Prisma.PrReviewFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PrReviewFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrReviewPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PrReviewFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrReviewPayload>
+          }
+          findFirst: {
+            args: Prisma.PrReviewFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrReviewPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PrReviewFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrReviewPayload>
+          }
+          findMany: {
+            args: Prisma.PrReviewFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrReviewPayload>[]
+          }
+          create: {
+            args: Prisma.PrReviewCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrReviewPayload>
+          }
+          createMany: {
+            args: Prisma.PrReviewCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PrReviewCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrReviewPayload>[]
+          }
+          delete: {
+            args: Prisma.PrReviewDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrReviewPayload>
+          }
+          update: {
+            args: Prisma.PrReviewUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrReviewPayload>
+          }
+          deleteMany: {
+            args: Prisma.PrReviewDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PrReviewUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PrReviewUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrReviewPayload>[]
+          }
+          upsert: {
+            args: Prisma.PrReviewUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrReviewPayload>
+          }
+          aggregate: {
+            args: Prisma.PrReviewAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePrReview>
+          }
+          groupBy: {
+            args: Prisma.PrReviewGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PrReviewGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PrReviewCountArgs<ExtArgs>
+            result: $Utils.Optional<PrReviewCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -877,6 +1057,8 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     user?: UserOmit
     githubIntegration?: GithubIntegrationOmit
+    enabledRepository?: EnabledRepositoryOmit
+    prReview?: PrReviewOmit
   }
 
   /* Types for Logging */
@@ -951,6 +1133,76 @@ export namespace Prisma {
    * Count Types
    */
 
+
+  /**
+   * Count Type UserCountOutputType
+   */
+
+  export type UserCountOutputType = {
+    enabledRepos: number
+    prReviews: number
+  }
+
+  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    enabledRepos?: boolean | UserCountOutputTypeCountEnabledReposArgs
+    prReviews?: boolean | UserCountOutputTypeCountPrReviewsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserCountOutputType
+     */
+    select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountEnabledReposArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EnabledRepositoryWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPrReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PrReviewWhereInput
+  }
+
+
+  /**
+   * Count Type EnabledRepositoryCountOutputType
+   */
+
+  export type EnabledRepositoryCountOutputType = {
+    prReviews: number
+  }
+
+  export type EnabledRepositoryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    prReviews?: boolean | EnabledRepositoryCountOutputTypeCountPrReviewsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * EnabledRepositoryCountOutputType without action
+   */
+  export type EnabledRepositoryCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnabledRepositoryCountOutputType
+     */
+    select?: EnabledRepositoryCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * EnabledRepositoryCountOutputType without action
+   */
+  export type EnabledRepositoryCountOutputTypeCountPrReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PrReviewWhereInput
+  }
 
 
   /**
@@ -1138,6 +1390,9 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     githubIntegration?: boolean | User$githubIntegrationArgs<ExtArgs>
+    enabledRepos?: boolean | User$enabledReposArgs<ExtArgs>
+    prReviews?: boolean | User$prReviewsArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1173,6 +1428,9 @@ export namespace Prisma {
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "avatarUrl" | "provider" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     githubIntegration?: boolean | User$githubIntegrationArgs<ExtArgs>
+    enabledRepos?: boolean | User$enabledReposArgs<ExtArgs>
+    prReviews?: boolean | User$prReviewsArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
   export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1181,6 +1439,8 @@ export namespace Prisma {
     name: "User"
     objects: {
       githubIntegration: Prisma.$GithubIntegrationPayload<ExtArgs> | null
+      enabledRepos: Prisma.$EnabledRepositoryPayload<ExtArgs>[]
+      prReviews: Prisma.$PrReviewPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -1585,6 +1845,8 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     githubIntegration<T extends User$githubIntegrationArgs<ExtArgs> = {}>(args?: Subset<T, User$githubIntegrationArgs<ExtArgs>>): Prisma__GithubIntegrationClient<$Result.GetResult<Prisma.$GithubIntegrationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    enabledRepos<T extends User$enabledReposArgs<ExtArgs> = {}>(args?: Subset<T, User$enabledReposArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EnabledRepositoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    prReviews<T extends User$prReviewsArgs<ExtArgs> = {}>(args?: Subset<T, User$prReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2030,6 +2292,54 @@ export namespace Prisma {
      */
     include?: GithubIntegrationInclude<ExtArgs> | null
     where?: GithubIntegrationWhereInput
+  }
+
+  /**
+   * User.enabledRepos
+   */
+  export type User$enabledReposArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnabledRepository
+     */
+    select?: EnabledRepositorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnabledRepository
+     */
+    omit?: EnabledRepositoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EnabledRepositoryInclude<ExtArgs> | null
+    where?: EnabledRepositoryWhereInput
+    orderBy?: EnabledRepositoryOrderByWithRelationInput | EnabledRepositoryOrderByWithRelationInput[]
+    cursor?: EnabledRepositoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EnabledRepositoryScalarFieldEnum | EnabledRepositoryScalarFieldEnum[]
+  }
+
+  /**
+   * User.prReviews
+   */
+  export type User$prReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrReview
+     */
+    select?: PrReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PrReview
+     */
+    omit?: PrReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrReviewInclude<ExtArgs> | null
+    where?: PrReviewWhereInput
+    orderBy?: PrReviewOrderByWithRelationInput | PrReviewOrderByWithRelationInput[]
+    cursor?: PrReviewWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PrReviewScalarFieldEnum | PrReviewScalarFieldEnum[]
   }
 
   /**
@@ -3188,6 +3498,2540 @@ export namespace Prisma {
 
 
   /**
+   * Model EnabledRepository
+   */
+
+  export type AggregateEnabledRepository = {
+    _count: EnabledRepositoryCountAggregateOutputType | null
+    _avg: EnabledRepositoryAvgAggregateOutputType | null
+    _sum: EnabledRepositorySumAggregateOutputType | null
+    _min: EnabledRepositoryMinAggregateOutputType | null
+    _max: EnabledRepositoryMaxAggregateOutputType | null
+  }
+
+  export type EnabledRepositoryAvgAggregateOutputType = {
+    githubRepoId: number | null
+    webhookId: number | null
+  }
+
+  export type EnabledRepositorySumAggregateOutputType = {
+    githubRepoId: number | null
+    webhookId: number | null
+  }
+
+  export type EnabledRepositoryMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    githubRepoId: number | null
+    fullName: string | null
+    name: string | null
+    owner: string | null
+    language: string | null
+    description: string | null
+    isPrivate: boolean | null
+    defaultBranch: string | null
+    webhookId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type EnabledRepositoryMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    githubRepoId: number | null
+    fullName: string | null
+    name: string | null
+    owner: string | null
+    language: string | null
+    description: string | null
+    isPrivate: boolean | null
+    defaultBranch: string | null
+    webhookId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type EnabledRepositoryCountAggregateOutputType = {
+    id: number
+    userId: number
+    githubRepoId: number
+    fullName: number
+    name: number
+    owner: number
+    language: number
+    description: number
+    isPrivate: number
+    defaultBranch: number
+    webhookId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type EnabledRepositoryAvgAggregateInputType = {
+    githubRepoId?: true
+    webhookId?: true
+  }
+
+  export type EnabledRepositorySumAggregateInputType = {
+    githubRepoId?: true
+    webhookId?: true
+  }
+
+  export type EnabledRepositoryMinAggregateInputType = {
+    id?: true
+    userId?: true
+    githubRepoId?: true
+    fullName?: true
+    name?: true
+    owner?: true
+    language?: true
+    description?: true
+    isPrivate?: true
+    defaultBranch?: true
+    webhookId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type EnabledRepositoryMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    githubRepoId?: true
+    fullName?: true
+    name?: true
+    owner?: true
+    language?: true
+    description?: true
+    isPrivate?: true
+    defaultBranch?: true
+    webhookId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type EnabledRepositoryCountAggregateInputType = {
+    id?: true
+    userId?: true
+    githubRepoId?: true
+    fullName?: true
+    name?: true
+    owner?: true
+    language?: true
+    description?: true
+    isPrivate?: true
+    defaultBranch?: true
+    webhookId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type EnabledRepositoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EnabledRepository to aggregate.
+     */
+    where?: EnabledRepositoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EnabledRepositories to fetch.
+     */
+    orderBy?: EnabledRepositoryOrderByWithRelationInput | EnabledRepositoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: EnabledRepositoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EnabledRepositories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EnabledRepositories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned EnabledRepositories
+    **/
+    _count?: true | EnabledRepositoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: EnabledRepositoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: EnabledRepositorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: EnabledRepositoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: EnabledRepositoryMaxAggregateInputType
+  }
+
+  export type GetEnabledRepositoryAggregateType<T extends EnabledRepositoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateEnabledRepository]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateEnabledRepository[P]>
+      : GetScalarType<T[P], AggregateEnabledRepository[P]>
+  }
+
+
+
+
+  export type EnabledRepositoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EnabledRepositoryWhereInput
+    orderBy?: EnabledRepositoryOrderByWithAggregationInput | EnabledRepositoryOrderByWithAggregationInput[]
+    by: EnabledRepositoryScalarFieldEnum[] | EnabledRepositoryScalarFieldEnum
+    having?: EnabledRepositoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: EnabledRepositoryCountAggregateInputType | true
+    _avg?: EnabledRepositoryAvgAggregateInputType
+    _sum?: EnabledRepositorySumAggregateInputType
+    _min?: EnabledRepositoryMinAggregateInputType
+    _max?: EnabledRepositoryMaxAggregateInputType
+  }
+
+  export type EnabledRepositoryGroupByOutputType = {
+    id: string
+    userId: string
+    githubRepoId: number
+    fullName: string
+    name: string
+    owner: string
+    language: string | null
+    description: string | null
+    isPrivate: boolean
+    defaultBranch: string
+    webhookId: number | null
+    createdAt: Date
+    updatedAt: Date
+    _count: EnabledRepositoryCountAggregateOutputType | null
+    _avg: EnabledRepositoryAvgAggregateOutputType | null
+    _sum: EnabledRepositorySumAggregateOutputType | null
+    _min: EnabledRepositoryMinAggregateOutputType | null
+    _max: EnabledRepositoryMaxAggregateOutputType | null
+  }
+
+  type GetEnabledRepositoryGroupByPayload<T extends EnabledRepositoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<EnabledRepositoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof EnabledRepositoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], EnabledRepositoryGroupByOutputType[P]>
+            : GetScalarType<T[P], EnabledRepositoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type EnabledRepositorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    githubRepoId?: boolean
+    fullName?: boolean
+    name?: boolean
+    owner?: boolean
+    language?: boolean
+    description?: boolean
+    isPrivate?: boolean
+    defaultBranch?: boolean
+    webhookId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    prReviews?: boolean | EnabledRepository$prReviewsArgs<ExtArgs>
+    _count?: boolean | EnabledRepositoryCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["enabledRepository"]>
+
+  export type EnabledRepositorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    githubRepoId?: boolean
+    fullName?: boolean
+    name?: boolean
+    owner?: boolean
+    language?: boolean
+    description?: boolean
+    isPrivate?: boolean
+    defaultBranch?: boolean
+    webhookId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["enabledRepository"]>
+
+  export type EnabledRepositorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    githubRepoId?: boolean
+    fullName?: boolean
+    name?: boolean
+    owner?: boolean
+    language?: boolean
+    description?: boolean
+    isPrivate?: boolean
+    defaultBranch?: boolean
+    webhookId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["enabledRepository"]>
+
+  export type EnabledRepositorySelectScalar = {
+    id?: boolean
+    userId?: boolean
+    githubRepoId?: boolean
+    fullName?: boolean
+    name?: boolean
+    owner?: boolean
+    language?: boolean
+    description?: boolean
+    isPrivate?: boolean
+    defaultBranch?: boolean
+    webhookId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type EnabledRepositoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "githubRepoId" | "fullName" | "name" | "owner" | "language" | "description" | "isPrivate" | "defaultBranch" | "webhookId" | "createdAt" | "updatedAt", ExtArgs["result"]["enabledRepository"]>
+  export type EnabledRepositoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    prReviews?: boolean | EnabledRepository$prReviewsArgs<ExtArgs>
+    _count?: boolean | EnabledRepositoryCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type EnabledRepositoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type EnabledRepositoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $EnabledRepositoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "EnabledRepository"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      prReviews: Prisma.$PrReviewPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      githubRepoId: number
+      fullName: string
+      name: string
+      owner: string
+      language: string | null
+      description: string | null
+      isPrivate: boolean
+      defaultBranch: string
+      webhookId: number | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["enabledRepository"]>
+    composites: {}
+  }
+
+  type EnabledRepositoryGetPayload<S extends boolean | null | undefined | EnabledRepositoryDefaultArgs> = $Result.GetResult<Prisma.$EnabledRepositoryPayload, S>
+
+  type EnabledRepositoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<EnabledRepositoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: EnabledRepositoryCountAggregateInputType | true
+    }
+
+  export interface EnabledRepositoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['EnabledRepository'], meta: { name: 'EnabledRepository' } }
+    /**
+     * Find zero or one EnabledRepository that matches the filter.
+     * @param {EnabledRepositoryFindUniqueArgs} args - Arguments to find a EnabledRepository
+     * @example
+     * // Get one EnabledRepository
+     * const enabledRepository = await prisma.enabledRepository.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends EnabledRepositoryFindUniqueArgs>(args: SelectSubset<T, EnabledRepositoryFindUniqueArgs<ExtArgs>>): Prisma__EnabledRepositoryClient<$Result.GetResult<Prisma.$EnabledRepositoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one EnabledRepository that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {EnabledRepositoryFindUniqueOrThrowArgs} args - Arguments to find a EnabledRepository
+     * @example
+     * // Get one EnabledRepository
+     * const enabledRepository = await prisma.enabledRepository.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends EnabledRepositoryFindUniqueOrThrowArgs>(args: SelectSubset<T, EnabledRepositoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__EnabledRepositoryClient<$Result.GetResult<Prisma.$EnabledRepositoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EnabledRepository that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EnabledRepositoryFindFirstArgs} args - Arguments to find a EnabledRepository
+     * @example
+     * // Get one EnabledRepository
+     * const enabledRepository = await prisma.enabledRepository.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends EnabledRepositoryFindFirstArgs>(args?: SelectSubset<T, EnabledRepositoryFindFirstArgs<ExtArgs>>): Prisma__EnabledRepositoryClient<$Result.GetResult<Prisma.$EnabledRepositoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EnabledRepository that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EnabledRepositoryFindFirstOrThrowArgs} args - Arguments to find a EnabledRepository
+     * @example
+     * // Get one EnabledRepository
+     * const enabledRepository = await prisma.enabledRepository.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends EnabledRepositoryFindFirstOrThrowArgs>(args?: SelectSubset<T, EnabledRepositoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__EnabledRepositoryClient<$Result.GetResult<Prisma.$EnabledRepositoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more EnabledRepositories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EnabledRepositoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all EnabledRepositories
+     * const enabledRepositories = await prisma.enabledRepository.findMany()
+     * 
+     * // Get first 10 EnabledRepositories
+     * const enabledRepositories = await prisma.enabledRepository.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const enabledRepositoryWithIdOnly = await prisma.enabledRepository.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends EnabledRepositoryFindManyArgs>(args?: SelectSubset<T, EnabledRepositoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EnabledRepositoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a EnabledRepository.
+     * @param {EnabledRepositoryCreateArgs} args - Arguments to create a EnabledRepository.
+     * @example
+     * // Create one EnabledRepository
+     * const EnabledRepository = await prisma.enabledRepository.create({
+     *   data: {
+     *     // ... data to create a EnabledRepository
+     *   }
+     * })
+     * 
+     */
+    create<T extends EnabledRepositoryCreateArgs>(args: SelectSubset<T, EnabledRepositoryCreateArgs<ExtArgs>>): Prisma__EnabledRepositoryClient<$Result.GetResult<Prisma.$EnabledRepositoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many EnabledRepositories.
+     * @param {EnabledRepositoryCreateManyArgs} args - Arguments to create many EnabledRepositories.
+     * @example
+     * // Create many EnabledRepositories
+     * const enabledRepository = await prisma.enabledRepository.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends EnabledRepositoryCreateManyArgs>(args?: SelectSubset<T, EnabledRepositoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many EnabledRepositories and returns the data saved in the database.
+     * @param {EnabledRepositoryCreateManyAndReturnArgs} args - Arguments to create many EnabledRepositories.
+     * @example
+     * // Create many EnabledRepositories
+     * const enabledRepository = await prisma.enabledRepository.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many EnabledRepositories and only return the `id`
+     * const enabledRepositoryWithIdOnly = await prisma.enabledRepository.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends EnabledRepositoryCreateManyAndReturnArgs>(args?: SelectSubset<T, EnabledRepositoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EnabledRepositoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a EnabledRepository.
+     * @param {EnabledRepositoryDeleteArgs} args - Arguments to delete one EnabledRepository.
+     * @example
+     * // Delete one EnabledRepository
+     * const EnabledRepository = await prisma.enabledRepository.delete({
+     *   where: {
+     *     // ... filter to delete one EnabledRepository
+     *   }
+     * })
+     * 
+     */
+    delete<T extends EnabledRepositoryDeleteArgs>(args: SelectSubset<T, EnabledRepositoryDeleteArgs<ExtArgs>>): Prisma__EnabledRepositoryClient<$Result.GetResult<Prisma.$EnabledRepositoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one EnabledRepository.
+     * @param {EnabledRepositoryUpdateArgs} args - Arguments to update one EnabledRepository.
+     * @example
+     * // Update one EnabledRepository
+     * const enabledRepository = await prisma.enabledRepository.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends EnabledRepositoryUpdateArgs>(args: SelectSubset<T, EnabledRepositoryUpdateArgs<ExtArgs>>): Prisma__EnabledRepositoryClient<$Result.GetResult<Prisma.$EnabledRepositoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more EnabledRepositories.
+     * @param {EnabledRepositoryDeleteManyArgs} args - Arguments to filter EnabledRepositories to delete.
+     * @example
+     * // Delete a few EnabledRepositories
+     * const { count } = await prisma.enabledRepository.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends EnabledRepositoryDeleteManyArgs>(args?: SelectSubset<T, EnabledRepositoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EnabledRepositories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EnabledRepositoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many EnabledRepositories
+     * const enabledRepository = await prisma.enabledRepository.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends EnabledRepositoryUpdateManyArgs>(args: SelectSubset<T, EnabledRepositoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EnabledRepositories and returns the data updated in the database.
+     * @param {EnabledRepositoryUpdateManyAndReturnArgs} args - Arguments to update many EnabledRepositories.
+     * @example
+     * // Update many EnabledRepositories
+     * const enabledRepository = await prisma.enabledRepository.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more EnabledRepositories and only return the `id`
+     * const enabledRepositoryWithIdOnly = await prisma.enabledRepository.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends EnabledRepositoryUpdateManyAndReturnArgs>(args: SelectSubset<T, EnabledRepositoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EnabledRepositoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one EnabledRepository.
+     * @param {EnabledRepositoryUpsertArgs} args - Arguments to update or create a EnabledRepository.
+     * @example
+     * // Update or create a EnabledRepository
+     * const enabledRepository = await prisma.enabledRepository.upsert({
+     *   create: {
+     *     // ... data to create a EnabledRepository
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the EnabledRepository we want to update
+     *   }
+     * })
+     */
+    upsert<T extends EnabledRepositoryUpsertArgs>(args: SelectSubset<T, EnabledRepositoryUpsertArgs<ExtArgs>>): Prisma__EnabledRepositoryClient<$Result.GetResult<Prisma.$EnabledRepositoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of EnabledRepositories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EnabledRepositoryCountArgs} args - Arguments to filter EnabledRepositories to count.
+     * @example
+     * // Count the number of EnabledRepositories
+     * const count = await prisma.enabledRepository.count({
+     *   where: {
+     *     // ... the filter for the EnabledRepositories we want to count
+     *   }
+     * })
+    **/
+    count<T extends EnabledRepositoryCountArgs>(
+      args?: Subset<T, EnabledRepositoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], EnabledRepositoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a EnabledRepository.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EnabledRepositoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends EnabledRepositoryAggregateArgs>(args: Subset<T, EnabledRepositoryAggregateArgs>): Prisma.PrismaPromise<GetEnabledRepositoryAggregateType<T>>
+
+    /**
+     * Group by EnabledRepository.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EnabledRepositoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends EnabledRepositoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: EnabledRepositoryGroupByArgs['orderBy'] }
+        : { orderBy?: EnabledRepositoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, EnabledRepositoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetEnabledRepositoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the EnabledRepository model
+   */
+  readonly fields: EnabledRepositoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for EnabledRepository.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__EnabledRepositoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    prReviews<T extends EnabledRepository$prReviewsArgs<ExtArgs> = {}>(args?: Subset<T, EnabledRepository$prReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the EnabledRepository model
+   */
+  interface EnabledRepositoryFieldRefs {
+    readonly id: FieldRef<"EnabledRepository", 'String'>
+    readonly userId: FieldRef<"EnabledRepository", 'String'>
+    readonly githubRepoId: FieldRef<"EnabledRepository", 'Int'>
+    readonly fullName: FieldRef<"EnabledRepository", 'String'>
+    readonly name: FieldRef<"EnabledRepository", 'String'>
+    readonly owner: FieldRef<"EnabledRepository", 'String'>
+    readonly language: FieldRef<"EnabledRepository", 'String'>
+    readonly description: FieldRef<"EnabledRepository", 'String'>
+    readonly isPrivate: FieldRef<"EnabledRepository", 'Boolean'>
+    readonly defaultBranch: FieldRef<"EnabledRepository", 'String'>
+    readonly webhookId: FieldRef<"EnabledRepository", 'Int'>
+    readonly createdAt: FieldRef<"EnabledRepository", 'DateTime'>
+    readonly updatedAt: FieldRef<"EnabledRepository", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * EnabledRepository findUnique
+   */
+  export type EnabledRepositoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnabledRepository
+     */
+    select?: EnabledRepositorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnabledRepository
+     */
+    omit?: EnabledRepositoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EnabledRepositoryInclude<ExtArgs> | null
+    /**
+     * Filter, which EnabledRepository to fetch.
+     */
+    where: EnabledRepositoryWhereUniqueInput
+  }
+
+  /**
+   * EnabledRepository findUniqueOrThrow
+   */
+  export type EnabledRepositoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnabledRepository
+     */
+    select?: EnabledRepositorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnabledRepository
+     */
+    omit?: EnabledRepositoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EnabledRepositoryInclude<ExtArgs> | null
+    /**
+     * Filter, which EnabledRepository to fetch.
+     */
+    where: EnabledRepositoryWhereUniqueInput
+  }
+
+  /**
+   * EnabledRepository findFirst
+   */
+  export type EnabledRepositoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnabledRepository
+     */
+    select?: EnabledRepositorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnabledRepository
+     */
+    omit?: EnabledRepositoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EnabledRepositoryInclude<ExtArgs> | null
+    /**
+     * Filter, which EnabledRepository to fetch.
+     */
+    where?: EnabledRepositoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EnabledRepositories to fetch.
+     */
+    orderBy?: EnabledRepositoryOrderByWithRelationInput | EnabledRepositoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EnabledRepositories.
+     */
+    cursor?: EnabledRepositoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EnabledRepositories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EnabledRepositories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EnabledRepositories.
+     */
+    distinct?: EnabledRepositoryScalarFieldEnum | EnabledRepositoryScalarFieldEnum[]
+  }
+
+  /**
+   * EnabledRepository findFirstOrThrow
+   */
+  export type EnabledRepositoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnabledRepository
+     */
+    select?: EnabledRepositorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnabledRepository
+     */
+    omit?: EnabledRepositoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EnabledRepositoryInclude<ExtArgs> | null
+    /**
+     * Filter, which EnabledRepository to fetch.
+     */
+    where?: EnabledRepositoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EnabledRepositories to fetch.
+     */
+    orderBy?: EnabledRepositoryOrderByWithRelationInput | EnabledRepositoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EnabledRepositories.
+     */
+    cursor?: EnabledRepositoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EnabledRepositories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EnabledRepositories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EnabledRepositories.
+     */
+    distinct?: EnabledRepositoryScalarFieldEnum | EnabledRepositoryScalarFieldEnum[]
+  }
+
+  /**
+   * EnabledRepository findMany
+   */
+  export type EnabledRepositoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnabledRepository
+     */
+    select?: EnabledRepositorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnabledRepository
+     */
+    omit?: EnabledRepositoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EnabledRepositoryInclude<ExtArgs> | null
+    /**
+     * Filter, which EnabledRepositories to fetch.
+     */
+    where?: EnabledRepositoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EnabledRepositories to fetch.
+     */
+    orderBy?: EnabledRepositoryOrderByWithRelationInput | EnabledRepositoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing EnabledRepositories.
+     */
+    cursor?: EnabledRepositoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EnabledRepositories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EnabledRepositories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EnabledRepositories.
+     */
+    distinct?: EnabledRepositoryScalarFieldEnum | EnabledRepositoryScalarFieldEnum[]
+  }
+
+  /**
+   * EnabledRepository create
+   */
+  export type EnabledRepositoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnabledRepository
+     */
+    select?: EnabledRepositorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnabledRepository
+     */
+    omit?: EnabledRepositoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EnabledRepositoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a EnabledRepository.
+     */
+    data: XOR<EnabledRepositoryCreateInput, EnabledRepositoryUncheckedCreateInput>
+  }
+
+  /**
+   * EnabledRepository createMany
+   */
+  export type EnabledRepositoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many EnabledRepositories.
+     */
+    data: EnabledRepositoryCreateManyInput | EnabledRepositoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * EnabledRepository createManyAndReturn
+   */
+  export type EnabledRepositoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnabledRepository
+     */
+    select?: EnabledRepositorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnabledRepository
+     */
+    omit?: EnabledRepositoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many EnabledRepositories.
+     */
+    data: EnabledRepositoryCreateManyInput | EnabledRepositoryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EnabledRepositoryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * EnabledRepository update
+   */
+  export type EnabledRepositoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnabledRepository
+     */
+    select?: EnabledRepositorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnabledRepository
+     */
+    omit?: EnabledRepositoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EnabledRepositoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a EnabledRepository.
+     */
+    data: XOR<EnabledRepositoryUpdateInput, EnabledRepositoryUncheckedUpdateInput>
+    /**
+     * Choose, which EnabledRepository to update.
+     */
+    where: EnabledRepositoryWhereUniqueInput
+  }
+
+  /**
+   * EnabledRepository updateMany
+   */
+  export type EnabledRepositoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update EnabledRepositories.
+     */
+    data: XOR<EnabledRepositoryUpdateManyMutationInput, EnabledRepositoryUncheckedUpdateManyInput>
+    /**
+     * Filter which EnabledRepositories to update
+     */
+    where?: EnabledRepositoryWhereInput
+    /**
+     * Limit how many EnabledRepositories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * EnabledRepository updateManyAndReturn
+   */
+  export type EnabledRepositoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnabledRepository
+     */
+    select?: EnabledRepositorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnabledRepository
+     */
+    omit?: EnabledRepositoryOmit<ExtArgs> | null
+    /**
+     * The data used to update EnabledRepositories.
+     */
+    data: XOR<EnabledRepositoryUpdateManyMutationInput, EnabledRepositoryUncheckedUpdateManyInput>
+    /**
+     * Filter which EnabledRepositories to update
+     */
+    where?: EnabledRepositoryWhereInput
+    /**
+     * Limit how many EnabledRepositories to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EnabledRepositoryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * EnabledRepository upsert
+   */
+  export type EnabledRepositoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnabledRepository
+     */
+    select?: EnabledRepositorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnabledRepository
+     */
+    omit?: EnabledRepositoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EnabledRepositoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the EnabledRepository to update in case it exists.
+     */
+    where: EnabledRepositoryWhereUniqueInput
+    /**
+     * In case the EnabledRepository found by the `where` argument doesn't exist, create a new EnabledRepository with this data.
+     */
+    create: XOR<EnabledRepositoryCreateInput, EnabledRepositoryUncheckedCreateInput>
+    /**
+     * In case the EnabledRepository was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<EnabledRepositoryUpdateInput, EnabledRepositoryUncheckedUpdateInput>
+  }
+
+  /**
+   * EnabledRepository delete
+   */
+  export type EnabledRepositoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnabledRepository
+     */
+    select?: EnabledRepositorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnabledRepository
+     */
+    omit?: EnabledRepositoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EnabledRepositoryInclude<ExtArgs> | null
+    /**
+     * Filter which EnabledRepository to delete.
+     */
+    where: EnabledRepositoryWhereUniqueInput
+  }
+
+  /**
+   * EnabledRepository deleteMany
+   */
+  export type EnabledRepositoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EnabledRepositories to delete
+     */
+    where?: EnabledRepositoryWhereInput
+    /**
+     * Limit how many EnabledRepositories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * EnabledRepository.prReviews
+   */
+  export type EnabledRepository$prReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrReview
+     */
+    select?: PrReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PrReview
+     */
+    omit?: PrReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrReviewInclude<ExtArgs> | null
+    where?: PrReviewWhereInput
+    orderBy?: PrReviewOrderByWithRelationInput | PrReviewOrderByWithRelationInput[]
+    cursor?: PrReviewWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PrReviewScalarFieldEnum | PrReviewScalarFieldEnum[]
+  }
+
+  /**
+   * EnabledRepository without action
+   */
+  export type EnabledRepositoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EnabledRepository
+     */
+    select?: EnabledRepositorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EnabledRepository
+     */
+    omit?: EnabledRepositoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EnabledRepositoryInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PrReview
+   */
+
+  export type AggregatePrReview = {
+    _count: PrReviewCountAggregateOutputType | null
+    _avg: PrReviewAvgAggregateOutputType | null
+    _sum: PrReviewSumAggregateOutputType | null
+    _min: PrReviewMinAggregateOutputType | null
+    _max: PrReviewMaxAggregateOutputType | null
+  }
+
+  export type PrReviewAvgAggregateOutputType = {
+    prNumber: number | null
+    additions: number | null
+    deletions: number | null
+    filesChanged: number | null
+    score: number | null
+    githubCommentId: number | null
+  }
+
+  export type PrReviewSumAggregateOutputType = {
+    prNumber: number | null
+    additions: number | null
+    deletions: number | null
+    filesChanged: number | null
+    score: number | null
+    githubCommentId: bigint | null
+  }
+
+  export type PrReviewMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    repoId: string | null
+    prNumber: number | null
+    prTitle: string | null
+    prAuthor: string | null
+    prBranch: string | null
+    additions: number | null
+    deletions: number | null
+    filesChanged: number | null
+    status: string | null
+    score: number | null
+    verdict: string | null
+    githubCommentId: bigint | null
+    reviewedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PrReviewMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    repoId: string | null
+    prNumber: number | null
+    prTitle: string | null
+    prAuthor: string | null
+    prBranch: string | null
+    additions: number | null
+    deletions: number | null
+    filesChanged: number | null
+    status: string | null
+    score: number | null
+    verdict: string | null
+    githubCommentId: bigint | null
+    reviewedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PrReviewCountAggregateOutputType = {
+    id: number
+    userId: number
+    repoId: number
+    prNumber: number
+    prTitle: number
+    prAuthor: number
+    prBranch: number
+    additions: number
+    deletions: number
+    filesChanged: number
+    status: number
+    score: number
+    verdict: number
+    summary: number
+    reviewComments: number
+    githubCommentId: number
+    reviewedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PrReviewAvgAggregateInputType = {
+    prNumber?: true
+    additions?: true
+    deletions?: true
+    filesChanged?: true
+    score?: true
+    githubCommentId?: true
+  }
+
+  export type PrReviewSumAggregateInputType = {
+    prNumber?: true
+    additions?: true
+    deletions?: true
+    filesChanged?: true
+    score?: true
+    githubCommentId?: true
+  }
+
+  export type PrReviewMinAggregateInputType = {
+    id?: true
+    userId?: true
+    repoId?: true
+    prNumber?: true
+    prTitle?: true
+    prAuthor?: true
+    prBranch?: true
+    additions?: true
+    deletions?: true
+    filesChanged?: true
+    status?: true
+    score?: true
+    verdict?: true
+    githubCommentId?: true
+    reviewedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PrReviewMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    repoId?: true
+    prNumber?: true
+    prTitle?: true
+    prAuthor?: true
+    prBranch?: true
+    additions?: true
+    deletions?: true
+    filesChanged?: true
+    status?: true
+    score?: true
+    verdict?: true
+    githubCommentId?: true
+    reviewedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PrReviewCountAggregateInputType = {
+    id?: true
+    userId?: true
+    repoId?: true
+    prNumber?: true
+    prTitle?: true
+    prAuthor?: true
+    prBranch?: true
+    additions?: true
+    deletions?: true
+    filesChanged?: true
+    status?: true
+    score?: true
+    verdict?: true
+    summary?: true
+    reviewComments?: true
+    githubCommentId?: true
+    reviewedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PrReviewAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PrReview to aggregate.
+     */
+    where?: PrReviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrReviews to fetch.
+     */
+    orderBy?: PrReviewOrderByWithRelationInput | PrReviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PrReviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrReviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrReviews.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PrReviews
+    **/
+    _count?: true | PrReviewCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PrReviewAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PrReviewSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PrReviewMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PrReviewMaxAggregateInputType
+  }
+
+  export type GetPrReviewAggregateType<T extends PrReviewAggregateArgs> = {
+        [P in keyof T & keyof AggregatePrReview]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePrReview[P]>
+      : GetScalarType<T[P], AggregatePrReview[P]>
+  }
+
+
+
+
+  export type PrReviewGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PrReviewWhereInput
+    orderBy?: PrReviewOrderByWithAggregationInput | PrReviewOrderByWithAggregationInput[]
+    by: PrReviewScalarFieldEnum[] | PrReviewScalarFieldEnum
+    having?: PrReviewScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PrReviewCountAggregateInputType | true
+    _avg?: PrReviewAvgAggregateInputType
+    _sum?: PrReviewSumAggregateInputType
+    _min?: PrReviewMinAggregateInputType
+    _max?: PrReviewMaxAggregateInputType
+  }
+
+  export type PrReviewGroupByOutputType = {
+    id: string
+    userId: string
+    repoId: string
+    prNumber: number
+    prTitle: string
+    prAuthor: string
+    prBranch: string
+    additions: number
+    deletions: number
+    filesChanged: number
+    status: string
+    score: number | null
+    verdict: string | null
+    summary: JsonValue | null
+    reviewComments: JsonValue | null
+    githubCommentId: bigint | null
+    reviewedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: PrReviewCountAggregateOutputType | null
+    _avg: PrReviewAvgAggregateOutputType | null
+    _sum: PrReviewSumAggregateOutputType | null
+    _min: PrReviewMinAggregateOutputType | null
+    _max: PrReviewMaxAggregateOutputType | null
+  }
+
+  type GetPrReviewGroupByPayload<T extends PrReviewGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PrReviewGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PrReviewGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PrReviewGroupByOutputType[P]>
+            : GetScalarType<T[P], PrReviewGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PrReviewSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    repoId?: boolean
+    prNumber?: boolean
+    prTitle?: boolean
+    prAuthor?: boolean
+    prBranch?: boolean
+    additions?: boolean
+    deletions?: boolean
+    filesChanged?: boolean
+    status?: boolean
+    score?: boolean
+    verdict?: boolean
+    summary?: boolean
+    reviewComments?: boolean
+    githubCommentId?: boolean
+    reviewedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    repo?: boolean | EnabledRepositoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["prReview"]>
+
+  export type PrReviewSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    repoId?: boolean
+    prNumber?: boolean
+    prTitle?: boolean
+    prAuthor?: boolean
+    prBranch?: boolean
+    additions?: boolean
+    deletions?: boolean
+    filesChanged?: boolean
+    status?: boolean
+    score?: boolean
+    verdict?: boolean
+    summary?: boolean
+    reviewComments?: boolean
+    githubCommentId?: boolean
+    reviewedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    repo?: boolean | EnabledRepositoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["prReview"]>
+
+  export type PrReviewSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    repoId?: boolean
+    prNumber?: boolean
+    prTitle?: boolean
+    prAuthor?: boolean
+    prBranch?: boolean
+    additions?: boolean
+    deletions?: boolean
+    filesChanged?: boolean
+    status?: boolean
+    score?: boolean
+    verdict?: boolean
+    summary?: boolean
+    reviewComments?: boolean
+    githubCommentId?: boolean
+    reviewedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    repo?: boolean | EnabledRepositoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["prReview"]>
+
+  export type PrReviewSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    repoId?: boolean
+    prNumber?: boolean
+    prTitle?: boolean
+    prAuthor?: boolean
+    prBranch?: boolean
+    additions?: boolean
+    deletions?: boolean
+    filesChanged?: boolean
+    status?: boolean
+    score?: boolean
+    verdict?: boolean
+    summary?: boolean
+    reviewComments?: boolean
+    githubCommentId?: boolean
+    reviewedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PrReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "repoId" | "prNumber" | "prTitle" | "prAuthor" | "prBranch" | "additions" | "deletions" | "filesChanged" | "status" | "score" | "verdict" | "summary" | "reviewComments" | "githubCommentId" | "reviewedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["prReview"]>
+  export type PrReviewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    repo?: boolean | EnabledRepositoryDefaultArgs<ExtArgs>
+  }
+  export type PrReviewIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    repo?: boolean | EnabledRepositoryDefaultArgs<ExtArgs>
+  }
+  export type PrReviewIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    repo?: boolean | EnabledRepositoryDefaultArgs<ExtArgs>
+  }
+
+  export type $PrReviewPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PrReview"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      repo: Prisma.$EnabledRepositoryPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      repoId: string
+      prNumber: number
+      prTitle: string
+      prAuthor: string
+      prBranch: string
+      additions: number
+      deletions: number
+      filesChanged: number
+      status: string
+      score: number | null
+      verdict: string | null
+      summary: Prisma.JsonValue | null
+      reviewComments: Prisma.JsonValue | null
+      githubCommentId: bigint | null
+      reviewedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["prReview"]>
+    composites: {}
+  }
+
+  type PrReviewGetPayload<S extends boolean | null | undefined | PrReviewDefaultArgs> = $Result.GetResult<Prisma.$PrReviewPayload, S>
+
+  type PrReviewCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PrReviewFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PrReviewCountAggregateInputType | true
+    }
+
+  export interface PrReviewDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PrReview'], meta: { name: 'PrReview' } }
+    /**
+     * Find zero or one PrReview that matches the filter.
+     * @param {PrReviewFindUniqueArgs} args - Arguments to find a PrReview
+     * @example
+     * // Get one PrReview
+     * const prReview = await prisma.prReview.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PrReviewFindUniqueArgs>(args: SelectSubset<T, PrReviewFindUniqueArgs<ExtArgs>>): Prisma__PrReviewClient<$Result.GetResult<Prisma.$PrReviewPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PrReview that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PrReviewFindUniqueOrThrowArgs} args - Arguments to find a PrReview
+     * @example
+     * // Get one PrReview
+     * const prReview = await prisma.prReview.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PrReviewFindUniqueOrThrowArgs>(args: SelectSubset<T, PrReviewFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PrReviewClient<$Result.GetResult<Prisma.$PrReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PrReview that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrReviewFindFirstArgs} args - Arguments to find a PrReview
+     * @example
+     * // Get one PrReview
+     * const prReview = await prisma.prReview.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PrReviewFindFirstArgs>(args?: SelectSubset<T, PrReviewFindFirstArgs<ExtArgs>>): Prisma__PrReviewClient<$Result.GetResult<Prisma.$PrReviewPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PrReview that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrReviewFindFirstOrThrowArgs} args - Arguments to find a PrReview
+     * @example
+     * // Get one PrReview
+     * const prReview = await prisma.prReview.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PrReviewFindFirstOrThrowArgs>(args?: SelectSubset<T, PrReviewFindFirstOrThrowArgs<ExtArgs>>): Prisma__PrReviewClient<$Result.GetResult<Prisma.$PrReviewPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PrReviews that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrReviewFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PrReviews
+     * const prReviews = await prisma.prReview.findMany()
+     * 
+     * // Get first 10 PrReviews
+     * const prReviews = await prisma.prReview.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const prReviewWithIdOnly = await prisma.prReview.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PrReviewFindManyArgs>(args?: SelectSubset<T, PrReviewFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PrReview.
+     * @param {PrReviewCreateArgs} args - Arguments to create a PrReview.
+     * @example
+     * // Create one PrReview
+     * const PrReview = await prisma.prReview.create({
+     *   data: {
+     *     // ... data to create a PrReview
+     *   }
+     * })
+     * 
+     */
+    create<T extends PrReviewCreateArgs>(args: SelectSubset<T, PrReviewCreateArgs<ExtArgs>>): Prisma__PrReviewClient<$Result.GetResult<Prisma.$PrReviewPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PrReviews.
+     * @param {PrReviewCreateManyArgs} args - Arguments to create many PrReviews.
+     * @example
+     * // Create many PrReviews
+     * const prReview = await prisma.prReview.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PrReviewCreateManyArgs>(args?: SelectSubset<T, PrReviewCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PrReviews and returns the data saved in the database.
+     * @param {PrReviewCreateManyAndReturnArgs} args - Arguments to create many PrReviews.
+     * @example
+     * // Create many PrReviews
+     * const prReview = await prisma.prReview.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PrReviews and only return the `id`
+     * const prReviewWithIdOnly = await prisma.prReview.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PrReviewCreateManyAndReturnArgs>(args?: SelectSubset<T, PrReviewCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrReviewPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PrReview.
+     * @param {PrReviewDeleteArgs} args - Arguments to delete one PrReview.
+     * @example
+     * // Delete one PrReview
+     * const PrReview = await prisma.prReview.delete({
+     *   where: {
+     *     // ... filter to delete one PrReview
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PrReviewDeleteArgs>(args: SelectSubset<T, PrReviewDeleteArgs<ExtArgs>>): Prisma__PrReviewClient<$Result.GetResult<Prisma.$PrReviewPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PrReview.
+     * @param {PrReviewUpdateArgs} args - Arguments to update one PrReview.
+     * @example
+     * // Update one PrReview
+     * const prReview = await prisma.prReview.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PrReviewUpdateArgs>(args: SelectSubset<T, PrReviewUpdateArgs<ExtArgs>>): Prisma__PrReviewClient<$Result.GetResult<Prisma.$PrReviewPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PrReviews.
+     * @param {PrReviewDeleteManyArgs} args - Arguments to filter PrReviews to delete.
+     * @example
+     * // Delete a few PrReviews
+     * const { count } = await prisma.prReview.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PrReviewDeleteManyArgs>(args?: SelectSubset<T, PrReviewDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PrReviews.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrReviewUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PrReviews
+     * const prReview = await prisma.prReview.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PrReviewUpdateManyArgs>(args: SelectSubset<T, PrReviewUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PrReviews and returns the data updated in the database.
+     * @param {PrReviewUpdateManyAndReturnArgs} args - Arguments to update many PrReviews.
+     * @example
+     * // Update many PrReviews
+     * const prReview = await prisma.prReview.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PrReviews and only return the `id`
+     * const prReviewWithIdOnly = await prisma.prReview.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PrReviewUpdateManyAndReturnArgs>(args: SelectSubset<T, PrReviewUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrReviewPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PrReview.
+     * @param {PrReviewUpsertArgs} args - Arguments to update or create a PrReview.
+     * @example
+     * // Update or create a PrReview
+     * const prReview = await prisma.prReview.upsert({
+     *   create: {
+     *     // ... data to create a PrReview
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PrReview we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PrReviewUpsertArgs>(args: SelectSubset<T, PrReviewUpsertArgs<ExtArgs>>): Prisma__PrReviewClient<$Result.GetResult<Prisma.$PrReviewPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PrReviews.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrReviewCountArgs} args - Arguments to filter PrReviews to count.
+     * @example
+     * // Count the number of PrReviews
+     * const count = await prisma.prReview.count({
+     *   where: {
+     *     // ... the filter for the PrReviews we want to count
+     *   }
+     * })
+    **/
+    count<T extends PrReviewCountArgs>(
+      args?: Subset<T, PrReviewCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PrReviewCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PrReview.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrReviewAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PrReviewAggregateArgs>(args: Subset<T, PrReviewAggregateArgs>): Prisma.PrismaPromise<GetPrReviewAggregateType<T>>
+
+    /**
+     * Group by PrReview.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrReviewGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PrReviewGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PrReviewGroupByArgs['orderBy'] }
+        : { orderBy?: PrReviewGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PrReviewGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPrReviewGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PrReview model
+   */
+  readonly fields: PrReviewFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PrReview.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PrReviewClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    repo<T extends EnabledRepositoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, EnabledRepositoryDefaultArgs<ExtArgs>>): Prisma__EnabledRepositoryClient<$Result.GetResult<Prisma.$EnabledRepositoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PrReview model
+   */
+  interface PrReviewFieldRefs {
+    readonly id: FieldRef<"PrReview", 'String'>
+    readonly userId: FieldRef<"PrReview", 'String'>
+    readonly repoId: FieldRef<"PrReview", 'String'>
+    readonly prNumber: FieldRef<"PrReview", 'Int'>
+    readonly prTitle: FieldRef<"PrReview", 'String'>
+    readonly prAuthor: FieldRef<"PrReview", 'String'>
+    readonly prBranch: FieldRef<"PrReview", 'String'>
+    readonly additions: FieldRef<"PrReview", 'Int'>
+    readonly deletions: FieldRef<"PrReview", 'Int'>
+    readonly filesChanged: FieldRef<"PrReview", 'Int'>
+    readonly status: FieldRef<"PrReview", 'String'>
+    readonly score: FieldRef<"PrReview", 'Int'>
+    readonly verdict: FieldRef<"PrReview", 'String'>
+    readonly summary: FieldRef<"PrReview", 'Json'>
+    readonly reviewComments: FieldRef<"PrReview", 'Json'>
+    readonly githubCommentId: FieldRef<"PrReview", 'BigInt'>
+    readonly reviewedAt: FieldRef<"PrReview", 'DateTime'>
+    readonly createdAt: FieldRef<"PrReview", 'DateTime'>
+    readonly updatedAt: FieldRef<"PrReview", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PrReview findUnique
+   */
+  export type PrReviewFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrReview
+     */
+    select?: PrReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PrReview
+     */
+    omit?: PrReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which PrReview to fetch.
+     */
+    where: PrReviewWhereUniqueInput
+  }
+
+  /**
+   * PrReview findUniqueOrThrow
+   */
+  export type PrReviewFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrReview
+     */
+    select?: PrReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PrReview
+     */
+    omit?: PrReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which PrReview to fetch.
+     */
+    where: PrReviewWhereUniqueInput
+  }
+
+  /**
+   * PrReview findFirst
+   */
+  export type PrReviewFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrReview
+     */
+    select?: PrReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PrReview
+     */
+    omit?: PrReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which PrReview to fetch.
+     */
+    where?: PrReviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrReviews to fetch.
+     */
+    orderBy?: PrReviewOrderByWithRelationInput | PrReviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PrReviews.
+     */
+    cursor?: PrReviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrReviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrReviews.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PrReviews.
+     */
+    distinct?: PrReviewScalarFieldEnum | PrReviewScalarFieldEnum[]
+  }
+
+  /**
+   * PrReview findFirstOrThrow
+   */
+  export type PrReviewFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrReview
+     */
+    select?: PrReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PrReview
+     */
+    omit?: PrReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which PrReview to fetch.
+     */
+    where?: PrReviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrReviews to fetch.
+     */
+    orderBy?: PrReviewOrderByWithRelationInput | PrReviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PrReviews.
+     */
+    cursor?: PrReviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrReviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrReviews.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PrReviews.
+     */
+    distinct?: PrReviewScalarFieldEnum | PrReviewScalarFieldEnum[]
+  }
+
+  /**
+   * PrReview findMany
+   */
+  export type PrReviewFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrReview
+     */
+    select?: PrReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PrReview
+     */
+    omit?: PrReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which PrReviews to fetch.
+     */
+    where?: PrReviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrReviews to fetch.
+     */
+    orderBy?: PrReviewOrderByWithRelationInput | PrReviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PrReviews.
+     */
+    cursor?: PrReviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrReviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrReviews.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PrReviews.
+     */
+    distinct?: PrReviewScalarFieldEnum | PrReviewScalarFieldEnum[]
+  }
+
+  /**
+   * PrReview create
+   */
+  export type PrReviewCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrReview
+     */
+    select?: PrReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PrReview
+     */
+    omit?: PrReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrReviewInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PrReview.
+     */
+    data: XOR<PrReviewCreateInput, PrReviewUncheckedCreateInput>
+  }
+
+  /**
+   * PrReview createMany
+   */
+  export type PrReviewCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PrReviews.
+     */
+    data: PrReviewCreateManyInput | PrReviewCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PrReview createManyAndReturn
+   */
+  export type PrReviewCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrReview
+     */
+    select?: PrReviewSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PrReview
+     */
+    omit?: PrReviewOmit<ExtArgs> | null
+    /**
+     * The data used to create many PrReviews.
+     */
+    data: PrReviewCreateManyInput | PrReviewCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrReviewIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PrReview update
+   */
+  export type PrReviewUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrReview
+     */
+    select?: PrReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PrReview
+     */
+    omit?: PrReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrReviewInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PrReview.
+     */
+    data: XOR<PrReviewUpdateInput, PrReviewUncheckedUpdateInput>
+    /**
+     * Choose, which PrReview to update.
+     */
+    where: PrReviewWhereUniqueInput
+  }
+
+  /**
+   * PrReview updateMany
+   */
+  export type PrReviewUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PrReviews.
+     */
+    data: XOR<PrReviewUpdateManyMutationInput, PrReviewUncheckedUpdateManyInput>
+    /**
+     * Filter which PrReviews to update
+     */
+    where?: PrReviewWhereInput
+    /**
+     * Limit how many PrReviews to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PrReview updateManyAndReturn
+   */
+  export type PrReviewUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrReview
+     */
+    select?: PrReviewSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PrReview
+     */
+    omit?: PrReviewOmit<ExtArgs> | null
+    /**
+     * The data used to update PrReviews.
+     */
+    data: XOR<PrReviewUpdateManyMutationInput, PrReviewUncheckedUpdateManyInput>
+    /**
+     * Filter which PrReviews to update
+     */
+    where?: PrReviewWhereInput
+    /**
+     * Limit how many PrReviews to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrReviewIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PrReview upsert
+   */
+  export type PrReviewUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrReview
+     */
+    select?: PrReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PrReview
+     */
+    omit?: PrReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrReviewInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PrReview to update in case it exists.
+     */
+    where: PrReviewWhereUniqueInput
+    /**
+     * In case the PrReview found by the `where` argument doesn't exist, create a new PrReview with this data.
+     */
+    create: XOR<PrReviewCreateInput, PrReviewUncheckedCreateInput>
+    /**
+     * In case the PrReview was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PrReviewUpdateInput, PrReviewUncheckedUpdateInput>
+  }
+
+  /**
+   * PrReview delete
+   */
+  export type PrReviewDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrReview
+     */
+    select?: PrReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PrReview
+     */
+    omit?: PrReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrReviewInclude<ExtArgs> | null
+    /**
+     * Filter which PrReview to delete.
+     */
+    where: PrReviewWhereUniqueInput
+  }
+
+  /**
+   * PrReview deleteMany
+   */
+  export type PrReviewDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PrReviews to delete
+     */
+    where?: PrReviewWhereInput
+    /**
+     * Limit how many PrReviews to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PrReview without action
+   */
+  export type PrReviewDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrReview
+     */
+    select?: PrReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PrReview
+     */
+    omit?: PrReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrReviewInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -3228,12 +6072,64 @@ export namespace Prisma {
   export type GithubIntegrationScalarFieldEnum = (typeof GithubIntegrationScalarFieldEnum)[keyof typeof GithubIntegrationScalarFieldEnum]
 
 
+  export const EnabledRepositoryScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    githubRepoId: 'githubRepoId',
+    fullName: 'fullName',
+    name: 'name',
+    owner: 'owner',
+    language: 'language',
+    description: 'description',
+    isPrivate: 'isPrivate',
+    defaultBranch: 'defaultBranch',
+    webhookId: 'webhookId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type EnabledRepositoryScalarFieldEnum = (typeof EnabledRepositoryScalarFieldEnum)[keyof typeof EnabledRepositoryScalarFieldEnum]
+
+
+  export const PrReviewScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    repoId: 'repoId',
+    prNumber: 'prNumber',
+    prTitle: 'prTitle',
+    prAuthor: 'prAuthor',
+    prBranch: 'prBranch',
+    additions: 'additions',
+    deletions: 'deletions',
+    filesChanged: 'filesChanged',
+    status: 'status',
+    score: 'score',
+    verdict: 'verdict',
+    summary: 'summary',
+    reviewComments: 'reviewComments',
+    githubCommentId: 'githubCommentId',
+    reviewedAt: 'reviewedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PrReviewScalarFieldEnum = (typeof PrReviewScalarFieldEnum)[keyof typeof PrReviewScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
   export const QueryMode: {
@@ -3250,6 +6146,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -3300,6 +6205,41 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'BigInt'
+   */
+  export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+    
+
+
+  /**
+   * Reference to a field of type 'BigInt[]'
+   */
+  export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -3328,6 +6268,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     githubIntegration?: XOR<GithubIntegrationNullableScalarRelationFilter, GithubIntegrationWhereInput> | null
+    enabledRepos?: EnabledRepositoryListRelationFilter
+    prReviews?: PrReviewListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -3339,6 +6281,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     githubIntegration?: GithubIntegrationOrderByWithRelationInput
+    enabledRepos?: EnabledRepositoryOrderByRelationAggregateInput
+    prReviews?: PrReviewOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -3353,6 +6297,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     githubIntegration?: XOR<GithubIntegrationNullableScalarRelationFilter, GithubIntegrationWhereInput> | null
+    enabledRepos?: EnabledRepositoryListRelationFilter
+    prReviews?: PrReviewListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -3453,6 +6399,238 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"GithubIntegration"> | Date | string
   }
 
+  export type EnabledRepositoryWhereInput = {
+    AND?: EnabledRepositoryWhereInput | EnabledRepositoryWhereInput[]
+    OR?: EnabledRepositoryWhereInput[]
+    NOT?: EnabledRepositoryWhereInput | EnabledRepositoryWhereInput[]
+    id?: StringFilter<"EnabledRepository"> | string
+    userId?: StringFilter<"EnabledRepository"> | string
+    githubRepoId?: IntFilter<"EnabledRepository"> | number
+    fullName?: StringFilter<"EnabledRepository"> | string
+    name?: StringFilter<"EnabledRepository"> | string
+    owner?: StringFilter<"EnabledRepository"> | string
+    language?: StringNullableFilter<"EnabledRepository"> | string | null
+    description?: StringNullableFilter<"EnabledRepository"> | string | null
+    isPrivate?: BoolFilter<"EnabledRepository"> | boolean
+    defaultBranch?: StringFilter<"EnabledRepository"> | string
+    webhookId?: IntNullableFilter<"EnabledRepository"> | number | null
+    createdAt?: DateTimeFilter<"EnabledRepository"> | Date | string
+    updatedAt?: DateTimeFilter<"EnabledRepository"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    prReviews?: PrReviewListRelationFilter
+  }
+
+  export type EnabledRepositoryOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    githubRepoId?: SortOrder
+    fullName?: SortOrder
+    name?: SortOrder
+    owner?: SortOrder
+    language?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    isPrivate?: SortOrder
+    defaultBranch?: SortOrder
+    webhookId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    prReviews?: PrReviewOrderByRelationAggregateInput
+  }
+
+  export type EnabledRepositoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_githubRepoId?: EnabledRepositoryUserIdGithubRepoIdCompoundUniqueInput
+    AND?: EnabledRepositoryWhereInput | EnabledRepositoryWhereInput[]
+    OR?: EnabledRepositoryWhereInput[]
+    NOT?: EnabledRepositoryWhereInput | EnabledRepositoryWhereInput[]
+    userId?: StringFilter<"EnabledRepository"> | string
+    githubRepoId?: IntFilter<"EnabledRepository"> | number
+    fullName?: StringFilter<"EnabledRepository"> | string
+    name?: StringFilter<"EnabledRepository"> | string
+    owner?: StringFilter<"EnabledRepository"> | string
+    language?: StringNullableFilter<"EnabledRepository"> | string | null
+    description?: StringNullableFilter<"EnabledRepository"> | string | null
+    isPrivate?: BoolFilter<"EnabledRepository"> | boolean
+    defaultBranch?: StringFilter<"EnabledRepository"> | string
+    webhookId?: IntNullableFilter<"EnabledRepository"> | number | null
+    createdAt?: DateTimeFilter<"EnabledRepository"> | Date | string
+    updatedAt?: DateTimeFilter<"EnabledRepository"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    prReviews?: PrReviewListRelationFilter
+  }, "id" | "userId_githubRepoId">
+
+  export type EnabledRepositoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    githubRepoId?: SortOrder
+    fullName?: SortOrder
+    name?: SortOrder
+    owner?: SortOrder
+    language?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    isPrivate?: SortOrder
+    defaultBranch?: SortOrder
+    webhookId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: EnabledRepositoryCountOrderByAggregateInput
+    _avg?: EnabledRepositoryAvgOrderByAggregateInput
+    _max?: EnabledRepositoryMaxOrderByAggregateInput
+    _min?: EnabledRepositoryMinOrderByAggregateInput
+    _sum?: EnabledRepositorySumOrderByAggregateInput
+  }
+
+  export type EnabledRepositoryScalarWhereWithAggregatesInput = {
+    AND?: EnabledRepositoryScalarWhereWithAggregatesInput | EnabledRepositoryScalarWhereWithAggregatesInput[]
+    OR?: EnabledRepositoryScalarWhereWithAggregatesInput[]
+    NOT?: EnabledRepositoryScalarWhereWithAggregatesInput | EnabledRepositoryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"EnabledRepository"> | string
+    userId?: StringWithAggregatesFilter<"EnabledRepository"> | string
+    githubRepoId?: IntWithAggregatesFilter<"EnabledRepository"> | number
+    fullName?: StringWithAggregatesFilter<"EnabledRepository"> | string
+    name?: StringWithAggregatesFilter<"EnabledRepository"> | string
+    owner?: StringWithAggregatesFilter<"EnabledRepository"> | string
+    language?: StringNullableWithAggregatesFilter<"EnabledRepository"> | string | null
+    description?: StringNullableWithAggregatesFilter<"EnabledRepository"> | string | null
+    isPrivate?: BoolWithAggregatesFilter<"EnabledRepository"> | boolean
+    defaultBranch?: StringWithAggregatesFilter<"EnabledRepository"> | string
+    webhookId?: IntNullableWithAggregatesFilter<"EnabledRepository"> | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"EnabledRepository"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"EnabledRepository"> | Date | string
+  }
+
+  export type PrReviewWhereInput = {
+    AND?: PrReviewWhereInput | PrReviewWhereInput[]
+    OR?: PrReviewWhereInput[]
+    NOT?: PrReviewWhereInput | PrReviewWhereInput[]
+    id?: StringFilter<"PrReview"> | string
+    userId?: StringFilter<"PrReview"> | string
+    repoId?: StringFilter<"PrReview"> | string
+    prNumber?: IntFilter<"PrReview"> | number
+    prTitle?: StringFilter<"PrReview"> | string
+    prAuthor?: StringFilter<"PrReview"> | string
+    prBranch?: StringFilter<"PrReview"> | string
+    additions?: IntFilter<"PrReview"> | number
+    deletions?: IntFilter<"PrReview"> | number
+    filesChanged?: IntFilter<"PrReview"> | number
+    status?: StringFilter<"PrReview"> | string
+    score?: IntNullableFilter<"PrReview"> | number | null
+    verdict?: StringNullableFilter<"PrReview"> | string | null
+    summary?: JsonNullableFilter<"PrReview">
+    reviewComments?: JsonNullableFilter<"PrReview">
+    githubCommentId?: BigIntNullableFilter<"PrReview"> | bigint | number | null
+    reviewedAt?: DateTimeNullableFilter<"PrReview"> | Date | string | null
+    createdAt?: DateTimeFilter<"PrReview"> | Date | string
+    updatedAt?: DateTimeFilter<"PrReview"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    repo?: XOR<EnabledRepositoryScalarRelationFilter, EnabledRepositoryWhereInput>
+  }
+
+  export type PrReviewOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    repoId?: SortOrder
+    prNumber?: SortOrder
+    prTitle?: SortOrder
+    prAuthor?: SortOrder
+    prBranch?: SortOrder
+    additions?: SortOrder
+    deletions?: SortOrder
+    filesChanged?: SortOrder
+    status?: SortOrder
+    score?: SortOrderInput | SortOrder
+    verdict?: SortOrderInput | SortOrder
+    summary?: SortOrderInput | SortOrder
+    reviewComments?: SortOrderInput | SortOrder
+    githubCommentId?: SortOrderInput | SortOrder
+    reviewedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    repo?: EnabledRepositoryOrderByWithRelationInput
+  }
+
+  export type PrReviewWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    repoId_prNumber?: PrReviewRepoIdPrNumberCompoundUniqueInput
+    AND?: PrReviewWhereInput | PrReviewWhereInput[]
+    OR?: PrReviewWhereInput[]
+    NOT?: PrReviewWhereInput | PrReviewWhereInput[]
+    userId?: StringFilter<"PrReview"> | string
+    repoId?: StringFilter<"PrReview"> | string
+    prNumber?: IntFilter<"PrReview"> | number
+    prTitle?: StringFilter<"PrReview"> | string
+    prAuthor?: StringFilter<"PrReview"> | string
+    prBranch?: StringFilter<"PrReview"> | string
+    additions?: IntFilter<"PrReview"> | number
+    deletions?: IntFilter<"PrReview"> | number
+    filesChanged?: IntFilter<"PrReview"> | number
+    status?: StringFilter<"PrReview"> | string
+    score?: IntNullableFilter<"PrReview"> | number | null
+    verdict?: StringNullableFilter<"PrReview"> | string | null
+    summary?: JsonNullableFilter<"PrReview">
+    reviewComments?: JsonNullableFilter<"PrReview">
+    githubCommentId?: BigIntNullableFilter<"PrReview"> | bigint | number | null
+    reviewedAt?: DateTimeNullableFilter<"PrReview"> | Date | string | null
+    createdAt?: DateTimeFilter<"PrReview"> | Date | string
+    updatedAt?: DateTimeFilter<"PrReview"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    repo?: XOR<EnabledRepositoryScalarRelationFilter, EnabledRepositoryWhereInput>
+  }, "id" | "repoId_prNumber">
+
+  export type PrReviewOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    repoId?: SortOrder
+    prNumber?: SortOrder
+    prTitle?: SortOrder
+    prAuthor?: SortOrder
+    prBranch?: SortOrder
+    additions?: SortOrder
+    deletions?: SortOrder
+    filesChanged?: SortOrder
+    status?: SortOrder
+    score?: SortOrderInput | SortOrder
+    verdict?: SortOrderInput | SortOrder
+    summary?: SortOrderInput | SortOrder
+    reviewComments?: SortOrderInput | SortOrder
+    githubCommentId?: SortOrderInput | SortOrder
+    reviewedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PrReviewCountOrderByAggregateInput
+    _avg?: PrReviewAvgOrderByAggregateInput
+    _max?: PrReviewMaxOrderByAggregateInput
+    _min?: PrReviewMinOrderByAggregateInput
+    _sum?: PrReviewSumOrderByAggregateInput
+  }
+
+  export type PrReviewScalarWhereWithAggregatesInput = {
+    AND?: PrReviewScalarWhereWithAggregatesInput | PrReviewScalarWhereWithAggregatesInput[]
+    OR?: PrReviewScalarWhereWithAggregatesInput[]
+    NOT?: PrReviewScalarWhereWithAggregatesInput | PrReviewScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PrReview"> | string
+    userId?: StringWithAggregatesFilter<"PrReview"> | string
+    repoId?: StringWithAggregatesFilter<"PrReview"> | string
+    prNumber?: IntWithAggregatesFilter<"PrReview"> | number
+    prTitle?: StringWithAggregatesFilter<"PrReview"> | string
+    prAuthor?: StringWithAggregatesFilter<"PrReview"> | string
+    prBranch?: StringWithAggregatesFilter<"PrReview"> | string
+    additions?: IntWithAggregatesFilter<"PrReview"> | number
+    deletions?: IntWithAggregatesFilter<"PrReview"> | number
+    filesChanged?: IntWithAggregatesFilter<"PrReview"> | number
+    status?: StringWithAggregatesFilter<"PrReview"> | string
+    score?: IntNullableWithAggregatesFilter<"PrReview"> | number | null
+    verdict?: StringNullableWithAggregatesFilter<"PrReview"> | string | null
+    summary?: JsonNullableWithAggregatesFilter<"PrReview">
+    reviewComments?: JsonNullableWithAggregatesFilter<"PrReview">
+    githubCommentId?: BigIntNullableWithAggregatesFilter<"PrReview"> | bigint | number | null
+    reviewedAt?: DateTimeNullableWithAggregatesFilter<"PrReview"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"PrReview"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PrReview"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -3462,6 +6640,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     githubIntegration?: GithubIntegrationCreateNestedOneWithoutUserInput
+    enabledRepos?: EnabledRepositoryCreateNestedManyWithoutUserInput
+    prReviews?: PrReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -3473,6 +6653,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     githubIntegration?: GithubIntegrationUncheckedCreateNestedOneWithoutUserInput
+    enabledRepos?: EnabledRepositoryUncheckedCreateNestedManyWithoutUserInput
+    prReviews?: PrReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -3484,6 +6666,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     githubIntegration?: GithubIntegrationUpdateOneWithoutUserNestedInput
+    enabledRepos?: EnabledRepositoryUpdateManyWithoutUserNestedInput
+    prReviews?: PrReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -3495,6 +6679,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     githubIntegration?: GithubIntegrationUncheckedUpdateOneWithoutUserNestedInput
+    enabledRepos?: EnabledRepositoryUncheckedUpdateManyWithoutUserNestedInput
+    prReviews?: PrReviewUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -3603,6 +6789,273 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type EnabledRepositoryCreateInput = {
+    id?: string
+    githubRepoId: number
+    fullName: string
+    name: string
+    owner: string
+    language?: string | null
+    description?: string | null
+    isPrivate?: boolean
+    defaultBranch?: string
+    webhookId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutEnabledReposInput
+    prReviews?: PrReviewCreateNestedManyWithoutRepoInput
+  }
+
+  export type EnabledRepositoryUncheckedCreateInput = {
+    id?: string
+    userId: string
+    githubRepoId: number
+    fullName: string
+    name: string
+    owner: string
+    language?: string | null
+    description?: string | null
+    isPrivate?: boolean
+    defaultBranch?: string
+    webhookId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    prReviews?: PrReviewUncheckedCreateNestedManyWithoutRepoInput
+  }
+
+  export type EnabledRepositoryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    githubRepoId?: IntFieldUpdateOperationsInput | number
+    fullName?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    owner?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    defaultBranch?: StringFieldUpdateOperationsInput | string
+    webhookId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutEnabledReposNestedInput
+    prReviews?: PrReviewUpdateManyWithoutRepoNestedInput
+  }
+
+  export type EnabledRepositoryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    githubRepoId?: IntFieldUpdateOperationsInput | number
+    fullName?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    owner?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    defaultBranch?: StringFieldUpdateOperationsInput | string
+    webhookId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    prReviews?: PrReviewUncheckedUpdateManyWithoutRepoNestedInput
+  }
+
+  export type EnabledRepositoryCreateManyInput = {
+    id?: string
+    userId: string
+    githubRepoId: number
+    fullName: string
+    name: string
+    owner: string
+    language?: string | null
+    description?: string | null
+    isPrivate?: boolean
+    defaultBranch?: string
+    webhookId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EnabledRepositoryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    githubRepoId?: IntFieldUpdateOperationsInput | number
+    fullName?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    owner?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    defaultBranch?: StringFieldUpdateOperationsInput | string
+    webhookId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EnabledRepositoryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    githubRepoId?: IntFieldUpdateOperationsInput | number
+    fullName?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    owner?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    defaultBranch?: StringFieldUpdateOperationsInput | string
+    webhookId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrReviewCreateInput = {
+    id?: string
+    prNumber: number
+    prTitle: string
+    prAuthor: string
+    prBranch: string
+    additions?: number
+    deletions?: number
+    filesChanged?: number
+    status?: string
+    score?: number | null
+    verdict?: string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: bigint | number | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutPrReviewsInput
+    repo: EnabledRepositoryCreateNestedOneWithoutPrReviewsInput
+  }
+
+  export type PrReviewUncheckedCreateInput = {
+    id?: string
+    userId: string
+    repoId: string
+    prNumber: number
+    prTitle: string
+    prAuthor: string
+    prBranch: string
+    additions?: number
+    deletions?: number
+    filesChanged?: number
+    status?: string
+    score?: number | null
+    verdict?: string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: bigint | number | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrReviewUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prAuthor?: StringFieldUpdateOperationsInput | string
+    prBranch?: StringFieldUpdateOperationsInput | string
+    additions?: IntFieldUpdateOperationsInput | number
+    deletions?: IntFieldUpdateOperationsInput | number
+    filesChanged?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    verdict?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPrReviewsNestedInput
+    repo?: EnabledRepositoryUpdateOneRequiredWithoutPrReviewsNestedInput
+  }
+
+  export type PrReviewUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    repoId?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prAuthor?: StringFieldUpdateOperationsInput | string
+    prBranch?: StringFieldUpdateOperationsInput | string
+    additions?: IntFieldUpdateOperationsInput | number
+    deletions?: IntFieldUpdateOperationsInput | number
+    filesChanged?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    verdict?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrReviewCreateManyInput = {
+    id?: string
+    userId: string
+    repoId: string
+    prNumber: number
+    prTitle: string
+    prAuthor: string
+    prBranch: string
+    additions?: number
+    deletions?: number
+    filesChanged?: number
+    status?: string
+    score?: number | null
+    verdict?: string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: bigint | number | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrReviewUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prAuthor?: StringFieldUpdateOperationsInput | string
+    prBranch?: StringFieldUpdateOperationsInput | string
+    additions?: IntFieldUpdateOperationsInput | number
+    deletions?: IntFieldUpdateOperationsInput | number
+    filesChanged?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    verdict?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrReviewUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    repoId?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prAuthor?: StringFieldUpdateOperationsInput | string
+    prBranch?: StringFieldUpdateOperationsInput | string
+    additions?: IntFieldUpdateOperationsInput | number
+    deletions?: IntFieldUpdateOperationsInput | number
+    filesChanged?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    verdict?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -3649,9 +7102,29 @@ export namespace Prisma {
     isNot?: GithubIntegrationWhereInput | null
   }
 
+  export type EnabledRepositoryListRelationFilter = {
+    every?: EnabledRepositoryWhereInput
+    some?: EnabledRepositoryWhereInput
+    none?: EnabledRepositoryWhereInput
+  }
+
+  export type PrReviewListRelationFilter = {
+    every?: PrReviewWhereInput
+    some?: PrReviewWhereInput
+    none?: PrReviewWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
+  }
+
+  export type EnabledRepositoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PrReviewOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type UserCountOrderByAggregateInput = {
@@ -3807,16 +7280,338 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type EnabledRepositoryUserIdGithubRepoIdCompoundUniqueInput = {
+    userId: string
+    githubRepoId: number
+  }
+
+  export type EnabledRepositoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    githubRepoId?: SortOrder
+    fullName?: SortOrder
+    name?: SortOrder
+    owner?: SortOrder
+    language?: SortOrder
+    description?: SortOrder
+    isPrivate?: SortOrder
+    defaultBranch?: SortOrder
+    webhookId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnabledRepositoryAvgOrderByAggregateInput = {
+    githubRepoId?: SortOrder
+    webhookId?: SortOrder
+  }
+
+  export type EnabledRepositoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    githubRepoId?: SortOrder
+    fullName?: SortOrder
+    name?: SortOrder
+    owner?: SortOrder
+    language?: SortOrder
+    description?: SortOrder
+    isPrivate?: SortOrder
+    defaultBranch?: SortOrder
+    webhookId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnabledRepositoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    githubRepoId?: SortOrder
+    fullName?: SortOrder
+    name?: SortOrder
+    owner?: SortOrder
+    language?: SortOrder
+    description?: SortOrder
+    isPrivate?: SortOrder
+    defaultBranch?: SortOrder
+    webhookId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnabledRepositorySumOrderByAggregateInput = {
+    githubRepoId?: SortOrder
+    webhookId?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type BigIntNullableFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type EnabledRepositoryScalarRelationFilter = {
+    is?: EnabledRepositoryWhereInput
+    isNot?: EnabledRepositoryWhereInput
+  }
+
+  export type PrReviewRepoIdPrNumberCompoundUniqueInput = {
+    repoId: string
+    prNumber: number
+  }
+
+  export type PrReviewCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    repoId?: SortOrder
+    prNumber?: SortOrder
+    prTitle?: SortOrder
+    prAuthor?: SortOrder
+    prBranch?: SortOrder
+    additions?: SortOrder
+    deletions?: SortOrder
+    filesChanged?: SortOrder
+    status?: SortOrder
+    score?: SortOrder
+    verdict?: SortOrder
+    summary?: SortOrder
+    reviewComments?: SortOrder
+    githubCommentId?: SortOrder
+    reviewedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PrReviewAvgOrderByAggregateInput = {
+    prNumber?: SortOrder
+    additions?: SortOrder
+    deletions?: SortOrder
+    filesChanged?: SortOrder
+    score?: SortOrder
+    githubCommentId?: SortOrder
+  }
+
+  export type PrReviewMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    repoId?: SortOrder
+    prNumber?: SortOrder
+    prTitle?: SortOrder
+    prAuthor?: SortOrder
+    prBranch?: SortOrder
+    additions?: SortOrder
+    deletions?: SortOrder
+    filesChanged?: SortOrder
+    status?: SortOrder
+    score?: SortOrder
+    verdict?: SortOrder
+    githubCommentId?: SortOrder
+    reviewedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PrReviewMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    repoId?: SortOrder
+    prNumber?: SortOrder
+    prTitle?: SortOrder
+    prAuthor?: SortOrder
+    prBranch?: SortOrder
+    additions?: SortOrder
+    deletions?: SortOrder
+    filesChanged?: SortOrder
+    status?: SortOrder
+    score?: SortOrder
+    verdict?: SortOrder
+    githubCommentId?: SortOrder
+    reviewedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PrReviewSumOrderByAggregateInput = {
+    prNumber?: SortOrder
+    additions?: SortOrder
+    deletions?: SortOrder
+    filesChanged?: SortOrder
+    score?: SortOrder
+    githubCommentId?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type BigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntNullableWithAggregatesFilter<$PrismaModel> | bigint | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedBigIntNullableFilter<$PrismaModel>
+    _min?: NestedBigIntNullableFilter<$PrismaModel>
+    _max?: NestedBigIntNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type GithubIntegrationCreateNestedOneWithoutUserInput = {
     create?: XOR<GithubIntegrationCreateWithoutUserInput, GithubIntegrationUncheckedCreateWithoutUserInput>
     connectOrCreate?: GithubIntegrationCreateOrConnectWithoutUserInput
     connect?: GithubIntegrationWhereUniqueInput
   }
 
+  export type EnabledRepositoryCreateNestedManyWithoutUserInput = {
+    create?: XOR<EnabledRepositoryCreateWithoutUserInput, EnabledRepositoryUncheckedCreateWithoutUserInput> | EnabledRepositoryCreateWithoutUserInput[] | EnabledRepositoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EnabledRepositoryCreateOrConnectWithoutUserInput | EnabledRepositoryCreateOrConnectWithoutUserInput[]
+    createMany?: EnabledRepositoryCreateManyUserInputEnvelope
+    connect?: EnabledRepositoryWhereUniqueInput | EnabledRepositoryWhereUniqueInput[]
+  }
+
+  export type PrReviewCreateNestedManyWithoutUserInput = {
+    create?: XOR<PrReviewCreateWithoutUserInput, PrReviewUncheckedCreateWithoutUserInput> | PrReviewCreateWithoutUserInput[] | PrReviewUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PrReviewCreateOrConnectWithoutUserInput | PrReviewCreateOrConnectWithoutUserInput[]
+    createMany?: PrReviewCreateManyUserInputEnvelope
+    connect?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+  }
+
   export type GithubIntegrationUncheckedCreateNestedOneWithoutUserInput = {
     create?: XOR<GithubIntegrationCreateWithoutUserInput, GithubIntegrationUncheckedCreateWithoutUserInput>
     connectOrCreate?: GithubIntegrationCreateOrConnectWithoutUserInput
     connect?: GithubIntegrationWhereUniqueInput
+  }
+
+  export type EnabledRepositoryUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<EnabledRepositoryCreateWithoutUserInput, EnabledRepositoryUncheckedCreateWithoutUserInput> | EnabledRepositoryCreateWithoutUserInput[] | EnabledRepositoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EnabledRepositoryCreateOrConnectWithoutUserInput | EnabledRepositoryCreateOrConnectWithoutUserInput[]
+    createMany?: EnabledRepositoryCreateManyUserInputEnvelope
+    connect?: EnabledRepositoryWhereUniqueInput | EnabledRepositoryWhereUniqueInput[]
+  }
+
+  export type PrReviewUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<PrReviewCreateWithoutUserInput, PrReviewUncheckedCreateWithoutUserInput> | PrReviewCreateWithoutUserInput[] | PrReviewUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PrReviewCreateOrConnectWithoutUserInput | PrReviewCreateOrConnectWithoutUserInput[]
+    createMany?: PrReviewCreateManyUserInputEnvelope
+    connect?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -3841,6 +7636,34 @@ export namespace Prisma {
     update?: XOR<XOR<GithubIntegrationUpdateToOneWithWhereWithoutUserInput, GithubIntegrationUpdateWithoutUserInput>, GithubIntegrationUncheckedUpdateWithoutUserInput>
   }
 
+  export type EnabledRepositoryUpdateManyWithoutUserNestedInput = {
+    create?: XOR<EnabledRepositoryCreateWithoutUserInput, EnabledRepositoryUncheckedCreateWithoutUserInput> | EnabledRepositoryCreateWithoutUserInput[] | EnabledRepositoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EnabledRepositoryCreateOrConnectWithoutUserInput | EnabledRepositoryCreateOrConnectWithoutUserInput[]
+    upsert?: EnabledRepositoryUpsertWithWhereUniqueWithoutUserInput | EnabledRepositoryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: EnabledRepositoryCreateManyUserInputEnvelope
+    set?: EnabledRepositoryWhereUniqueInput | EnabledRepositoryWhereUniqueInput[]
+    disconnect?: EnabledRepositoryWhereUniqueInput | EnabledRepositoryWhereUniqueInput[]
+    delete?: EnabledRepositoryWhereUniqueInput | EnabledRepositoryWhereUniqueInput[]
+    connect?: EnabledRepositoryWhereUniqueInput | EnabledRepositoryWhereUniqueInput[]
+    update?: EnabledRepositoryUpdateWithWhereUniqueWithoutUserInput | EnabledRepositoryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: EnabledRepositoryUpdateManyWithWhereWithoutUserInput | EnabledRepositoryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: EnabledRepositoryScalarWhereInput | EnabledRepositoryScalarWhereInput[]
+  }
+
+  export type PrReviewUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PrReviewCreateWithoutUserInput, PrReviewUncheckedCreateWithoutUserInput> | PrReviewCreateWithoutUserInput[] | PrReviewUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PrReviewCreateOrConnectWithoutUserInput | PrReviewCreateOrConnectWithoutUserInput[]
+    upsert?: PrReviewUpsertWithWhereUniqueWithoutUserInput | PrReviewUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PrReviewCreateManyUserInputEnvelope
+    set?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+    disconnect?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+    delete?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+    connect?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+    update?: PrReviewUpdateWithWhereUniqueWithoutUserInput | PrReviewUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PrReviewUpdateManyWithWhereWithoutUserInput | PrReviewUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PrReviewScalarWhereInput | PrReviewScalarWhereInput[]
+  }
+
   export type GithubIntegrationUncheckedUpdateOneWithoutUserNestedInput = {
     create?: XOR<GithubIntegrationCreateWithoutUserInput, GithubIntegrationUncheckedCreateWithoutUserInput>
     connectOrCreate?: GithubIntegrationCreateOrConnectWithoutUserInput
@@ -3849,6 +7672,34 @@ export namespace Prisma {
     delete?: GithubIntegrationWhereInput | boolean
     connect?: GithubIntegrationWhereUniqueInput
     update?: XOR<XOR<GithubIntegrationUpdateToOneWithWhereWithoutUserInput, GithubIntegrationUpdateWithoutUserInput>, GithubIntegrationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type EnabledRepositoryUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<EnabledRepositoryCreateWithoutUserInput, EnabledRepositoryUncheckedCreateWithoutUserInput> | EnabledRepositoryCreateWithoutUserInput[] | EnabledRepositoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EnabledRepositoryCreateOrConnectWithoutUserInput | EnabledRepositoryCreateOrConnectWithoutUserInput[]
+    upsert?: EnabledRepositoryUpsertWithWhereUniqueWithoutUserInput | EnabledRepositoryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: EnabledRepositoryCreateManyUserInputEnvelope
+    set?: EnabledRepositoryWhereUniqueInput | EnabledRepositoryWhereUniqueInput[]
+    disconnect?: EnabledRepositoryWhereUniqueInput | EnabledRepositoryWhereUniqueInput[]
+    delete?: EnabledRepositoryWhereUniqueInput | EnabledRepositoryWhereUniqueInput[]
+    connect?: EnabledRepositoryWhereUniqueInput | EnabledRepositoryWhereUniqueInput[]
+    update?: EnabledRepositoryUpdateWithWhereUniqueWithoutUserInput | EnabledRepositoryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: EnabledRepositoryUpdateManyWithWhereWithoutUserInput | EnabledRepositoryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: EnabledRepositoryScalarWhereInput | EnabledRepositoryScalarWhereInput[]
+  }
+
+  export type PrReviewUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PrReviewCreateWithoutUserInput, PrReviewUncheckedCreateWithoutUserInput> | PrReviewCreateWithoutUserInput[] | PrReviewUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PrReviewCreateOrConnectWithoutUserInput | PrReviewCreateOrConnectWithoutUserInput[]
+    upsert?: PrReviewUpsertWithWhereUniqueWithoutUserInput | PrReviewUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PrReviewCreateManyUserInputEnvelope
+    set?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+    disconnect?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+    delete?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+    connect?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+    update?: PrReviewUpdateWithWhereUniqueWithoutUserInput | PrReviewUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PrReviewUpdateManyWithWhereWithoutUserInput | PrReviewUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PrReviewScalarWhereInput | PrReviewScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutGithubIntegrationInput = {
@@ -3871,6 +7722,114 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutGithubIntegrationInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGithubIntegrationInput, UserUpdateWithoutGithubIntegrationInput>, UserUncheckedUpdateWithoutGithubIntegrationInput>
+  }
+
+  export type UserCreateNestedOneWithoutEnabledReposInput = {
+    create?: XOR<UserCreateWithoutEnabledReposInput, UserUncheckedCreateWithoutEnabledReposInput>
+    connectOrCreate?: UserCreateOrConnectWithoutEnabledReposInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type PrReviewCreateNestedManyWithoutRepoInput = {
+    create?: XOR<PrReviewCreateWithoutRepoInput, PrReviewUncheckedCreateWithoutRepoInput> | PrReviewCreateWithoutRepoInput[] | PrReviewUncheckedCreateWithoutRepoInput[]
+    connectOrCreate?: PrReviewCreateOrConnectWithoutRepoInput | PrReviewCreateOrConnectWithoutRepoInput[]
+    createMany?: PrReviewCreateManyRepoInputEnvelope
+    connect?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+  }
+
+  export type PrReviewUncheckedCreateNestedManyWithoutRepoInput = {
+    create?: XOR<PrReviewCreateWithoutRepoInput, PrReviewUncheckedCreateWithoutRepoInput> | PrReviewCreateWithoutRepoInput[] | PrReviewUncheckedCreateWithoutRepoInput[]
+    connectOrCreate?: PrReviewCreateOrConnectWithoutRepoInput | PrReviewCreateOrConnectWithoutRepoInput[]
+    createMany?: PrReviewCreateManyRepoInputEnvelope
+    connect?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutEnabledReposNestedInput = {
+    create?: XOR<UserCreateWithoutEnabledReposInput, UserUncheckedCreateWithoutEnabledReposInput>
+    connectOrCreate?: UserCreateOrConnectWithoutEnabledReposInput
+    upsert?: UserUpsertWithoutEnabledReposInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutEnabledReposInput, UserUpdateWithoutEnabledReposInput>, UserUncheckedUpdateWithoutEnabledReposInput>
+  }
+
+  export type PrReviewUpdateManyWithoutRepoNestedInput = {
+    create?: XOR<PrReviewCreateWithoutRepoInput, PrReviewUncheckedCreateWithoutRepoInput> | PrReviewCreateWithoutRepoInput[] | PrReviewUncheckedCreateWithoutRepoInput[]
+    connectOrCreate?: PrReviewCreateOrConnectWithoutRepoInput | PrReviewCreateOrConnectWithoutRepoInput[]
+    upsert?: PrReviewUpsertWithWhereUniqueWithoutRepoInput | PrReviewUpsertWithWhereUniqueWithoutRepoInput[]
+    createMany?: PrReviewCreateManyRepoInputEnvelope
+    set?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+    disconnect?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+    delete?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+    connect?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+    update?: PrReviewUpdateWithWhereUniqueWithoutRepoInput | PrReviewUpdateWithWhereUniqueWithoutRepoInput[]
+    updateMany?: PrReviewUpdateManyWithWhereWithoutRepoInput | PrReviewUpdateManyWithWhereWithoutRepoInput[]
+    deleteMany?: PrReviewScalarWhereInput | PrReviewScalarWhereInput[]
+  }
+
+  export type PrReviewUncheckedUpdateManyWithoutRepoNestedInput = {
+    create?: XOR<PrReviewCreateWithoutRepoInput, PrReviewUncheckedCreateWithoutRepoInput> | PrReviewCreateWithoutRepoInput[] | PrReviewUncheckedCreateWithoutRepoInput[]
+    connectOrCreate?: PrReviewCreateOrConnectWithoutRepoInput | PrReviewCreateOrConnectWithoutRepoInput[]
+    upsert?: PrReviewUpsertWithWhereUniqueWithoutRepoInput | PrReviewUpsertWithWhereUniqueWithoutRepoInput[]
+    createMany?: PrReviewCreateManyRepoInputEnvelope
+    set?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+    disconnect?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+    delete?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+    connect?: PrReviewWhereUniqueInput | PrReviewWhereUniqueInput[]
+    update?: PrReviewUpdateWithWhereUniqueWithoutRepoInput | PrReviewUpdateWithWhereUniqueWithoutRepoInput[]
+    updateMany?: PrReviewUpdateManyWithWhereWithoutRepoInput | PrReviewUpdateManyWithWhereWithoutRepoInput[]
+    deleteMany?: PrReviewScalarWhereInput | PrReviewScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutPrReviewsInput = {
+    create?: XOR<UserCreateWithoutPrReviewsInput, UserUncheckedCreateWithoutPrReviewsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPrReviewsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnabledRepositoryCreateNestedOneWithoutPrReviewsInput = {
+    create?: XOR<EnabledRepositoryCreateWithoutPrReviewsInput, EnabledRepositoryUncheckedCreateWithoutPrReviewsInput>
+    connectOrCreate?: EnabledRepositoryCreateOrConnectWithoutPrReviewsInput
+    connect?: EnabledRepositoryWhereUniqueInput
+  }
+
+  export type NullableBigIntFieldUpdateOperationsInput = {
+    set?: bigint | number | null
+    increment?: bigint | number
+    decrement?: bigint | number
+    multiply?: bigint | number
+    divide?: bigint | number
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type UserUpdateOneRequiredWithoutPrReviewsNestedInput = {
+    create?: XOR<UserCreateWithoutPrReviewsInput, UserUncheckedCreateWithoutPrReviewsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPrReviewsInput
+    upsert?: UserUpsertWithoutPrReviewsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPrReviewsInput, UserUpdateWithoutPrReviewsInput>, UserUncheckedUpdateWithoutPrReviewsInput>
+  }
+
+  export type EnabledRepositoryUpdateOneRequiredWithoutPrReviewsNestedInput = {
+    create?: XOR<EnabledRepositoryCreateWithoutPrReviewsInput, EnabledRepositoryUncheckedCreateWithoutPrReviewsInput>
+    connectOrCreate?: EnabledRepositoryCreateOrConnectWithoutPrReviewsInput
+    upsert?: EnabledRepositoryUpsertWithoutPrReviewsInput
+    connect?: EnabledRepositoryWhereUniqueInput
+    update?: XOR<XOR<EnabledRepositoryUpdateToOneWithWhereWithoutPrReviewsInput, EnabledRepositoryUpdateWithoutPrReviewsInput>, EnabledRepositoryUncheckedUpdateWithoutPrReviewsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -4009,6 +7968,121 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedBigIntNullableFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedBigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntNullableWithAggregatesFilter<$PrismaModel> | bigint | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedBigIntNullableFilter<$PrismaModel>
+    _min?: NestedBigIntNullableFilter<$PrismaModel>
+    _max?: NestedBigIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type GithubIntegrationCreateWithoutUserInput = {
     id?: string
     githubId: number
@@ -4032,6 +8106,100 @@ export namespace Prisma {
   export type GithubIntegrationCreateOrConnectWithoutUserInput = {
     where: GithubIntegrationWhereUniqueInput
     create: XOR<GithubIntegrationCreateWithoutUserInput, GithubIntegrationUncheckedCreateWithoutUserInput>
+  }
+
+  export type EnabledRepositoryCreateWithoutUserInput = {
+    id?: string
+    githubRepoId: number
+    fullName: string
+    name: string
+    owner: string
+    language?: string | null
+    description?: string | null
+    isPrivate?: boolean
+    defaultBranch?: string
+    webhookId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    prReviews?: PrReviewCreateNestedManyWithoutRepoInput
+  }
+
+  export type EnabledRepositoryUncheckedCreateWithoutUserInput = {
+    id?: string
+    githubRepoId: number
+    fullName: string
+    name: string
+    owner: string
+    language?: string | null
+    description?: string | null
+    isPrivate?: boolean
+    defaultBranch?: string
+    webhookId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    prReviews?: PrReviewUncheckedCreateNestedManyWithoutRepoInput
+  }
+
+  export type EnabledRepositoryCreateOrConnectWithoutUserInput = {
+    where: EnabledRepositoryWhereUniqueInput
+    create: XOR<EnabledRepositoryCreateWithoutUserInput, EnabledRepositoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type EnabledRepositoryCreateManyUserInputEnvelope = {
+    data: EnabledRepositoryCreateManyUserInput | EnabledRepositoryCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PrReviewCreateWithoutUserInput = {
+    id?: string
+    prNumber: number
+    prTitle: string
+    prAuthor: string
+    prBranch: string
+    additions?: number
+    deletions?: number
+    filesChanged?: number
+    status?: string
+    score?: number | null
+    verdict?: string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: bigint | number | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    repo: EnabledRepositoryCreateNestedOneWithoutPrReviewsInput
+  }
+
+  export type PrReviewUncheckedCreateWithoutUserInput = {
+    id?: string
+    repoId: string
+    prNumber: number
+    prTitle: string
+    prAuthor: string
+    prBranch: string
+    additions?: number
+    deletions?: number
+    filesChanged?: number
+    status?: string
+    score?: number | null
+    verdict?: string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: bigint | number | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrReviewCreateOrConnectWithoutUserInput = {
+    where: PrReviewWhereUniqueInput
+    create: XOR<PrReviewCreateWithoutUserInput, PrReviewUncheckedCreateWithoutUserInput>
+  }
+
+  export type PrReviewCreateManyUserInputEnvelope = {
+    data: PrReviewCreateManyUserInput | PrReviewCreateManyUserInput[]
+    skipDuplicates?: boolean
   }
 
   export type GithubIntegrationUpsertWithoutUserInput = {
@@ -4065,6 +8233,82 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type EnabledRepositoryUpsertWithWhereUniqueWithoutUserInput = {
+    where: EnabledRepositoryWhereUniqueInput
+    update: XOR<EnabledRepositoryUpdateWithoutUserInput, EnabledRepositoryUncheckedUpdateWithoutUserInput>
+    create: XOR<EnabledRepositoryCreateWithoutUserInput, EnabledRepositoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type EnabledRepositoryUpdateWithWhereUniqueWithoutUserInput = {
+    where: EnabledRepositoryWhereUniqueInput
+    data: XOR<EnabledRepositoryUpdateWithoutUserInput, EnabledRepositoryUncheckedUpdateWithoutUserInput>
+  }
+
+  export type EnabledRepositoryUpdateManyWithWhereWithoutUserInput = {
+    where: EnabledRepositoryScalarWhereInput
+    data: XOR<EnabledRepositoryUpdateManyMutationInput, EnabledRepositoryUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type EnabledRepositoryScalarWhereInput = {
+    AND?: EnabledRepositoryScalarWhereInput | EnabledRepositoryScalarWhereInput[]
+    OR?: EnabledRepositoryScalarWhereInput[]
+    NOT?: EnabledRepositoryScalarWhereInput | EnabledRepositoryScalarWhereInput[]
+    id?: StringFilter<"EnabledRepository"> | string
+    userId?: StringFilter<"EnabledRepository"> | string
+    githubRepoId?: IntFilter<"EnabledRepository"> | number
+    fullName?: StringFilter<"EnabledRepository"> | string
+    name?: StringFilter<"EnabledRepository"> | string
+    owner?: StringFilter<"EnabledRepository"> | string
+    language?: StringNullableFilter<"EnabledRepository"> | string | null
+    description?: StringNullableFilter<"EnabledRepository"> | string | null
+    isPrivate?: BoolFilter<"EnabledRepository"> | boolean
+    defaultBranch?: StringFilter<"EnabledRepository"> | string
+    webhookId?: IntNullableFilter<"EnabledRepository"> | number | null
+    createdAt?: DateTimeFilter<"EnabledRepository"> | Date | string
+    updatedAt?: DateTimeFilter<"EnabledRepository"> | Date | string
+  }
+
+  export type PrReviewUpsertWithWhereUniqueWithoutUserInput = {
+    where: PrReviewWhereUniqueInput
+    update: XOR<PrReviewUpdateWithoutUserInput, PrReviewUncheckedUpdateWithoutUserInput>
+    create: XOR<PrReviewCreateWithoutUserInput, PrReviewUncheckedCreateWithoutUserInput>
+  }
+
+  export type PrReviewUpdateWithWhereUniqueWithoutUserInput = {
+    where: PrReviewWhereUniqueInput
+    data: XOR<PrReviewUpdateWithoutUserInput, PrReviewUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PrReviewUpdateManyWithWhereWithoutUserInput = {
+    where: PrReviewScalarWhereInput
+    data: XOR<PrReviewUpdateManyMutationInput, PrReviewUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type PrReviewScalarWhereInput = {
+    AND?: PrReviewScalarWhereInput | PrReviewScalarWhereInput[]
+    OR?: PrReviewScalarWhereInput[]
+    NOT?: PrReviewScalarWhereInput | PrReviewScalarWhereInput[]
+    id?: StringFilter<"PrReview"> | string
+    userId?: StringFilter<"PrReview"> | string
+    repoId?: StringFilter<"PrReview"> | string
+    prNumber?: IntFilter<"PrReview"> | number
+    prTitle?: StringFilter<"PrReview"> | string
+    prAuthor?: StringFilter<"PrReview"> | string
+    prBranch?: StringFilter<"PrReview"> | string
+    additions?: IntFilter<"PrReview"> | number
+    deletions?: IntFilter<"PrReview"> | number
+    filesChanged?: IntFilter<"PrReview"> | number
+    status?: StringFilter<"PrReview"> | string
+    score?: IntNullableFilter<"PrReview"> | number | null
+    verdict?: StringNullableFilter<"PrReview"> | string | null
+    summary?: JsonNullableFilter<"PrReview">
+    reviewComments?: JsonNullableFilter<"PrReview">
+    githubCommentId?: BigIntNullableFilter<"PrReview"> | bigint | number | null
+    reviewedAt?: DateTimeNullableFilter<"PrReview"> | Date | string | null
+    createdAt?: DateTimeFilter<"PrReview"> | Date | string
+    updatedAt?: DateTimeFilter<"PrReview"> | Date | string
+  }
+
   export type UserCreateWithoutGithubIntegrationInput = {
     id?: string
     email: string
@@ -4073,6 +8317,8 @@ export namespace Prisma {
     provider?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    enabledRepos?: EnabledRepositoryCreateNestedManyWithoutUserInput
+    prReviews?: PrReviewCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutGithubIntegrationInput = {
@@ -4083,6 +8329,8 @@ export namespace Prisma {
     provider?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    enabledRepos?: EnabledRepositoryUncheckedCreateNestedManyWithoutUserInput
+    prReviews?: PrReviewUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutGithubIntegrationInput = {
@@ -4109,6 +8357,8 @@ export namespace Prisma {
     provider?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    enabledRepos?: EnabledRepositoryUpdateManyWithoutUserNestedInput
+    prReviews?: PrReviewUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutGithubIntegrationInput = {
@@ -4117,6 +8367,514 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     provider?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    enabledRepos?: EnabledRepositoryUncheckedUpdateManyWithoutUserNestedInput
+    prReviews?: PrReviewUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutEnabledReposInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    provider?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    githubIntegration?: GithubIntegrationCreateNestedOneWithoutUserInput
+    prReviews?: PrReviewCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutEnabledReposInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    provider?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    githubIntegration?: GithubIntegrationUncheckedCreateNestedOneWithoutUserInput
+    prReviews?: PrReviewUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutEnabledReposInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutEnabledReposInput, UserUncheckedCreateWithoutEnabledReposInput>
+  }
+
+  export type PrReviewCreateWithoutRepoInput = {
+    id?: string
+    prNumber: number
+    prTitle: string
+    prAuthor: string
+    prBranch: string
+    additions?: number
+    deletions?: number
+    filesChanged?: number
+    status?: string
+    score?: number | null
+    verdict?: string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: bigint | number | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutPrReviewsInput
+  }
+
+  export type PrReviewUncheckedCreateWithoutRepoInput = {
+    id?: string
+    userId: string
+    prNumber: number
+    prTitle: string
+    prAuthor: string
+    prBranch: string
+    additions?: number
+    deletions?: number
+    filesChanged?: number
+    status?: string
+    score?: number | null
+    verdict?: string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: bigint | number | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrReviewCreateOrConnectWithoutRepoInput = {
+    where: PrReviewWhereUniqueInput
+    create: XOR<PrReviewCreateWithoutRepoInput, PrReviewUncheckedCreateWithoutRepoInput>
+  }
+
+  export type PrReviewCreateManyRepoInputEnvelope = {
+    data: PrReviewCreateManyRepoInput | PrReviewCreateManyRepoInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutEnabledReposInput = {
+    update: XOR<UserUpdateWithoutEnabledReposInput, UserUncheckedUpdateWithoutEnabledReposInput>
+    create: XOR<UserCreateWithoutEnabledReposInput, UserUncheckedCreateWithoutEnabledReposInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutEnabledReposInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutEnabledReposInput, UserUncheckedUpdateWithoutEnabledReposInput>
+  }
+
+  export type UserUpdateWithoutEnabledReposInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    githubIntegration?: GithubIntegrationUpdateOneWithoutUserNestedInput
+    prReviews?: PrReviewUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutEnabledReposInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    githubIntegration?: GithubIntegrationUncheckedUpdateOneWithoutUserNestedInput
+    prReviews?: PrReviewUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type PrReviewUpsertWithWhereUniqueWithoutRepoInput = {
+    where: PrReviewWhereUniqueInput
+    update: XOR<PrReviewUpdateWithoutRepoInput, PrReviewUncheckedUpdateWithoutRepoInput>
+    create: XOR<PrReviewCreateWithoutRepoInput, PrReviewUncheckedCreateWithoutRepoInput>
+  }
+
+  export type PrReviewUpdateWithWhereUniqueWithoutRepoInput = {
+    where: PrReviewWhereUniqueInput
+    data: XOR<PrReviewUpdateWithoutRepoInput, PrReviewUncheckedUpdateWithoutRepoInput>
+  }
+
+  export type PrReviewUpdateManyWithWhereWithoutRepoInput = {
+    where: PrReviewScalarWhereInput
+    data: XOR<PrReviewUpdateManyMutationInput, PrReviewUncheckedUpdateManyWithoutRepoInput>
+  }
+
+  export type UserCreateWithoutPrReviewsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    provider?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    githubIntegration?: GithubIntegrationCreateNestedOneWithoutUserInput
+    enabledRepos?: EnabledRepositoryCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutPrReviewsInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    provider?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    githubIntegration?: GithubIntegrationUncheckedCreateNestedOneWithoutUserInput
+    enabledRepos?: EnabledRepositoryUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutPrReviewsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPrReviewsInput, UserUncheckedCreateWithoutPrReviewsInput>
+  }
+
+  export type EnabledRepositoryCreateWithoutPrReviewsInput = {
+    id?: string
+    githubRepoId: number
+    fullName: string
+    name: string
+    owner: string
+    language?: string | null
+    description?: string | null
+    isPrivate?: boolean
+    defaultBranch?: string
+    webhookId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutEnabledReposInput
+  }
+
+  export type EnabledRepositoryUncheckedCreateWithoutPrReviewsInput = {
+    id?: string
+    userId: string
+    githubRepoId: number
+    fullName: string
+    name: string
+    owner: string
+    language?: string | null
+    description?: string | null
+    isPrivate?: boolean
+    defaultBranch?: string
+    webhookId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EnabledRepositoryCreateOrConnectWithoutPrReviewsInput = {
+    where: EnabledRepositoryWhereUniqueInput
+    create: XOR<EnabledRepositoryCreateWithoutPrReviewsInput, EnabledRepositoryUncheckedCreateWithoutPrReviewsInput>
+  }
+
+  export type UserUpsertWithoutPrReviewsInput = {
+    update: XOR<UserUpdateWithoutPrReviewsInput, UserUncheckedUpdateWithoutPrReviewsInput>
+    create: XOR<UserCreateWithoutPrReviewsInput, UserUncheckedCreateWithoutPrReviewsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPrReviewsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPrReviewsInput, UserUncheckedUpdateWithoutPrReviewsInput>
+  }
+
+  export type UserUpdateWithoutPrReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    githubIntegration?: GithubIntegrationUpdateOneWithoutUserNestedInput
+    enabledRepos?: EnabledRepositoryUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPrReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    githubIntegration?: GithubIntegrationUncheckedUpdateOneWithoutUserNestedInput
+    enabledRepos?: EnabledRepositoryUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type EnabledRepositoryUpsertWithoutPrReviewsInput = {
+    update: XOR<EnabledRepositoryUpdateWithoutPrReviewsInput, EnabledRepositoryUncheckedUpdateWithoutPrReviewsInput>
+    create: XOR<EnabledRepositoryCreateWithoutPrReviewsInput, EnabledRepositoryUncheckedCreateWithoutPrReviewsInput>
+    where?: EnabledRepositoryWhereInput
+  }
+
+  export type EnabledRepositoryUpdateToOneWithWhereWithoutPrReviewsInput = {
+    where?: EnabledRepositoryWhereInput
+    data: XOR<EnabledRepositoryUpdateWithoutPrReviewsInput, EnabledRepositoryUncheckedUpdateWithoutPrReviewsInput>
+  }
+
+  export type EnabledRepositoryUpdateWithoutPrReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    githubRepoId?: IntFieldUpdateOperationsInput | number
+    fullName?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    owner?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    defaultBranch?: StringFieldUpdateOperationsInput | string
+    webhookId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutEnabledReposNestedInput
+  }
+
+  export type EnabledRepositoryUncheckedUpdateWithoutPrReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    githubRepoId?: IntFieldUpdateOperationsInput | number
+    fullName?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    owner?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    defaultBranch?: StringFieldUpdateOperationsInput | string
+    webhookId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EnabledRepositoryCreateManyUserInput = {
+    id?: string
+    githubRepoId: number
+    fullName: string
+    name: string
+    owner: string
+    language?: string | null
+    description?: string | null
+    isPrivate?: boolean
+    defaultBranch?: string
+    webhookId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrReviewCreateManyUserInput = {
+    id?: string
+    repoId: string
+    prNumber: number
+    prTitle: string
+    prAuthor: string
+    prBranch: string
+    additions?: number
+    deletions?: number
+    filesChanged?: number
+    status?: string
+    score?: number | null
+    verdict?: string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: bigint | number | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EnabledRepositoryUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    githubRepoId?: IntFieldUpdateOperationsInput | number
+    fullName?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    owner?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    defaultBranch?: StringFieldUpdateOperationsInput | string
+    webhookId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    prReviews?: PrReviewUpdateManyWithoutRepoNestedInput
+  }
+
+  export type EnabledRepositoryUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    githubRepoId?: IntFieldUpdateOperationsInput | number
+    fullName?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    owner?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    defaultBranch?: StringFieldUpdateOperationsInput | string
+    webhookId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    prReviews?: PrReviewUncheckedUpdateManyWithoutRepoNestedInput
+  }
+
+  export type EnabledRepositoryUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    githubRepoId?: IntFieldUpdateOperationsInput | number
+    fullName?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    owner?: StringFieldUpdateOperationsInput | string
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isPrivate?: BoolFieldUpdateOperationsInput | boolean
+    defaultBranch?: StringFieldUpdateOperationsInput | string
+    webhookId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrReviewUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prAuthor?: StringFieldUpdateOperationsInput | string
+    prBranch?: StringFieldUpdateOperationsInput | string
+    additions?: IntFieldUpdateOperationsInput | number
+    deletions?: IntFieldUpdateOperationsInput | number
+    filesChanged?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    verdict?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    repo?: EnabledRepositoryUpdateOneRequiredWithoutPrReviewsNestedInput
+  }
+
+  export type PrReviewUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    repoId?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prAuthor?: StringFieldUpdateOperationsInput | string
+    prBranch?: StringFieldUpdateOperationsInput | string
+    additions?: IntFieldUpdateOperationsInput | number
+    deletions?: IntFieldUpdateOperationsInput | number
+    filesChanged?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    verdict?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrReviewUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    repoId?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prAuthor?: StringFieldUpdateOperationsInput | string
+    prBranch?: StringFieldUpdateOperationsInput | string
+    additions?: IntFieldUpdateOperationsInput | number
+    deletions?: IntFieldUpdateOperationsInput | number
+    filesChanged?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    verdict?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrReviewCreateManyRepoInput = {
+    id?: string
+    userId: string
+    prNumber: number
+    prTitle: string
+    prAuthor: string
+    prBranch: string
+    additions?: number
+    deletions?: number
+    filesChanged?: number
+    status?: string
+    score?: number | null
+    verdict?: string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: bigint | number | null
+    reviewedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrReviewUpdateWithoutRepoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prAuthor?: StringFieldUpdateOperationsInput | string
+    prBranch?: StringFieldUpdateOperationsInput | string
+    additions?: IntFieldUpdateOperationsInput | number
+    deletions?: IntFieldUpdateOperationsInput | number
+    filesChanged?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    verdict?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPrReviewsNestedInput
+  }
+
+  export type PrReviewUncheckedUpdateWithoutRepoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prAuthor?: StringFieldUpdateOperationsInput | string
+    prBranch?: StringFieldUpdateOperationsInput | string
+    additions?: IntFieldUpdateOperationsInput | number
+    deletions?: IntFieldUpdateOperationsInput | number
+    filesChanged?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    verdict?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrReviewUncheckedUpdateManyWithoutRepoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    prNumber?: IntFieldUpdateOperationsInput | number
+    prTitle?: StringFieldUpdateOperationsInput | string
+    prAuthor?: StringFieldUpdateOperationsInput | string
+    prBranch?: StringFieldUpdateOperationsInput | string
+    additions?: IntFieldUpdateOperationsInput | number
+    deletions?: IntFieldUpdateOperationsInput | number
+    filesChanged?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    verdict?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    reviewComments?: NullableJsonNullValueInput | InputJsonValue
+    githubCommentId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
