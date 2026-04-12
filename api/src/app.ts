@@ -53,6 +53,13 @@ export const buildApp = async () => {
     scope: ['profile', 'email'],
   });
 
+  // Convert BigInt values to strings before JSON serialization
+  fastify.addHook('preSerialization', async (_request, _reply, payload) => {
+    return JSON.parse(JSON.stringify(payload, (_key, value) =>
+      typeof value === 'bigint' ? value.toString() : value
+    ));
+  });
+
   // Default root route
   fastify.get('/', async () => {
     return { status: 'CodeReview API is running.' };

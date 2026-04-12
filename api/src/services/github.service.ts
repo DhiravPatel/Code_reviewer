@@ -210,9 +210,6 @@ export class GithubService {
       '## <img src="https://img.icons8.com/fluency/24/artificial-intelligence.png" width="20" /> CodeReview AI',
       '',
       '> **Analyzing your pull request...** This usually takes 15–30 seconds.',
-      '',
-      '---',
-      '_Powered by [CodeReview AI](https://github.com) — Automated code review with Groq AI_',
     ].join('\n');
   }
 
@@ -259,9 +256,6 @@ export class GithubService {
         lines.push('');
       }
     }
-
-    lines.push('---');
-    lines.push('_Powered by [CodeReview AI](https://github.com) — Automated code review with Groq AI_');
 
     return lines.join('\n');
   }
