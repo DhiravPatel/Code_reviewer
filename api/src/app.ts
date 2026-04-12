@@ -62,7 +62,7 @@ export const buildApp = async () => {
 
   // Default root route
   fastify.get('/', async () => {
-    return { status: 'CodeReview API is running.' };
+    return { status: 'CodeReview API is running....' };
   });
 
   // Register API Routes under /api/v1
