@@ -54,23 +54,19 @@ export const handleGithubWebhook = async (request: FastifyRequest, reply: Fastif
       return reply.code(200).send({ message: 'Repository not enabled' });
     }
 
-    // Trigger the review asynchronously — don't block the webhook response
-    // GitHub expects a response within 10 seconds
-    reply.code(202).send({ message: 'Review triggered', prNumber, repo: repoFullName });
-
-    // Run the review in the background after responding
-    setImmediate(async () => {
-      try {
-        await PrService.triggerReviewWithGithubComment(
-          enabledRepo.userId,
-          enabledRepo.id,
-          prNumber
-        );
-        request.log.info({ repoFullName, prNumber }, 'Webhook-triggered review completed');
-      } catch (err) {
-        request.log.error(err, 'Webhook-triggered review failed');
-      }
-    });
+    // Run the review synchronously (required for serverless — function dies after response)
+    try {
+      await PrService.triggerReviewWithGithubComment(
+        enabledRepo.userId,
+        enabledRepo.id,
+        prNumber
+      );
+      request.log.info({ repoFullName, prNumber }, 'Webhook-triggered review completed');
+      return reply.code(200).send({ message: 'Review completed', prNumber, repo: repoFullName });
+    } catch (err) {
+      request.log.error(err, 'Webhook-triggered review failed');
+      return reply.code(200).send({ message: 'Review failed', prNumber, repo: repoFullName });
+    }
   } catch (error) {
     request.log.error(error, 'Webhook handler error');
     return reply.code(500).send({ error: 'Internal server error' });
