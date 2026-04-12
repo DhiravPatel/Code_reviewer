@@ -42,20 +42,24 @@ export const buildApp = async () => {
     },
   });
 
-  // Register Google OAuth2
-  await fastify.register(fastifyOauth2, {
-    name: 'googleOAuth2',
-    credentials: {
-      client: {
-        id: env.GOOGLE_CLIENT_ID,
-        secret: env.GOOGLE_CLIENT_SECRET,
+  // Register Google OAuth2 only when credentials are configured
+  if (env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET) {
+    await fastify.register(fastifyOauth2, {
+      name: 'googleOAuth2',
+      credentials: {
+        client: {
+          id: env.GOOGLE_CLIENT_ID,
+          secret: env.GOOGLE_CLIENT_SECRET,
+        },
+        auth: (fastifyOauth2 as any).GOOGLE_CONFIGURATION,
       },
-      auth: (fastifyOauth2 as any).GOOGLE_CONFIGURATION,
-    },
-    startRedirectPath: '/api/v1/auth/google',
-    callbackUri: env.GOOGLE_REDIRECT_URI,
-    scope: ['profile', 'email'],
-  });
+      startRedirectPath: '/api/v1/auth/google',
+      callbackUri: env.GOOGLE_REDIRECT_URI,
+      scope: ['profile', 'email'],
+    });
+  } else {
+    fastify.log.warn('Google OAuth is disabled: GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET is missing.');
+  }
 
   // Convert BigInt values to strings before JSON serialization
   fastify.addHook('preSerialization', async (_request, _reply, payload) => {

@@ -17,7 +17,7 @@ export const env = {
 
 // Validation
 if (env.IS_PRODUCTION && env.JWT_SECRET === 'super_secret_default_key_change_in_production') {
-  throw new Error('JWT_SECRET must be set in production');
+  throw new Error('JWT_SECRET must be set in production (configure it in Vercel Project Settings → Environment Variables).');
 }
 if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
   console.warn('GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET is missing from environment variables.');
