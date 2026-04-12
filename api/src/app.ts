@@ -1,5 +1,9 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
+import fastifyCookie from '@fastify/cookie';
+import fastifyJwt from '@fastify/jwt';
+import fastifyOauth2 from '@fastify/oauth2';
+import fastifyRawBody from 'fastify-raw-body';
 import { router } from './routes';
 import { env } from './config/env';
 
@@ -8,7 +12,7 @@ export const buildApp = async () => {
     logger: true,
   });
 
-  // Register CORS — allow the frontend origin
+  // Register CORS
   await fastify.register(cors, {
     origin: env.IS_PRODUCTION
       ? [env.FRONTEND_URL]
@@ -19,18 +23,18 @@ export const buildApp = async () => {
   });
 
   // Add rawBody support for webhook signature verification
-  await fastify.register(require('fastify-raw-body'), {
+  await fastify.register(fastifyRawBody, {
     field: 'rawBody',
     global: false,
     runFirst: true,
   });
 
   // Register cookie and JWT plugins
-  await fastify.register(require('@fastify/cookie'), {
+  await fastify.register(fastifyCookie, {
     secret: env.JWT_SECRET,
   });
 
-  await fastify.register(require('@fastify/jwt'), {
+  await fastify.register(fastifyJwt, {
     secret: env.JWT_SECRET,
     cookie: {
       cookieName: 'token',
@@ -39,14 +43,14 @@ export const buildApp = async () => {
   });
 
   // Register Google OAuth2
-  await fastify.register(require('@fastify/oauth2'), {
+  await fastify.register(fastifyOauth2, {
     name: 'googleOAuth2',
     credentials: {
       client: {
         id: env.GOOGLE_CLIENT_ID,
         secret: env.GOOGLE_CLIENT_SECRET,
       },
-      auth: require('@fastify/oauth2').GOOGLE_CONFIGURATION,
+      auth: (fastifyOauth2 as any).GOOGLE_CONFIGURATION,
     },
     startRedirectPath: '/api/v1/auth/google',
     callbackUri: env.GOOGLE_REDIRECT_URI,
@@ -62,7 +66,7 @@ export const buildApp = async () => {
 
   // Default root route
   fastify.get('/', async () => {
-    return { status: 'CodeReview API is running....' };
+    return { status: 'CodeReview API is running.' };
   });
 
   // Register API Routes under /api/v1
