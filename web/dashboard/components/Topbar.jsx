@@ -1,8 +1,23 @@
 import { Bell, Moon, Sun, Menu } from 'lucide-react'
 import { useTheme } from '../../shared/context/ThemeContext'
+import { useAuth } from '../../shared/context/AuthContext'
+
+function getInitials(name) {
+  if (!name) return '?'
+  return name
+    .split(' ')
+    .map((w) => w[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
+}
 
 export default function Topbar() {
   const { isDark, toggleTheme } = useTheme()
+  const { user } = useAuth()
+
+  const initials = getInitials(user?.name)
+  const displayName = user?.name || 'User'
 
   return (
     <div id="dashboard-topbar" className="h-16 t-bg-surface backdrop-blur-xl border-b t-border flex items-center justify-between px-6 flex-shrink-0 transition-colors duration-300">
@@ -40,12 +55,20 @@ export default function Topbar() {
 
         {/* User avatar */}
         <button id="user-avatar" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-cyan-500 flex items-center justify-center text-white font-bold text-sm shadow-glow">
-            DP
-          </div>
+          {user?.avatarUrl ? (
+            <img
+              src={user.avatarUrl}
+              alt={displayName}
+              className="w-9 h-9 rounded-xl object-cover shadow-glow"
+            />
+          ) : (
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-cyan-500 flex items-center justify-center text-white font-bold text-sm shadow-glow">
+              {initials}
+            </div>
+          )}
           <div className="hidden sm:block text-left">
-            <p className="t-text text-sm font-medium leading-tight">Dhirav Patel</p>
-            <p className="t-text-muted text-[11px]">Pro Plan</p>
+            <p className="t-text text-sm font-medium leading-tight">{displayName}</p>
+            <p className="t-text-muted text-[11px]">Free Plan</p>
           </div>
         </button>
       </div>

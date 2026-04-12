@@ -6,38 +6,45 @@ export class IntegrationService {
     githubId: number;
     username: string;
     accessToken: string;
+    avatarUrl: string | null;
   }) {
-    try {
-      const integration = await prisma.githubIntegration.upsert({
-        where: { githubId: data.githubId },
-        update: {
-          userId: data.userId,
-          username: data.username,
-          accessToken: data.accessToken,
-        },
-        create: {
-          userId: data.userId,
-          githubId: data.githubId,
-          username: data.username,
-          accessToken: data.accessToken,
-        },
-      });
-      return integration;
-    } catch (error) {
-      console.error('Error in saveGithubIntegration:', error);
-      throw new Error('Failed to save GitHub integration');
-    }
+    // Use upsert on userId (unique) — one GitHub account per user
+    const integration = await prisma.githubIntegration.upsert({
+      where: { userId: data.userId },
+      update: {
+        githubId: data.githubId,
+        username: data.username,
+        accessToken: data.accessToken,
+        avatarUrl: data.avatarUrl,
+      },
+      create: {
+        userId: data.userId,
+        githubId: data.githubId,
+        username: data.username,
+        accessToken: data.accessToken,
+        avatarUrl: data.avatarUrl,
+      },
+    });
+    return integration;
   }
 
   static async getGithubIntegration(userId: string) {
-    try {
-      const integration = await prisma.githubIntegration.findFirst({
+    const integration = await prisma.githubIntegration.findUnique({
+      where: { userId },
+    });
+    return integration;
+  }
+
+  static async deleteGithubIntegration(userId: string) {
+    // Only delete if it exists (findUnique + delete to avoid errors)
+    const existing = await prisma.githubIntegration.findUnique({
+      where: { userId },
+    });
+    if (existing) {
+      await prisma.githubIntegration.delete({
         where: { userId },
       });
-      return integration;
-    } catch (error) {
-      console.error('Error in getGithubIntegration:', error);
-      throw new Error('Failed to get GitHub integration');
     }
+    return existing;
   }
 }

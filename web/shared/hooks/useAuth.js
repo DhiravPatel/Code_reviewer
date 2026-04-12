@@ -13,14 +13,12 @@ export function useAuth() {
       const response = await api.get('/auth/me');
       return response.data?.data?.user || null;
     },
-    retry: false, // Don't retry if hitting 401
+    retry: false,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   const loginMutation = useMutation({
     mutationFn: async () => {
-      // Direct the user to the backend Google OAuth flow
-      // This will redirect their browser entirely
       window.location.href = `${API_URL}/auth/google`;
     },
   });
@@ -30,27 +28,20 @@ export function useAuth() {
       await api.post('/auth/logout');
     },
     onSuccess: () => {
-      // Clear React Query cache so the user data is universally dropped
       queryClient.setQueryData(['auth', 'me'], null);
       queryClient.clear();
-
-      // Clear any lingering front-end storage (from the old Supabase days or other caching)
       localStorage.clear();
       sessionStorage.clear();
-
-      // Bruteforce delete every single frontend readable cookie 
-      document.cookie.split(";").forEach((c) => {
+      document.cookie.split(';').forEach((c) => {
         document.cookie = c
-          .replace(/^ +/, "")
-          .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+          .replace(/^ +/, '')
+          .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
       });
-
-      // Ensure the browser cleans up everything and kicks them safely to the login page
       window.location.href = '/login';
     },
   });
 
-  // Parse backend authentication errors from the URL parameter (e.g. ?error=auth_failed)
+  // Parse backend authentication errors from the URL parameter
   const urlParams = new URLSearchParams(window.location.search);
   const urlError = urlParams.get('error');
   const displayError = urlError === 'auth_failed' ? 'Google Authentication failed. Please try again.' : null;
@@ -58,11 +49,14 @@ export function useAuth() {
   return {
     user: data || null,
     loading: isLoading,
-    // We intentionally don't expose the /auth/me query error to the UI 
-    // because a 401 Unauthorized simply means "not logged in yet".
     error: displayError,
     isAuthenticated: !!data,
+    // GitHub integration status from the /auth/me response
+    githubConnected: data?.githubConnected || false,
+    githubUsername: data?.githubUsername || null,
     signInWithGoogle: () => loginMutation.mutateAsync(),
     signOut: () => logoutMutation.mutateAsync(),
+    // Helper to refetch user data (e.g., after connecting GitHub)
+    refetchUser: () => queryClient.invalidateQueries({ queryKey: ['auth', 'me'] }),
   };
 }

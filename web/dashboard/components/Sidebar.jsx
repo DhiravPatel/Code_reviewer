@@ -1,9 +1,7 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, GitBranch, Code2, Settings, LogOut, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Link, useLocation } from 'react-router-dom'
+import { LayoutDashboard, GitBranch, Code2, Settings, LogOut, ChevronLeft, ChevronRight, Blocks } from 'lucide-react'
 import { useState } from 'react'
 import { useAuth } from '../../shared/context/AuthContext'
-
-import { Blocks } from 'lucide-react'
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
@@ -13,11 +11,24 @@ const menuItems = [
   { icon: Settings, label: 'Settings', path: '/dashboard/settings' },
 ]
 
+function getInitials(name) {
+  if (!name) return '?'
+  return name
+    .split(' ')
+    .map((w) => w[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
+}
+
 export default function Sidebar() {
   const location = useLocation()
-  const navigate = useNavigate()
   const [collapsed, setCollapsed] = useState(false)
-  const { signOut } = useAuth()
+  const { user, signOut } = useAuth()
+
+  const initials = getInitials(user?.name)
+  const displayName = user?.name || 'User'
+  const displayEmail = user?.email || ''
 
   return (
     <aside
@@ -79,12 +90,20 @@ export default function Sidebar() {
       <div className="pt-4 border-t t-border-subtle">
         {!collapsed && (
           <div className="flex items-center gap-3 px-2 mb-3 animate-fade-in">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-cyan-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-              DP
-            </div>
+            {user?.avatarUrl ? (
+              <img
+                src={user.avatarUrl}
+                alt={displayName}
+                className="w-8 h-8 rounded-lg object-cover flex-shrink-0"
+              />
+            ) : (
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-cyan-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                {initials}
+              </div>
+            )}
             <div className="min-w-0">
-              <p className="t-text text-sm font-medium truncate">Dhirav Patel</p>
-              <p className="t-text-muted text-[11px] truncate">dhirav@company.com</p>
+              <p className="t-text text-sm font-medium truncate">{displayName}</p>
+              <p className="t-text-muted text-[11px] truncate">{displayEmail}</p>
             </div>
           </div>
         )}

@@ -20,15 +20,15 @@ export const buildApp = async () => {
 
   // Register cookie and JWT plugins
   await fastify.register(require('@fastify/cookie'), {
-    secret: env.JWT_SECRET, // for cookies signature
+    secret: env.JWT_SECRET,
   });
-  
+
   await fastify.register(require('@fastify/jwt'), {
     secret: env.JWT_SECRET,
     cookie: {
       cookieName: 'token',
-      signed: false
-    }
+      signed: false,
+    },
   });
 
   // Register Google OAuth2
@@ -37,34 +37,18 @@ export const buildApp = async () => {
     credentials: {
       client: {
         id: env.GOOGLE_CLIENT_ID,
-        secret: env.GOOGLE_CLIENT_SECRET
+        secret: env.GOOGLE_CLIENT_SECRET,
       },
-      auth: require('@fastify/oauth2').GOOGLE_CONFIGURATION
+      auth: require('@fastify/oauth2').GOOGLE_CONFIGURATION,
     },
     startRedirectPath: '/api/v1/auth/google',
     callbackUri: env.GOOGLE_REDIRECT_URI,
-    scope: ['profile', 'email']
+    scope: ['profile', 'email'],
   });
 
-  // Register GitHub OAuth2
-  await fastify.register(require('@fastify/oauth2'), {
-    name: 'githubOAuth2',
-    scope: ['repo', 'user'],
-    credentials: {
-      client: {
-        id: env.GITHUB_CLIENT_ID,
-        secret: env.GITHUB_CLIENT_SECRET
-      },
-      auth: {
-        authorizeHost: 'https://github.com',
-        authorizePath: '/login/oauth/authorize',
-        tokenHost: 'https://github.com',
-        tokenPath: '/login/oauth/access_token'
-      }
-    },
-    // Omitting startRedirectPath so we can define the protected endpoint manually
-    callbackUri: env.GITHUB_REDIRECT_URI
-  });
+  // NOTE: GitHub OAuth is handled manually in integration.controller.ts
+  // because the callback redirect from github.com won't carry our JWT cookie.
+  // We use a custom state token to identify the user instead.
 
   // Default root route
   fastify.get('/', async () => {

@@ -16,29 +16,28 @@ model User {
   id        String   @id @default(uuid())
   email     String   @unique
   name      String?
-  avatarUrl String?
+  avatarUrl String?  @map("avatar_url")
   provider  String   @default("google")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  githubIntegrations GithubIntegration[]
-}
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-model sample_testing {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
+  githubIntegration GithubIntegration?
+
+  @@map("users")
 }
 
 model GithubIntegration {
-  id           String   @id @default(uuid())
-  userId       String
-  githubId     Int      @unique
-  username     String
-  accessToken  String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id          String   @id @default(uuid())
+  userId      String   @unique @map("user_id")
+  githubId    Int      @unique @map("github_id")
+  username    String
+  accessToken String   @map("access_token")
+  avatarUrl   String?  @map("avatar_url")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@map("github_integrations")
 }

@@ -19,11 +19,6 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
- * Model sample_testing
- * 
- */
-export type sample_testing = $Result.DefaultSelection<Prisma.$sample_testingPayload>
-/**
  * Model GithubIntegration
  * 
  */
@@ -159,16 +154,6 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.sample_testing`: Exposes CRUD operations for the **sample_testing** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Sample_testings
-    * const sample_testings = await prisma.sample_testing.findMany()
-    * ```
-    */
-  get sample_testing(): Prisma.sample_testingDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.githubIntegration`: Exposes CRUD operations for the **GithubIntegration** model.
@@ -614,7 +599,6 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
-    sample_testing: 'sample_testing',
     GithubIntegration: 'GithubIntegration'
   };
 
@@ -631,7 +615,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "sample_testing" | "githubIntegration"
+      modelProps: "user" | "githubIntegration"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -706,80 +690,6 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
-          }
-        }
-      }
-      sample_testing: {
-        payload: Prisma.$sample_testingPayload<ExtArgs>
-        fields: Prisma.sample_testingFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.sample_testingFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$sample_testingPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.sample_testingFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$sample_testingPayload>
-          }
-          findFirst: {
-            args: Prisma.sample_testingFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$sample_testingPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.sample_testingFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$sample_testingPayload>
-          }
-          findMany: {
-            args: Prisma.sample_testingFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$sample_testingPayload>[]
-          }
-          create: {
-            args: Prisma.sample_testingCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$sample_testingPayload>
-          }
-          createMany: {
-            args: Prisma.sample_testingCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.sample_testingCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$sample_testingPayload>[]
-          }
-          delete: {
-            args: Prisma.sample_testingDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$sample_testingPayload>
-          }
-          update: {
-            args: Prisma.sample_testingUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$sample_testingPayload>
-          }
-          deleteMany: {
-            args: Prisma.sample_testingDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.sample_testingUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.sample_testingUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$sample_testingPayload>[]
-          }
-          upsert: {
-            args: Prisma.sample_testingUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$sample_testingPayload>
-          }
-          aggregate: {
-            args: Prisma.Sample_testingAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateSample_testing>
-          }
-          groupBy: {
-            args: Prisma.sample_testingGroupByArgs<ExtArgs>
-            result: $Utils.Optional<Sample_testingGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.sample_testingCountArgs<ExtArgs>
-            result: $Utils.Optional<Sample_testingCountAggregateOutputType> | number
           }
         }
       }
@@ -966,7 +876,6 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     user?: UserOmit
-    sample_testing?: sample_testingOmit
     githubIntegration?: GithubIntegrationOmit
   }
 
@@ -1042,36 +951,6 @@ export namespace Prisma {
    * Count Types
    */
 
-
-  /**
-   * Count Type UserCountOutputType
-   */
-
-  export type UserCountOutputType = {
-    githubIntegrations: number
-  }
-
-  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    githubIntegrations?: boolean | UserCountOutputTypeCountGithubIntegrationsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserCountOutputType
-     */
-    select?: UserCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountGithubIntegrationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GithubIntegrationWhereInput
-  }
 
 
   /**
@@ -1258,8 +1137,7 @@ export namespace Prisma {
     provider?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    githubIntegrations?: boolean | User$githubIntegrationsArgs<ExtArgs>
-    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
+    githubIntegration?: boolean | User$githubIntegrationArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1294,8 +1172,7 @@ export namespace Prisma {
 
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "avatarUrl" | "provider" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    githubIntegrations?: boolean | User$githubIntegrationsArgs<ExtArgs>
-    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
+    githubIntegration?: boolean | User$githubIntegrationArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
   export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1303,7 +1180,7 @@ export namespace Prisma {
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
-      githubIntegrations: Prisma.$GithubIntegrationPayload<ExtArgs>[]
+      githubIntegration: Prisma.$GithubIntegrationPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -1707,7 +1584,7 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    githubIntegrations<T extends User$githubIntegrationsArgs<ExtArgs> = {}>(args?: Subset<T, User$githubIntegrationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GithubIntegrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    githubIntegration<T extends User$githubIntegrationArgs<ExtArgs> = {}>(args?: Subset<T, User$githubIntegrationArgs<ExtArgs>>): Prisma__GithubIntegrationClient<$Result.GetResult<Prisma.$GithubIntegrationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2137,9 +2014,9 @@ export namespace Prisma {
   }
 
   /**
-   * User.githubIntegrations
+   * User.githubIntegration
    */
-  export type User$githubIntegrationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$githubIntegrationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the GithubIntegration
      */
@@ -2153,11 +2030,6 @@ export namespace Prisma {
      */
     include?: GithubIntegrationInclude<ExtArgs> | null
     where?: GithubIntegrationWhereInput
-    orderBy?: GithubIntegrationOrderByWithRelationInput | GithubIntegrationOrderByWithRelationInput[]
-    cursor?: GithubIntegrationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: GithubIntegrationScalarFieldEnum | GithubIntegrationScalarFieldEnum[]
   }
 
   /**
@@ -2176,980 +2048,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model sample_testing
-   */
-
-  export type AggregateSample_testing = {
-    _count: Sample_testingCountAggregateOutputType | null
-    _min: Sample_testingMinAggregateOutputType | null
-    _max: Sample_testingMaxAggregateOutputType | null
-  }
-
-  export type Sample_testingMinAggregateOutputType = {
-    id: string | null
-    name: string | null
-    createdAt: Date | null
-  }
-
-  export type Sample_testingMaxAggregateOutputType = {
-    id: string | null
-    name: string | null
-    createdAt: Date | null
-  }
-
-  export type Sample_testingCountAggregateOutputType = {
-    id: number
-    name: number
-    createdAt: number
-    _all: number
-  }
-
-
-  export type Sample_testingMinAggregateInputType = {
-    id?: true
-    name?: true
-    createdAt?: true
-  }
-
-  export type Sample_testingMaxAggregateInputType = {
-    id?: true
-    name?: true
-    createdAt?: true
-  }
-
-  export type Sample_testingCountAggregateInputType = {
-    id?: true
-    name?: true
-    createdAt?: true
-    _all?: true
-  }
-
-  export type Sample_testingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which sample_testing to aggregate.
-     */
-    where?: sample_testingWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of sample_testings to fetch.
-     */
-    orderBy?: sample_testingOrderByWithRelationInput | sample_testingOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: sample_testingWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` sample_testings from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` sample_testings.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned sample_testings
-    **/
-    _count?: true | Sample_testingCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: Sample_testingMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: Sample_testingMaxAggregateInputType
-  }
-
-  export type GetSample_testingAggregateType<T extends Sample_testingAggregateArgs> = {
-        [P in keyof T & keyof AggregateSample_testing]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateSample_testing[P]>
-      : GetScalarType<T[P], AggregateSample_testing[P]>
-  }
-
-
-
-
-  export type sample_testingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: sample_testingWhereInput
-    orderBy?: sample_testingOrderByWithAggregationInput | sample_testingOrderByWithAggregationInput[]
-    by: Sample_testingScalarFieldEnum[] | Sample_testingScalarFieldEnum
-    having?: sample_testingScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: Sample_testingCountAggregateInputType | true
-    _min?: Sample_testingMinAggregateInputType
-    _max?: Sample_testingMaxAggregateInputType
-  }
-
-  export type Sample_testingGroupByOutputType = {
-    id: string
-    name: string
-    createdAt: Date
-    _count: Sample_testingCountAggregateOutputType | null
-    _min: Sample_testingMinAggregateOutputType | null
-    _max: Sample_testingMaxAggregateOutputType | null
-  }
-
-  type GetSample_testingGroupByPayload<T extends sample_testingGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<Sample_testingGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof Sample_testingGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], Sample_testingGroupByOutputType[P]>
-            : GetScalarType<T[P], Sample_testingGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type sample_testingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    createdAt?: boolean
-  }, ExtArgs["result"]["sample_testing"]>
-
-  export type sample_testingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    createdAt?: boolean
-  }, ExtArgs["result"]["sample_testing"]>
-
-  export type sample_testingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    createdAt?: boolean
-  }, ExtArgs["result"]["sample_testing"]>
-
-  export type sample_testingSelectScalar = {
-    id?: boolean
-    name?: boolean
-    createdAt?: boolean
-  }
-
-  export type sample_testingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt", ExtArgs["result"]["sample_testing"]>
-
-  export type $sample_testingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "sample_testing"
-    objects: {}
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      name: string
-      createdAt: Date
-    }, ExtArgs["result"]["sample_testing"]>
-    composites: {}
-  }
-
-  type sample_testingGetPayload<S extends boolean | null | undefined | sample_testingDefaultArgs> = $Result.GetResult<Prisma.$sample_testingPayload, S>
-
-  type sample_testingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<sample_testingFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: Sample_testingCountAggregateInputType | true
-    }
-
-  export interface sample_testingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['sample_testing'], meta: { name: 'sample_testing' } }
-    /**
-     * Find zero or one Sample_testing that matches the filter.
-     * @param {sample_testingFindUniqueArgs} args - Arguments to find a Sample_testing
-     * @example
-     * // Get one Sample_testing
-     * const sample_testing = await prisma.sample_testing.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends sample_testingFindUniqueArgs>(args: SelectSubset<T, sample_testingFindUniqueArgs<ExtArgs>>): Prisma__sample_testingClient<$Result.GetResult<Prisma.$sample_testingPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Sample_testing that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {sample_testingFindUniqueOrThrowArgs} args - Arguments to find a Sample_testing
-     * @example
-     * // Get one Sample_testing
-     * const sample_testing = await prisma.sample_testing.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends sample_testingFindUniqueOrThrowArgs>(args: SelectSubset<T, sample_testingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__sample_testingClient<$Result.GetResult<Prisma.$sample_testingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Sample_testing that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {sample_testingFindFirstArgs} args - Arguments to find a Sample_testing
-     * @example
-     * // Get one Sample_testing
-     * const sample_testing = await prisma.sample_testing.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends sample_testingFindFirstArgs>(args?: SelectSubset<T, sample_testingFindFirstArgs<ExtArgs>>): Prisma__sample_testingClient<$Result.GetResult<Prisma.$sample_testingPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Sample_testing that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {sample_testingFindFirstOrThrowArgs} args - Arguments to find a Sample_testing
-     * @example
-     * // Get one Sample_testing
-     * const sample_testing = await prisma.sample_testing.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends sample_testingFindFirstOrThrowArgs>(args?: SelectSubset<T, sample_testingFindFirstOrThrowArgs<ExtArgs>>): Prisma__sample_testingClient<$Result.GetResult<Prisma.$sample_testingPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Sample_testings that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {sample_testingFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Sample_testings
-     * const sample_testings = await prisma.sample_testing.findMany()
-     * 
-     * // Get first 10 Sample_testings
-     * const sample_testings = await prisma.sample_testing.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const sample_testingWithIdOnly = await prisma.sample_testing.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends sample_testingFindManyArgs>(args?: SelectSubset<T, sample_testingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$sample_testingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Sample_testing.
-     * @param {sample_testingCreateArgs} args - Arguments to create a Sample_testing.
-     * @example
-     * // Create one Sample_testing
-     * const Sample_testing = await prisma.sample_testing.create({
-     *   data: {
-     *     // ... data to create a Sample_testing
-     *   }
-     * })
-     * 
-     */
-    create<T extends sample_testingCreateArgs>(args: SelectSubset<T, sample_testingCreateArgs<ExtArgs>>): Prisma__sample_testingClient<$Result.GetResult<Prisma.$sample_testingPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Sample_testings.
-     * @param {sample_testingCreateManyArgs} args - Arguments to create many Sample_testings.
-     * @example
-     * // Create many Sample_testings
-     * const sample_testing = await prisma.sample_testing.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends sample_testingCreateManyArgs>(args?: SelectSubset<T, sample_testingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Sample_testings and returns the data saved in the database.
-     * @param {sample_testingCreateManyAndReturnArgs} args - Arguments to create many Sample_testings.
-     * @example
-     * // Create many Sample_testings
-     * const sample_testing = await prisma.sample_testing.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Sample_testings and only return the `id`
-     * const sample_testingWithIdOnly = await prisma.sample_testing.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends sample_testingCreateManyAndReturnArgs>(args?: SelectSubset<T, sample_testingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$sample_testingPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Sample_testing.
-     * @param {sample_testingDeleteArgs} args - Arguments to delete one Sample_testing.
-     * @example
-     * // Delete one Sample_testing
-     * const Sample_testing = await prisma.sample_testing.delete({
-     *   where: {
-     *     // ... filter to delete one Sample_testing
-     *   }
-     * })
-     * 
-     */
-    delete<T extends sample_testingDeleteArgs>(args: SelectSubset<T, sample_testingDeleteArgs<ExtArgs>>): Prisma__sample_testingClient<$Result.GetResult<Prisma.$sample_testingPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Sample_testing.
-     * @param {sample_testingUpdateArgs} args - Arguments to update one Sample_testing.
-     * @example
-     * // Update one Sample_testing
-     * const sample_testing = await prisma.sample_testing.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends sample_testingUpdateArgs>(args: SelectSubset<T, sample_testingUpdateArgs<ExtArgs>>): Prisma__sample_testingClient<$Result.GetResult<Prisma.$sample_testingPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Sample_testings.
-     * @param {sample_testingDeleteManyArgs} args - Arguments to filter Sample_testings to delete.
-     * @example
-     * // Delete a few Sample_testings
-     * const { count } = await prisma.sample_testing.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends sample_testingDeleteManyArgs>(args?: SelectSubset<T, sample_testingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Sample_testings.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {sample_testingUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Sample_testings
-     * const sample_testing = await prisma.sample_testing.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends sample_testingUpdateManyArgs>(args: SelectSubset<T, sample_testingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Sample_testings and returns the data updated in the database.
-     * @param {sample_testingUpdateManyAndReturnArgs} args - Arguments to update many Sample_testings.
-     * @example
-     * // Update many Sample_testings
-     * const sample_testing = await prisma.sample_testing.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Sample_testings and only return the `id`
-     * const sample_testingWithIdOnly = await prisma.sample_testing.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends sample_testingUpdateManyAndReturnArgs>(args: SelectSubset<T, sample_testingUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$sample_testingPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Sample_testing.
-     * @param {sample_testingUpsertArgs} args - Arguments to update or create a Sample_testing.
-     * @example
-     * // Update or create a Sample_testing
-     * const sample_testing = await prisma.sample_testing.upsert({
-     *   create: {
-     *     // ... data to create a Sample_testing
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Sample_testing we want to update
-     *   }
-     * })
-     */
-    upsert<T extends sample_testingUpsertArgs>(args: SelectSubset<T, sample_testingUpsertArgs<ExtArgs>>): Prisma__sample_testingClient<$Result.GetResult<Prisma.$sample_testingPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Sample_testings.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {sample_testingCountArgs} args - Arguments to filter Sample_testings to count.
-     * @example
-     * // Count the number of Sample_testings
-     * const count = await prisma.sample_testing.count({
-     *   where: {
-     *     // ... the filter for the Sample_testings we want to count
-     *   }
-     * })
-    **/
-    count<T extends sample_testingCountArgs>(
-      args?: Subset<T, sample_testingCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], Sample_testingCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Sample_testing.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Sample_testingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends Sample_testingAggregateArgs>(args: Subset<T, Sample_testingAggregateArgs>): Prisma.PrismaPromise<GetSample_testingAggregateType<T>>
-
-    /**
-     * Group by Sample_testing.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {sample_testingGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends sample_testingGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: sample_testingGroupByArgs['orderBy'] }
-        : { orderBy?: sample_testingGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, sample_testingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSample_testingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the sample_testing model
-   */
-  readonly fields: sample_testingFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for sample_testing.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__sample_testingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the sample_testing model
-   */
-  interface sample_testingFieldRefs {
-    readonly id: FieldRef<"sample_testing", 'String'>
-    readonly name: FieldRef<"sample_testing", 'String'>
-    readonly createdAt: FieldRef<"sample_testing", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * sample_testing findUnique
-   */
-  export type sample_testingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the sample_testing
-     */
-    select?: sample_testingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the sample_testing
-     */
-    omit?: sample_testingOmit<ExtArgs> | null
-    /**
-     * Filter, which sample_testing to fetch.
-     */
-    where: sample_testingWhereUniqueInput
-  }
-
-  /**
-   * sample_testing findUniqueOrThrow
-   */
-  export type sample_testingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the sample_testing
-     */
-    select?: sample_testingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the sample_testing
-     */
-    omit?: sample_testingOmit<ExtArgs> | null
-    /**
-     * Filter, which sample_testing to fetch.
-     */
-    where: sample_testingWhereUniqueInput
-  }
-
-  /**
-   * sample_testing findFirst
-   */
-  export type sample_testingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the sample_testing
-     */
-    select?: sample_testingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the sample_testing
-     */
-    omit?: sample_testingOmit<ExtArgs> | null
-    /**
-     * Filter, which sample_testing to fetch.
-     */
-    where?: sample_testingWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of sample_testings to fetch.
-     */
-    orderBy?: sample_testingOrderByWithRelationInput | sample_testingOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for sample_testings.
-     */
-    cursor?: sample_testingWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` sample_testings from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` sample_testings.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of sample_testings.
-     */
-    distinct?: Sample_testingScalarFieldEnum | Sample_testingScalarFieldEnum[]
-  }
-
-  /**
-   * sample_testing findFirstOrThrow
-   */
-  export type sample_testingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the sample_testing
-     */
-    select?: sample_testingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the sample_testing
-     */
-    omit?: sample_testingOmit<ExtArgs> | null
-    /**
-     * Filter, which sample_testing to fetch.
-     */
-    where?: sample_testingWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of sample_testings to fetch.
-     */
-    orderBy?: sample_testingOrderByWithRelationInput | sample_testingOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for sample_testings.
-     */
-    cursor?: sample_testingWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` sample_testings from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` sample_testings.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of sample_testings.
-     */
-    distinct?: Sample_testingScalarFieldEnum | Sample_testingScalarFieldEnum[]
-  }
-
-  /**
-   * sample_testing findMany
-   */
-  export type sample_testingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the sample_testing
-     */
-    select?: sample_testingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the sample_testing
-     */
-    omit?: sample_testingOmit<ExtArgs> | null
-    /**
-     * Filter, which sample_testings to fetch.
-     */
-    where?: sample_testingWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of sample_testings to fetch.
-     */
-    orderBy?: sample_testingOrderByWithRelationInput | sample_testingOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing sample_testings.
-     */
-    cursor?: sample_testingWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` sample_testings from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` sample_testings.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of sample_testings.
-     */
-    distinct?: Sample_testingScalarFieldEnum | Sample_testingScalarFieldEnum[]
-  }
-
-  /**
-   * sample_testing create
-   */
-  export type sample_testingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the sample_testing
-     */
-    select?: sample_testingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the sample_testing
-     */
-    omit?: sample_testingOmit<ExtArgs> | null
-    /**
-     * The data needed to create a sample_testing.
-     */
-    data: XOR<sample_testingCreateInput, sample_testingUncheckedCreateInput>
-  }
-
-  /**
-   * sample_testing createMany
-   */
-  export type sample_testingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many sample_testings.
-     */
-    data: sample_testingCreateManyInput | sample_testingCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * sample_testing createManyAndReturn
-   */
-  export type sample_testingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the sample_testing
-     */
-    select?: sample_testingSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the sample_testing
-     */
-    omit?: sample_testingOmit<ExtArgs> | null
-    /**
-     * The data used to create many sample_testings.
-     */
-    data: sample_testingCreateManyInput | sample_testingCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * sample_testing update
-   */
-  export type sample_testingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the sample_testing
-     */
-    select?: sample_testingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the sample_testing
-     */
-    omit?: sample_testingOmit<ExtArgs> | null
-    /**
-     * The data needed to update a sample_testing.
-     */
-    data: XOR<sample_testingUpdateInput, sample_testingUncheckedUpdateInput>
-    /**
-     * Choose, which sample_testing to update.
-     */
-    where: sample_testingWhereUniqueInput
-  }
-
-  /**
-   * sample_testing updateMany
-   */
-  export type sample_testingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update sample_testings.
-     */
-    data: XOR<sample_testingUpdateManyMutationInput, sample_testingUncheckedUpdateManyInput>
-    /**
-     * Filter which sample_testings to update
-     */
-    where?: sample_testingWhereInput
-    /**
-     * Limit how many sample_testings to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * sample_testing updateManyAndReturn
-   */
-  export type sample_testingUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the sample_testing
-     */
-    select?: sample_testingSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the sample_testing
-     */
-    omit?: sample_testingOmit<ExtArgs> | null
-    /**
-     * The data used to update sample_testings.
-     */
-    data: XOR<sample_testingUpdateManyMutationInput, sample_testingUncheckedUpdateManyInput>
-    /**
-     * Filter which sample_testings to update
-     */
-    where?: sample_testingWhereInput
-    /**
-     * Limit how many sample_testings to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * sample_testing upsert
-   */
-  export type sample_testingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the sample_testing
-     */
-    select?: sample_testingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the sample_testing
-     */
-    omit?: sample_testingOmit<ExtArgs> | null
-    /**
-     * The filter to search for the sample_testing to update in case it exists.
-     */
-    where: sample_testingWhereUniqueInput
-    /**
-     * In case the sample_testing found by the `where` argument doesn't exist, create a new sample_testing with this data.
-     */
-    create: XOR<sample_testingCreateInput, sample_testingUncheckedCreateInput>
-    /**
-     * In case the sample_testing was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<sample_testingUpdateInput, sample_testingUncheckedUpdateInput>
-  }
-
-  /**
-   * sample_testing delete
-   */
-  export type sample_testingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the sample_testing
-     */
-    select?: sample_testingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the sample_testing
-     */
-    omit?: sample_testingOmit<ExtArgs> | null
-    /**
-     * Filter which sample_testing to delete.
-     */
-    where: sample_testingWhereUniqueInput
-  }
-
-  /**
-   * sample_testing deleteMany
-   */
-  export type sample_testingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which sample_testings to delete
-     */
-    where?: sample_testingWhereInput
-    /**
-     * Limit how many sample_testings to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * sample_testing without action
-   */
-  export type sample_testingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the sample_testing
-     */
-    select?: sample_testingSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the sample_testing
-     */
-    omit?: sample_testingOmit<ExtArgs> | null
   }
 
 
@@ -3179,6 +2077,7 @@ export namespace Prisma {
     githubId: number | null
     username: string | null
     accessToken: string | null
+    avatarUrl: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3189,6 +2088,7 @@ export namespace Prisma {
     githubId: number | null
     username: string | null
     accessToken: string | null
+    avatarUrl: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3199,6 +2099,7 @@ export namespace Prisma {
     githubId: number
     username: number
     accessToken: number
+    avatarUrl: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -3219,6 +2120,7 @@ export namespace Prisma {
     githubId?: true
     username?: true
     accessToken?: true
+    avatarUrl?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -3229,6 +2131,7 @@ export namespace Prisma {
     githubId?: true
     username?: true
     accessToken?: true
+    avatarUrl?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -3239,6 +2142,7 @@ export namespace Prisma {
     githubId?: true
     username?: true
     accessToken?: true
+    avatarUrl?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -3336,6 +2240,7 @@ export namespace Prisma {
     githubId: number
     username: string
     accessToken: string
+    avatarUrl: string | null
     createdAt: Date
     updatedAt: Date
     _count: GithubIntegrationCountAggregateOutputType | null
@@ -3365,6 +2270,7 @@ export namespace Prisma {
     githubId?: boolean
     username?: boolean
     accessToken?: boolean
+    avatarUrl?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -3376,6 +2282,7 @@ export namespace Prisma {
     githubId?: boolean
     username?: boolean
     accessToken?: boolean
+    avatarUrl?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -3387,6 +2294,7 @@ export namespace Prisma {
     githubId?: boolean
     username?: boolean
     accessToken?: boolean
+    avatarUrl?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -3398,11 +2306,12 @@ export namespace Prisma {
     githubId?: boolean
     username?: boolean
     accessToken?: boolean
+    avatarUrl?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type GithubIntegrationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "githubId" | "username" | "accessToken" | "createdAt" | "updatedAt", ExtArgs["result"]["githubIntegration"]>
+  export type GithubIntegrationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "githubId" | "username" | "accessToken" | "avatarUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["githubIntegration"]>
   export type GithubIntegrationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -3424,6 +2333,7 @@ export namespace Prisma {
       githubId: number
       username: string
       accessToken: string
+      avatarUrl: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["githubIntegration"]>
@@ -3855,6 +2765,7 @@ export namespace Prisma {
     readonly githubId: FieldRef<"GithubIntegration", 'Int'>
     readonly username: FieldRef<"GithubIntegration", 'String'>
     readonly accessToken: FieldRef<"GithubIntegration", 'String'>
+    readonly avatarUrl: FieldRef<"GithubIntegration", 'String'>
     readonly createdAt: FieldRef<"GithubIntegration", 'DateTime'>
     readonly updatedAt: FieldRef<"GithubIntegration", 'DateTime'>
   }
@@ -4303,21 +3214,13 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-  export const Sample_testingScalarFieldEnum: {
-    id: 'id',
-    name: 'name',
-    createdAt: 'createdAt'
-  };
-
-  export type Sample_testingScalarFieldEnum = (typeof Sample_testingScalarFieldEnum)[keyof typeof Sample_testingScalarFieldEnum]
-
-
   export const GithubIntegrationScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
     githubId: 'githubId',
     username: 'username',
     accessToken: 'accessToken',
+    avatarUrl: 'avatarUrl',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -4424,7 +3327,7 @@ export namespace Prisma {
     provider?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    githubIntegrations?: GithubIntegrationListRelationFilter
+    githubIntegration?: XOR<GithubIntegrationNullableScalarRelationFilter, GithubIntegrationWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
@@ -4435,7 +3338,7 @@ export namespace Prisma {
     provider?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    githubIntegrations?: GithubIntegrationOrderByRelationAggregateInput
+    githubIntegration?: GithubIntegrationOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -4449,7 +3352,7 @@ export namespace Prisma {
     provider?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    githubIntegrations?: GithubIntegrationListRelationFilter
+    githubIntegration?: XOR<GithubIntegrationNullableScalarRelationFilter, GithubIntegrationWhereInput> | null
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -4478,48 +3381,6 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
-  export type sample_testingWhereInput = {
-    AND?: sample_testingWhereInput | sample_testingWhereInput[]
-    OR?: sample_testingWhereInput[]
-    NOT?: sample_testingWhereInput | sample_testingWhereInput[]
-    id?: StringFilter<"sample_testing"> | string
-    name?: StringFilter<"sample_testing"> | string
-    createdAt?: DateTimeFilter<"sample_testing"> | Date | string
-  }
-
-  export type sample_testingOrderByWithRelationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type sample_testingWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: sample_testingWhereInput | sample_testingWhereInput[]
-    OR?: sample_testingWhereInput[]
-    NOT?: sample_testingWhereInput | sample_testingWhereInput[]
-    name?: StringFilter<"sample_testing"> | string
-    createdAt?: DateTimeFilter<"sample_testing"> | Date | string
-  }, "id">
-
-  export type sample_testingOrderByWithAggregationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    createdAt?: SortOrder
-    _count?: sample_testingCountOrderByAggregateInput
-    _max?: sample_testingMaxOrderByAggregateInput
-    _min?: sample_testingMinOrderByAggregateInput
-  }
-
-  export type sample_testingScalarWhereWithAggregatesInput = {
-    AND?: sample_testingScalarWhereWithAggregatesInput | sample_testingScalarWhereWithAggregatesInput[]
-    OR?: sample_testingScalarWhereWithAggregatesInput[]
-    NOT?: sample_testingScalarWhereWithAggregatesInput | sample_testingScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"sample_testing"> | string
-    name?: StringWithAggregatesFilter<"sample_testing"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"sample_testing"> | Date | string
-  }
-
   export type GithubIntegrationWhereInput = {
     AND?: GithubIntegrationWhereInput | GithubIntegrationWhereInput[]
     OR?: GithubIntegrationWhereInput[]
@@ -4529,6 +3390,7 @@ export namespace Prisma {
     githubId?: IntFilter<"GithubIntegration"> | number
     username?: StringFilter<"GithubIntegration"> | string
     accessToken?: StringFilter<"GithubIntegration"> | string
+    avatarUrl?: StringNullableFilter<"GithubIntegration"> | string | null
     createdAt?: DateTimeFilter<"GithubIntegration"> | Date | string
     updatedAt?: DateTimeFilter<"GithubIntegration"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -4540,6 +3402,7 @@ export namespace Prisma {
     githubId?: SortOrder
     username?: SortOrder
     accessToken?: SortOrder
+    avatarUrl?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -4547,17 +3410,18 @@ export namespace Prisma {
 
   export type GithubIntegrationWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    userId?: string
     githubId?: number
     AND?: GithubIntegrationWhereInput | GithubIntegrationWhereInput[]
     OR?: GithubIntegrationWhereInput[]
     NOT?: GithubIntegrationWhereInput | GithubIntegrationWhereInput[]
-    userId?: StringFilter<"GithubIntegration"> | string
     username?: StringFilter<"GithubIntegration"> | string
     accessToken?: StringFilter<"GithubIntegration"> | string
+    avatarUrl?: StringNullableFilter<"GithubIntegration"> | string | null
     createdAt?: DateTimeFilter<"GithubIntegration"> | Date | string
     updatedAt?: DateTimeFilter<"GithubIntegration"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id" | "githubId">
+  }, "id" | "userId" | "githubId">
 
   export type GithubIntegrationOrderByWithAggregationInput = {
     id?: SortOrder
@@ -4565,6 +3429,7 @@ export namespace Prisma {
     githubId?: SortOrder
     username?: SortOrder
     accessToken?: SortOrder
+    avatarUrl?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: GithubIntegrationCountOrderByAggregateInput
@@ -4583,6 +3448,7 @@ export namespace Prisma {
     githubId?: IntWithAggregatesFilter<"GithubIntegration"> | number
     username?: StringWithAggregatesFilter<"GithubIntegration"> | string
     accessToken?: StringWithAggregatesFilter<"GithubIntegration"> | string
+    avatarUrl?: StringNullableWithAggregatesFilter<"GithubIntegration"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"GithubIntegration"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"GithubIntegration"> | Date | string
   }
@@ -4595,7 +3461,7 @@ export namespace Prisma {
     provider?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    githubIntegrations?: GithubIntegrationCreateNestedManyWithoutUserInput
+    githubIntegration?: GithubIntegrationCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -4606,7 +3472,7 @@ export namespace Prisma {
     provider?: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    githubIntegrations?: GithubIntegrationUncheckedCreateNestedManyWithoutUserInput
+    githubIntegration?: GithubIntegrationUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -4617,7 +3483,7 @@ export namespace Prisma {
     provider?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    githubIntegrations?: GithubIntegrationUpdateManyWithoutUserNestedInput
+    githubIntegration?: GithubIntegrationUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -4628,7 +3494,7 @@ export namespace Prisma {
     provider?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    githubIntegrations?: GithubIntegrationUncheckedUpdateManyWithoutUserNestedInput
+    githubIntegration?: GithubIntegrationUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -4661,56 +3527,15 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type sample_testingCreateInput = {
-    id?: string
-    name: string
-    createdAt?: Date | string
-  }
-
-  export type sample_testingUncheckedCreateInput = {
-    id?: string
-    name: string
-    createdAt?: Date | string
-  }
-
-  export type sample_testingUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type sample_testingUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type sample_testingCreateManyInput = {
-    id?: string
-    name: string
-    createdAt?: Date | string
-  }
-
-  export type sample_testingUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type sample_testingUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type GithubIntegrationCreateInput = {
     id?: string
     githubId: number
     username: string
     accessToken: string
+    avatarUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutGithubIntegrationsInput
+    user: UserCreateNestedOneWithoutGithubIntegrationInput
   }
 
   export type GithubIntegrationUncheckedCreateInput = {
@@ -4719,6 +3544,7 @@ export namespace Prisma {
     githubId: number
     username: string
     accessToken: string
+    avatarUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -4728,9 +3554,10 @@ export namespace Prisma {
     githubId?: IntFieldUpdateOperationsInput | number
     username?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutGithubIntegrationsNestedInput
+    user?: UserUpdateOneRequiredWithoutGithubIntegrationNestedInput
   }
 
   export type GithubIntegrationUncheckedUpdateInput = {
@@ -4739,6 +3566,7 @@ export namespace Prisma {
     githubId?: IntFieldUpdateOperationsInput | number
     username?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -4749,6 +3577,7 @@ export namespace Prisma {
     githubId: number
     username: string
     accessToken: string
+    avatarUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -4758,6 +3587,7 @@ export namespace Prisma {
     githubId?: IntFieldUpdateOperationsInput | number
     username?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -4768,6 +3598,7 @@ export namespace Prisma {
     githubId?: IntFieldUpdateOperationsInput | number
     username?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -4813,19 +3644,14 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type GithubIntegrationListRelationFilter = {
-    every?: GithubIntegrationWhereInput
-    some?: GithubIntegrationWhereInput
-    none?: GithubIntegrationWhereInput
+  export type GithubIntegrationNullableScalarRelationFilter = {
+    is?: GithubIntegrationWhereInput | null
+    isNot?: GithubIntegrationWhereInput | null
   }
 
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
-  }
-
-  export type GithubIntegrationOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type UserCountOrderByAggregateInput = {
@@ -4908,24 +3734,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type sample_testingCountOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type sample_testingMaxOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type sample_testingMinOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    createdAt?: SortOrder
-  }
-
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -4948,6 +3756,7 @@ export namespace Prisma {
     githubId?: SortOrder
     username?: SortOrder
     accessToken?: SortOrder
+    avatarUrl?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -4962,6 +3771,7 @@ export namespace Prisma {
     githubId?: SortOrder
     username?: SortOrder
     accessToken?: SortOrder
+    avatarUrl?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -4972,6 +3782,7 @@ export namespace Prisma {
     githubId?: SortOrder
     username?: SortOrder
     accessToken?: SortOrder
+    avatarUrl?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -4996,18 +3807,16 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type GithubIntegrationCreateNestedManyWithoutUserInput = {
-    create?: XOR<GithubIntegrationCreateWithoutUserInput, GithubIntegrationUncheckedCreateWithoutUserInput> | GithubIntegrationCreateWithoutUserInput[] | GithubIntegrationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: GithubIntegrationCreateOrConnectWithoutUserInput | GithubIntegrationCreateOrConnectWithoutUserInput[]
-    createMany?: GithubIntegrationCreateManyUserInputEnvelope
-    connect?: GithubIntegrationWhereUniqueInput | GithubIntegrationWhereUniqueInput[]
+  export type GithubIntegrationCreateNestedOneWithoutUserInput = {
+    create?: XOR<GithubIntegrationCreateWithoutUserInput, GithubIntegrationUncheckedCreateWithoutUserInput>
+    connectOrCreate?: GithubIntegrationCreateOrConnectWithoutUserInput
+    connect?: GithubIntegrationWhereUniqueInput
   }
 
-  export type GithubIntegrationUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<GithubIntegrationCreateWithoutUserInput, GithubIntegrationUncheckedCreateWithoutUserInput> | GithubIntegrationCreateWithoutUserInput[] | GithubIntegrationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: GithubIntegrationCreateOrConnectWithoutUserInput | GithubIntegrationCreateOrConnectWithoutUserInput[]
-    createMany?: GithubIntegrationCreateManyUserInputEnvelope
-    connect?: GithubIntegrationWhereUniqueInput | GithubIntegrationWhereUniqueInput[]
+  export type GithubIntegrationUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<GithubIntegrationCreateWithoutUserInput, GithubIntegrationUncheckedCreateWithoutUserInput>
+    connectOrCreate?: GithubIntegrationCreateOrConnectWithoutUserInput
+    connect?: GithubIntegrationWhereUniqueInput
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -5022,37 +3831,29 @@ export namespace Prisma {
     set?: Date | string
   }
 
-  export type GithubIntegrationUpdateManyWithoutUserNestedInput = {
-    create?: XOR<GithubIntegrationCreateWithoutUserInput, GithubIntegrationUncheckedCreateWithoutUserInput> | GithubIntegrationCreateWithoutUserInput[] | GithubIntegrationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: GithubIntegrationCreateOrConnectWithoutUserInput | GithubIntegrationCreateOrConnectWithoutUserInput[]
-    upsert?: GithubIntegrationUpsertWithWhereUniqueWithoutUserInput | GithubIntegrationUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: GithubIntegrationCreateManyUserInputEnvelope
-    set?: GithubIntegrationWhereUniqueInput | GithubIntegrationWhereUniqueInput[]
-    disconnect?: GithubIntegrationWhereUniqueInput | GithubIntegrationWhereUniqueInput[]
-    delete?: GithubIntegrationWhereUniqueInput | GithubIntegrationWhereUniqueInput[]
-    connect?: GithubIntegrationWhereUniqueInput | GithubIntegrationWhereUniqueInput[]
-    update?: GithubIntegrationUpdateWithWhereUniqueWithoutUserInput | GithubIntegrationUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: GithubIntegrationUpdateManyWithWhereWithoutUserInput | GithubIntegrationUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: GithubIntegrationScalarWhereInput | GithubIntegrationScalarWhereInput[]
+  export type GithubIntegrationUpdateOneWithoutUserNestedInput = {
+    create?: XOR<GithubIntegrationCreateWithoutUserInput, GithubIntegrationUncheckedCreateWithoutUserInput>
+    connectOrCreate?: GithubIntegrationCreateOrConnectWithoutUserInput
+    upsert?: GithubIntegrationUpsertWithoutUserInput
+    disconnect?: GithubIntegrationWhereInput | boolean
+    delete?: GithubIntegrationWhereInput | boolean
+    connect?: GithubIntegrationWhereUniqueInput
+    update?: XOR<XOR<GithubIntegrationUpdateToOneWithWhereWithoutUserInput, GithubIntegrationUpdateWithoutUserInput>, GithubIntegrationUncheckedUpdateWithoutUserInput>
   }
 
-  export type GithubIntegrationUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<GithubIntegrationCreateWithoutUserInput, GithubIntegrationUncheckedCreateWithoutUserInput> | GithubIntegrationCreateWithoutUserInput[] | GithubIntegrationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: GithubIntegrationCreateOrConnectWithoutUserInput | GithubIntegrationCreateOrConnectWithoutUserInput[]
-    upsert?: GithubIntegrationUpsertWithWhereUniqueWithoutUserInput | GithubIntegrationUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: GithubIntegrationCreateManyUserInputEnvelope
-    set?: GithubIntegrationWhereUniqueInput | GithubIntegrationWhereUniqueInput[]
-    disconnect?: GithubIntegrationWhereUniqueInput | GithubIntegrationWhereUniqueInput[]
-    delete?: GithubIntegrationWhereUniqueInput | GithubIntegrationWhereUniqueInput[]
-    connect?: GithubIntegrationWhereUniqueInput | GithubIntegrationWhereUniqueInput[]
-    update?: GithubIntegrationUpdateWithWhereUniqueWithoutUserInput | GithubIntegrationUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: GithubIntegrationUpdateManyWithWhereWithoutUserInput | GithubIntegrationUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: GithubIntegrationScalarWhereInput | GithubIntegrationScalarWhereInput[]
+  export type GithubIntegrationUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<GithubIntegrationCreateWithoutUserInput, GithubIntegrationUncheckedCreateWithoutUserInput>
+    connectOrCreate?: GithubIntegrationCreateOrConnectWithoutUserInput
+    upsert?: GithubIntegrationUpsertWithoutUserInput
+    disconnect?: GithubIntegrationWhereInput | boolean
+    delete?: GithubIntegrationWhereInput | boolean
+    connect?: GithubIntegrationWhereUniqueInput
+    update?: XOR<XOR<GithubIntegrationUpdateToOneWithWhereWithoutUserInput, GithubIntegrationUpdateWithoutUserInput>, GithubIntegrationUncheckedUpdateWithoutUserInput>
   }
 
-  export type UserCreateNestedOneWithoutGithubIntegrationsInput = {
-    create?: XOR<UserCreateWithoutGithubIntegrationsInput, UserUncheckedCreateWithoutGithubIntegrationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutGithubIntegrationsInput
+  export type UserCreateNestedOneWithoutGithubIntegrationInput = {
+    create?: XOR<UserCreateWithoutGithubIntegrationInput, UserUncheckedCreateWithoutGithubIntegrationInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGithubIntegrationInput
     connect?: UserWhereUniqueInput
   }
 
@@ -5064,12 +3865,12 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type UserUpdateOneRequiredWithoutGithubIntegrationsNestedInput = {
-    create?: XOR<UserCreateWithoutGithubIntegrationsInput, UserUncheckedCreateWithoutGithubIntegrationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutGithubIntegrationsInput
-    upsert?: UserUpsertWithoutGithubIntegrationsInput
+  export type UserUpdateOneRequiredWithoutGithubIntegrationNestedInput = {
+    create?: XOR<UserCreateWithoutGithubIntegrationInput, UserUncheckedCreateWithoutGithubIntegrationInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGithubIntegrationInput
+    upsert?: UserUpsertWithoutGithubIntegrationInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGithubIntegrationsInput, UserUpdateWithoutGithubIntegrationsInput>, UserUncheckedUpdateWithoutGithubIntegrationsInput>
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGithubIntegrationInput, UserUpdateWithoutGithubIntegrationInput>, UserUncheckedUpdateWithoutGithubIntegrationInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -5213,6 +4014,7 @@ export namespace Prisma {
     githubId: number
     username: string
     accessToken: string
+    avatarUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -5222,6 +4024,7 @@ export namespace Prisma {
     githubId: number
     username: string
     accessToken: string
+    avatarUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -5231,103 +4034,15 @@ export namespace Prisma {
     create: XOR<GithubIntegrationCreateWithoutUserInput, GithubIntegrationUncheckedCreateWithoutUserInput>
   }
 
-  export type GithubIntegrationCreateManyUserInputEnvelope = {
-    data: GithubIntegrationCreateManyUserInput | GithubIntegrationCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type GithubIntegrationUpsertWithWhereUniqueWithoutUserInput = {
-    where: GithubIntegrationWhereUniqueInput
+  export type GithubIntegrationUpsertWithoutUserInput = {
     update: XOR<GithubIntegrationUpdateWithoutUserInput, GithubIntegrationUncheckedUpdateWithoutUserInput>
     create: XOR<GithubIntegrationCreateWithoutUserInput, GithubIntegrationUncheckedCreateWithoutUserInput>
+    where?: GithubIntegrationWhereInput
   }
 
-  export type GithubIntegrationUpdateWithWhereUniqueWithoutUserInput = {
-    where: GithubIntegrationWhereUniqueInput
+  export type GithubIntegrationUpdateToOneWithWhereWithoutUserInput = {
+    where?: GithubIntegrationWhereInput
     data: XOR<GithubIntegrationUpdateWithoutUserInput, GithubIntegrationUncheckedUpdateWithoutUserInput>
-  }
-
-  export type GithubIntegrationUpdateManyWithWhereWithoutUserInput = {
-    where: GithubIntegrationScalarWhereInput
-    data: XOR<GithubIntegrationUpdateManyMutationInput, GithubIntegrationUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type GithubIntegrationScalarWhereInput = {
-    AND?: GithubIntegrationScalarWhereInput | GithubIntegrationScalarWhereInput[]
-    OR?: GithubIntegrationScalarWhereInput[]
-    NOT?: GithubIntegrationScalarWhereInput | GithubIntegrationScalarWhereInput[]
-    id?: StringFilter<"GithubIntegration"> | string
-    userId?: StringFilter<"GithubIntegration"> | string
-    githubId?: IntFilter<"GithubIntegration"> | number
-    username?: StringFilter<"GithubIntegration"> | string
-    accessToken?: StringFilter<"GithubIntegration"> | string
-    createdAt?: DateTimeFilter<"GithubIntegration"> | Date | string
-    updatedAt?: DateTimeFilter<"GithubIntegration"> | Date | string
-  }
-
-  export type UserCreateWithoutGithubIntegrationsInput = {
-    id?: string
-    email: string
-    name?: string | null
-    avatarUrl?: string | null
-    provider?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type UserUncheckedCreateWithoutGithubIntegrationsInput = {
-    id?: string
-    email: string
-    name?: string | null
-    avatarUrl?: string | null
-    provider?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type UserCreateOrConnectWithoutGithubIntegrationsInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutGithubIntegrationsInput, UserUncheckedCreateWithoutGithubIntegrationsInput>
-  }
-
-  export type UserUpsertWithoutGithubIntegrationsInput = {
-    update: XOR<UserUpdateWithoutGithubIntegrationsInput, UserUncheckedUpdateWithoutGithubIntegrationsInput>
-    create: XOR<UserCreateWithoutGithubIntegrationsInput, UserUncheckedCreateWithoutGithubIntegrationsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutGithubIntegrationsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutGithubIntegrationsInput, UserUncheckedUpdateWithoutGithubIntegrationsInput>
-  }
-
-  export type UserUpdateWithoutGithubIntegrationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    provider?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserUncheckedUpdateWithoutGithubIntegrationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    provider?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type GithubIntegrationCreateManyUserInput = {
-    id?: string
-    githubId: number
-    username: string
-    accessToken: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
   export type GithubIntegrationUpdateWithoutUserInput = {
@@ -5335,6 +4050,7 @@ export namespace Prisma {
     githubId?: IntFieldUpdateOperationsInput | number
     username?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -5344,15 +4060,63 @@ export namespace Prisma {
     githubId?: IntFieldUpdateOperationsInput | number
     username?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type GithubIntegrationUncheckedUpdateManyWithoutUserInput = {
+  export type UserCreateWithoutGithubIntegrationInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    provider?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserUncheckedCreateWithoutGithubIntegrationInput = {
+    id?: string
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    provider?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserCreateOrConnectWithoutGithubIntegrationInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutGithubIntegrationInput, UserUncheckedCreateWithoutGithubIntegrationInput>
+  }
+
+  export type UserUpsertWithoutGithubIntegrationInput = {
+    update: XOR<UserUpdateWithoutGithubIntegrationInput, UserUncheckedUpdateWithoutGithubIntegrationInput>
+    create: XOR<UserCreateWithoutGithubIntegrationInput, UserUncheckedCreateWithoutGithubIntegrationInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutGithubIntegrationInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutGithubIntegrationInput, UserUncheckedUpdateWithoutGithubIntegrationInput>
+  }
+
+  export type UserUpdateWithoutGithubIntegrationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    githubId?: IntFieldUpdateOperationsInput | number
-    username?: StringFieldUpdateOperationsInput | string
-    accessToken?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUncheckedUpdateWithoutGithubIntegrationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

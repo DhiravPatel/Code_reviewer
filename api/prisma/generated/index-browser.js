@@ -130,18 +130,13 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.Sample_testingScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  createdAt: 'createdAt'
-};
-
 exports.Prisma.GithubIntegrationScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   githubId: 'githubId',
   username: 'username',
   accessToken: 'accessToken',
+  avatarUrl: 'avatarUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -164,7 +159,6 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  sample_testing: 'sample_testing',
   GithubIntegration: 'GithubIntegration'
 };
 
