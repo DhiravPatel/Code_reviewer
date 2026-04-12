@@ -7,15 +7,14 @@
     "start": "bun run src/server.ts",
     "postinstall": "prisma generate"
   },
-  "type": "module",
   "private": true,
   "devDependencies": {
     "@types/bun": "latest",
+    "@types/node": "^22.0.0",
     "@types/pg": "^8.20.0",
-    "prisma": "^7.6.0"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
+    "dotenv": "^16.4.0",
+    "prisma": "^7.6.0",
+    "typescript": "^5.7.0"
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",
