@@ -10,6 +10,9 @@ export const env = {
   GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET || '',
   GITHUB_REDIRECT_URI: process.env.GITHUB_REDIRECT_URI || 'http://localhost:8000/api/v1/integrations/github/callback',
   JWT_SECRET: process.env.JWT_SECRET || 'super_secret_default_key_change_in_production',
+  GROQ_API_KEY: process.env.GROQ_API_KEY || '',
+  WEBHOOK_SECRET: process.env.WEBHOOK_SECRET || 'codereview_webhook_secret_dev',
+  API_BASE_URL: process.env.API_BASE_URL || 'http://localhost:8000',
 };
 
 // Validation
@@ -21,4 +24,7 @@ if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
 }
 if (!env.GITHUB_CLIENT_ID || !env.GITHUB_CLIENT_SECRET) {
   console.warn('GITHUB_CLIENT_ID or GITHUB_CLIENT_SECRET is missing from environment variables.');
+}
+if (!env.GROQ_API_KEY) {
+  console.warn('GROQ_API_KEY is missing from environment variables.');
 }

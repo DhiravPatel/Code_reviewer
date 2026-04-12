@@ -141,9 +141,52 @@ exports.Prisma.GithubIntegrationScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.EnabledRepositoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  githubRepoId: 'githubRepoId',
+  fullName: 'fullName',
+  name: 'name',
+  owner: 'owner',
+  language: 'language',
+  description: 'description',
+  isPrivate: 'isPrivate',
+  defaultBranch: 'defaultBranch',
+  webhookId: 'webhookId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PrReviewScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  repoId: 'repoId',
+  prNumber: 'prNumber',
+  prTitle: 'prTitle',
+  prAuthor: 'prAuthor',
+  prBranch: 'prBranch',
+  additions: 'additions',
+  deletions: 'deletions',
+  filesChanged: 'filesChanged',
+  status: 'status',
+  score: 'score',
+  verdict: 'verdict',
+  summary: 'summary',
+  reviewComments: 'reviewComments',
+  githubCommentId: 'githubCommentId',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -156,10 +199,18 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
 
 exports.Prisma.ModelName = {
   User: 'User',
-  GithubIntegration: 'GithubIntegration'
+  GithubIntegration: 'GithubIntegration',
+  EnabledRepository: 'EnabledRepository',
+  PrReview: 'PrReview'
 };
 
 /**
