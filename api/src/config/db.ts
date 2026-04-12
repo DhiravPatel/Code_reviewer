@@ -1,10 +1,11 @@
 import { PrismaClient } from '../../prisma/generated';
-import { PrismaPg } from '@prisma/adapter-pg';
-import pg from 'pg';
 
-const pool = new pg.Pool({
-  connectionString: process.env.DATABASE_URL || process.env.DIRECT_URL,
-});
+// In serverless (Vercel), we reuse the client across warm invocations
+// to avoid creating a new connection on every request
+const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
-const adapter = new PrismaPg(pool);
-export const prisma = new PrismaClient({ adapter });
+export const prisma = globalForPrisma.prisma || new PrismaClient();
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma;
+}
