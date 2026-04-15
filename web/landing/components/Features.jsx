@@ -1,4 +1,4 @@
-import { Zap, AlertTriangle, Code2, BarChart3, GitBranch, Lock, Sparkles } from 'lucide-react'
+import { Zap, AlertTriangle, Code2, BarChart3, GitBranch, Lock, Sparkles, ArrowRight } from 'lucide-react'
 import AnimateIn from '../../shared/components/AnimateIn'
 import { useRef } from 'react'
 
@@ -7,55 +7,55 @@ const features = [
     icon: Zap,
     title: 'Auto PR Review',
     description: 'Every pull request is automatically analyzed with our AI engine the moment it\'s opened.',
-    gradient: 'from-brand-500 via-emerald-500 to-teal-500',
-    iconBg: 'bg-brand-500/15',
+    iconBg: 'bg-brand-500/10',
     iconColor: 'text-brand-400',
-    accent: 'group-hover:shadow-[0_0_30px_rgba(16,185,129,0.2)]',
+    glowColor: 'rgba(16, 185, 129, 0.35)',
+    borderHover: 'hover:border-brand-500/50',
   },
   {
     icon: Code2,
     title: 'Code Suggestions',
     description: 'Get actionable suggestions for performance improvements, patterns, and best practices.',
-    gradient: 'from-cyan-500 via-blue-500 to-indigo-500',
-    iconBg: 'bg-cyan-500/15',
+    iconBg: 'bg-cyan-500/10',
     iconColor: 'text-cyan-400',
-    accent: 'group-hover:shadow-[0_0_30px_rgba(6,182,212,0.2)]',
+    glowColor: 'rgba(6, 182, 212, 0.35)',
+    borderHover: 'hover:border-cyan-500/50',
   },
   {
     icon: AlertTriangle,
     title: 'Security Warnings',
     description: 'Detect vulnerabilities, SQL injections, XSS risks, and insecure patterns before production.',
-    gradient: 'from-amber-500 via-orange-500 to-red-500',
-    iconBg: 'bg-amber-500/15',
+    iconBg: 'bg-amber-500/10',
     iconColor: 'text-amber-400',
-    accent: 'group-hover:shadow-[0_0_30px_rgba(245,158,11,0.2)]',
+    glowColor: 'rgba(245, 158, 11, 0.35)',
+    borderHover: 'hover:border-amber-500/50',
   },
   {
     icon: BarChart3,
     title: 'Quality Metrics',
     description: 'Track code quality trends across your team with real-time dashboards and alerts.',
-    gradient: 'from-purple-500 via-violet-500 to-pink-500',
-    iconBg: 'bg-purple-500/15',
+    iconBg: 'bg-purple-500/10',
     iconColor: 'text-purple-400',
-    accent: 'group-hover:shadow-[0_0_30px_rgba(168,85,247,0.2)]',
+    glowColor: 'rgba(168, 85, 247, 0.35)',
+    borderHover: 'hover:border-purple-500/50',
   },
   {
     icon: GitBranch,
     title: 'Smart Merging',
     description: 'AI-powered merge conflict detection and resolution suggestions to speed up delivery.',
-    gradient: 'from-rose-500 via-pink-500 to-red-500',
-    iconBg: 'bg-rose-500/15',
+    iconBg: 'bg-rose-500/10',
     iconColor: 'text-rose-400',
-    accent: 'group-hover:shadow-[0_0_30px_rgba(244,63,94,0.2)]',
+    glowColor: 'rgba(244, 63, 94, 0.35)',
+    borderHover: 'hover:border-rose-500/50',
   },
   {
     icon: Lock,
     title: 'Enterprise Security',
     description: 'SOC2 compliant with end-to-end encryption. Your code never leaves your infrastructure.',
-    gradient: 'from-indigo-500 via-violet-500 to-purple-500',
-    iconBg: 'bg-indigo-500/15',
+    iconBg: 'bg-indigo-500/10',
     iconColor: 'text-indigo-400',
-    accent: 'group-hover:shadow-[0_0_30px_rgba(99,102,241,0.2)]',
+    glowColor: 'rgba(99, 102, 241, 0.35)',
+    borderHover: 'hover:border-indigo-500/50',
   },
 ]
 
@@ -67,41 +67,61 @@ function FeatureCard({ feature, idx }) {
     const card = cardRef.current
     if (!card) return
     const rect = card.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width) * 100
-    const y = ((e.clientY - rect.top) / rect.height) * 100
-    card.style.setProperty('--x', `${x}%`)
-    card.style.setProperty('--y', `${y}%`)
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    card.style.setProperty('--mx', `${x}px`)
+    card.style.setProperty('--my', `${y}px`)
   }
 
   return (
-    <AnimateIn delay={idx * 100}>
+    <AnimateIn delay={idx * 80} className="h-full">
       <div
         ref={cardRef}
         onMouseMove={handleMouseMove}
-        className={`tilt-card relative p-6 lg:p-8 rounded-2xl bg-gradient-to-br from-surface-800/40 to-surface-900/80 border border-surface-700/50 hover:border-surface-600/80 transition-all duration-500 h-full group overflow-hidden ${feature.accent}`}
+        className={`relative h-full p-7 rounded-2xl bg-gradient-to-br from-surface-800/40 to-surface-900/60 border border-surface-700/50 ${feature.borderHover} transition-all duration-500 group overflow-hidden hover:-translate-y-1`}
+        style={{
+          '--glow-color': feature.glowColor,
+        }}
       >
-        {/* Gradient top border on hover */}
-        <div className={`absolute top-0 left-0 right-0 h-px bg-gradient-to-r ${feature.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+        {/* Mouse-following spotlight */}
+        <div
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+          style={{
+            background: `radial-gradient(400px circle at var(--mx, 50%) var(--my, 50%), ${feature.glowColor}, transparent 40%)`,
+          }}
+        />
 
-        {/* Icon with glow */}
-        <div className="relative mb-6 inline-block">
-          <div className={`absolute inset-0 ${feature.iconBg} rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500 scale-100 group-hover:scale-125`} />
-          <div className={`relative w-14 h-14 rounded-2xl ${feature.iconBg} border border-surface-700/50 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
-            <Icon className={`w-7 h-7 ${feature.iconColor}`} strokeWidth={2} />
+        {/* Content */}
+        <div className="relative flex flex-col h-full">
+          {/* Icon */}
+          <div className="mb-5">
+            <div
+              className={`relative w-12 h-12 rounded-xl ${feature.iconBg} border border-surface-700/60 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
+            >
+              <Icon className={`w-6 h-6 ${feature.iconColor}`} strokeWidth={2} />
+            </div>
           </div>
-        </div>
 
-        <h3 className="text-xl font-bold text-white mb-3 group-hover:translate-x-0.5 transition-transform duration-300">
-          {feature.title}
-        </h3>
-        <p className="text-surface-400 text-sm leading-relaxed mb-5">
-          {feature.description}
-        </p>
+          {/* Title */}
+          <h3 className="text-lg font-bold text-white mb-2.5">
+            {feature.title}
+          </h3>
 
-        {/* Learn more link */}
-        <div className={`inline-flex items-center gap-1.5 text-xs font-semibold bg-gradient-to-r ${feature.gradient} bg-clip-text text-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`}>
-          Learn more
-          <span className={`w-3 h-0.5 bg-gradient-to-r ${feature.gradient} group-hover:w-5 transition-all duration-300`} />
+          {/* Description */}
+          <p className="text-surface-400 text-sm leading-relaxed mb-5 flex-1">
+            {feature.description}
+          </p>
+
+          {/* Learn more */}
+          <div
+            className={`inline-flex items-center gap-1.5 text-xs font-semibold ${feature.iconColor} opacity-60 group-hover:opacity-100 transition-all duration-300`}
+          >
+            <span>Learn more</span>
+            <ArrowRight
+              size={12}
+              className="group-hover:translate-x-1 transition-transform duration-300"
+            />
+          </div>
         </div>
       </div>
     </AnimateIn>
@@ -133,7 +153,7 @@ export default function Features() {
         </AnimateIn>
 
         {/* Features grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {features.map((feature, idx) => (
             <FeatureCard key={idx} feature={feature} idx={idx} />
           ))}
