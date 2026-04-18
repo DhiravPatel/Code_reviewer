@@ -71,73 +71,120 @@ export class PrService {
   }
 
   /**
-   * List all open PRs across all enabled repos for a user.
+   * List all PRs across all enabled repos — merges live open PRs from GitHub
+   * with any PR reviews already stored in the DB (so merged/closed PRs stay visible).
    */
   static async listAllPullRequests(userId: string) {
-    const accessToken = await RepositoryService.getAccessToken(userId);
-    if (!accessToken) throw new Error('GitHub not connected');
-
     const enabledRepos = await RepositoryService.getEnabledRepos(userId);
     if (enabledRepos.length === 0) return [];
 
-    // Fetch PRs from all enabled repos in parallel
-    const allPrs: any[] = [];
-    const results = await Promise.allSettled(
-      enabledRepos.map(async (repo) => {
-        const prs = await this.fetchPullRequests(accessToken, repo.owner, repo.name);
-        return prs.map((pr: any) => ({
-          id: pr.id,
-          number: pr.number,
-          title: pr.title,
-          repoFullName: repo.fullName,
-          repoName: repo.name,
-          repoOwner: repo.owner,
-          repoId: repo.id,
-          author: pr.user?.login || 'unknown',
-          authorAvatar: pr.user?.avatar_url || null,
-          branch: pr.head?.ref || '',
-          baseBranch: pr.base?.ref || '',
-          additions: pr.additions || 0,
-          deletions: pr.deletions || 0,
-          changedFiles: pr.changed_files || 0,
-          createdAt: pr.created_at,
-          updatedAt: pr.updated_at,
-          htmlUrl: pr.html_url,
-          body: pr.body || '',
-        }));
-      })
-    );
+    const repoById = new Map(enabledRepos.map((r) => [r.id, r]));
 
-    for (const result of results) {
-      if (result.status === 'fulfilled') {
-        allPrs.push(...result.value);
+    // 1) Fetch open PRs from GitHub (if GitHub is still connected)
+    const accessToken = await RepositoryService.getAccessToken(userId);
+    const livePrs: any[] = [];
+
+    if (accessToken) {
+      const results = await Promise.allSettled(
+        enabledRepos.map(async (repo) => {
+          const prs = await this.fetchPullRequests(accessToken, repo.owner, repo.name);
+          return prs.map((pr: any) => ({
+            id: pr.id,
+            number: pr.number,
+            title: pr.title,
+            repoFullName: repo.fullName,
+            repoName: repo.name,
+            repoOwner: repo.owner,
+            repoId: repo.id,
+            author: pr.user?.login || 'unknown',
+            authorAvatar: pr.user?.avatar_url || null,
+            branch: pr.head?.ref || '',
+            baseBranch: pr.base?.ref || '',
+            additions: pr.additions || 0,
+            deletions: pr.deletions || 0,
+            changedFiles: pr.changed_files || 0,
+            createdAt: pr.created_at,
+            updatedAt: pr.updated_at,
+            htmlUrl: pr.html_url,
+            body: pr.body || '',
+            state: pr.state || 'open',
+          }));
+        })
+      );
+      for (const result of results) {
+        if (result.status === 'fulfilled') livePrs.push(...result.value);
       }
     }
 
-    // Sort by updated date (most recent first)
-    allPrs.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-
-    // Check which PRs already have reviews in our DB
+    // 2) Fetch all DB-persisted reviews for this user (includes closed/merged PRs)
     const existingReviews = await prisma.prReview.findMany({
       where: { userId },
-      select: { repoId: true, prNumber: true, status: true, score: true, verdict: true, id: true },
+      orderBy: { updatedAt: 'desc' },
     });
 
+    // Key = "repoId:prNumber"
+    const keyOf = (repoId: string, prNumber: number) => `${repoId}:${prNumber}`;
+
+    // Map of review by key for quick lookup
     const reviewMap = new Map<string, any>();
     for (const r of existingReviews) {
-      reviewMap.set(`${r.repoId}:${r.prNumber}`, r);
+      reviewMap.set(keyOf(r.repoId, r.prNumber), r);
     }
 
-    return allPrs.map((pr) => {
-      const review = reviewMap.get(`${pr.repoId}:${pr.number}`);
+    // Set of live PR keys so we don't duplicate
+    const liveKeys = new Set(livePrs.map((pr) => keyOf(pr.repoId, pr.number)));
+
+    // 3) Merge: decorate live PRs with review data
+    const merged: any[] = livePrs.map((pr) => {
+      const review = reviewMap.get(keyOf(pr.repoId, pr.number));
       return {
         ...pr,
         reviewStatus: review?.status || null,
-        reviewScore: review?.score || null,
+        reviewScore: review?.score ?? null,
         reviewVerdict: review?.verdict || null,
         reviewId: review?.id || null,
       };
     });
+
+    // 4) Add DB-only reviews (for PRs that are merged/closed and no longer in the open list)
+    for (const review of existingReviews) {
+      const key = keyOf(review.repoId, review.prNumber);
+      if (liveKeys.has(key)) continue;
+
+      const repo = repoById.get(review.repoId);
+      if (!repo) continue;
+
+      merged.push({
+        id: `db-${review.id}`,
+        number: review.prNumber,
+        title: review.prTitle,
+        repoFullName: repo.fullName,
+        repoName: repo.name,
+        repoOwner: repo.owner,
+        repoId: repo.id,
+        author: review.prAuthor,
+        authorAvatar: null,
+        branch: review.prBranch,
+        baseBranch: repo.defaultBranch,
+        additions: review.additions,
+        deletions: review.deletions,
+        changedFiles: review.filesChanged,
+        createdAt: review.createdAt,
+        updatedAt: review.updatedAt,
+        htmlUrl: `https://github.com/${repo.fullName}/pull/${review.prNumber}`,
+        body: '',
+        state: 'closed',
+        reviewStatus: review.status,
+        reviewScore: review.score ?? null,
+        reviewVerdict: review.verdict,
+        reviewId: review.id,
+      });
+    }
+
+    // Sort by most recently updated
+    merged.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+
+    return merged;
   }
 
   /**
