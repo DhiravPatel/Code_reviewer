@@ -2,7 +2,6 @@ import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import fastifyCookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
-import fastifyOauth2 from '@fastify/oauth2';
 import fastifyRawBody from 'fastify-raw-body';
 import { router } from './routes';
 import { env } from './config/env';
@@ -42,26 +41,7 @@ export const buildApp = async () => {
     },
   });
 
-  // Register Google OAuth2 only when credentials are configured
-  if (env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET) {
-    await fastify.register(fastifyOauth2, {
-      name: 'googleOAuth2',
-      credentials: {
-        client: {
-          id: env.GOOGLE_CLIENT_ID,
-          secret: env.GOOGLE_CLIENT_SECRET,
-        },
-        auth: (fastifyOauth2 as any).GOOGLE_CONFIGURATION,
-      },
-      startRedirectPath: '/api/v1/auth/google',
-      callbackUri: env.GOOGLE_REDIRECT_URI,
-      scope: ['profile', 'email'],
-      // Cross-site cookies (Google → our backend domain) require sameSite=none + secure
-      cookie: env.IS_PRODUCTION
-        ? { secure: true, sameSite: 'none' as const, httpOnly: true, path: '/' }
-        : { secure: false, sameSite: 'lax' as const, httpOnly: true, path: '/' },
-    });
-  } else {
+  if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
     fastify.log.warn('Google OAuth is disabled: GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET is missing.');
   }
 
