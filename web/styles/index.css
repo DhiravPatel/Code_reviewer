@@ -465,3 +465,284 @@
 .light-theme .btn-primary:hover {
   box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
 }
+
+/* =============================================
+   MODERN LANDING ANIMATIONS
+   ============================================= */
+
+/* Aurora / animated gradient background */
+.aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.aurora::before,
+.aurora::after {
+  content: '';
+  position: absolute;
+  width: 60vw;
+  height: 60vw;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.35;
+  animation: auroraDrift 20s ease-in-out infinite;
+}
+
+.aurora::before {
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.6), transparent 70%);
+  top: -20%;
+  left: -10%;
+}
+
+.aurora::after {
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.5), transparent 70%);
+  bottom: -20%;
+  right: -10%;
+  animation-delay: -10s;
+}
+
+@keyframes auroraDrift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(10%, -10%) rotate(120deg); }
+  66% { transform: translate(-10%, 10%) rotate(240deg); }
+}
+
+/* Animated gradient text flow */
+.gradient-flow {
+  background: linear-gradient(
+    90deg,
+    #10b981 0%,
+    #06b6d4 25%,
+    #8b5cf6 50%,
+    #06b6d4 75%,
+    #10b981 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientFlow 6s linear infinite;
+}
+
+@keyframes gradientFlow {
+  to { background-position: 200% center; }
+}
+
+/* Reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Card hover tilt effect with glow */
+.tilt-card {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tilt-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    600px circle at var(--x, 50%) var(--y, 50%),
+    rgba(16, 185, 129, 0.12),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.tilt-card:hover::before {
+  opacity: 1;
+}
+
+.tilt-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Shimmer effect for buttons */
+.shimmer-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+.shimmer-btn:hover::after {
+  left: 100%;
+}
+
+/* Marquee scroll */
+.marquee {
+  display: flex;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+}
+
+.marquee-track {
+  display: flex;
+  animation: marqueeScroll 30s linear infinite;
+  gap: 3rem;
+  flex-shrink: 0;
+}
+
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Spotlight for hero */
+.spotlight {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(16, 185, 129, 0.08),
+    transparent 50%
+  );
+  pointer-events: none;
+  transition: background 0.1s ease;
+}
+
+/* Animated underline for links */
+.animated-link {
+  position: relative;
+  display: inline-block;
+}
+
+.animated-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg, #10b981, #06b6d4);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animated-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Floating badges */
+@keyframes floatSoft {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(0.5deg); }
+}
+
+.float-soft {
+  animation: floatSoft 4s ease-in-out infinite;
+}
+
+/* Glow pulse ring */
+@keyframes glowRing {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgba(16, 185, 129, 0);
+  }
+}
+
+.glow-ring {
+  animation: glowRing 2s ease-out infinite;
+}
+
+/* Scale-up on scroll reveal */
+.scale-reveal {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scale-reveal.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Noise texture overlay */
+.noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.015;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Step number pulse */
+@keyframes stepPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.3); }
+  50% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
+}
+
+.step-pulse {
+  animation: stepPulse 3s ease-in-out infinite;
+}
+
+/* Dotted connector line animation */
+@keyframes dotFlow {
+  from { background-position: 0 0; }
+  to { background-position: 40px 0; }
+}
+
+.dotted-flow {
+  background-image: linear-gradient(
+    90deg,
+    rgba(16, 185, 129, 0.4) 50%,
+    transparent 50%
+  );
+  background-size: 10px 2px;
+  background-repeat: repeat-x;
+  animation: dotFlow 1.5s linear infinite;
+}
