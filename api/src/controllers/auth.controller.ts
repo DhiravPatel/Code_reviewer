@@ -5,14 +5,26 @@ import { env } from '../config/env';
 import '@fastify/cookie';
 import '@fastify/jwt';
 
-/** Shared cookie options — single source of truth */
+/** Shared cookie options — single source of truth
+ *  Cross-site cookies (frontend + backend on different domains) require:
+ *  - sameSite: 'none' so browser sends the cookie cross-site
+ *  - secure: true (browsers reject sameSite=none without secure)
+ *  - no `domain` attribute — let it default to the backend host
+ */
 function getCookieOptions() {
+  if (env.IS_PRODUCTION) {
+    return {
+      path: '/',
+      secure: true,
+      httpOnly: true,
+      sameSite: 'none' as const,
+    };
+  }
   return {
     path: '/',
-    secure: env.IS_PRODUCTION,
+    secure: false,
     httpOnly: true,
     sameSite: 'lax' as const,
-    ...(env.IS_PRODUCTION && env.COOKIE_DOMAIN ? { domain: env.COOKIE_DOMAIN } : {}),
   };
 }
 

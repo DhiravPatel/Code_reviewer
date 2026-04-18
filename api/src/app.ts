@@ -56,6 +56,10 @@ export const buildApp = async () => {
       startRedirectPath: '/api/v1/auth/google',
       callbackUri: env.GOOGLE_REDIRECT_URI,
       scope: ['profile', 'email'],
+      // Cross-site cookies (Google → our backend domain) require sameSite=none + secure
+      cookie: env.IS_PRODUCTION
+        ? { secure: true, sameSite: 'none' as const, httpOnly: true, path: '/' }
+        : { secure: false, sameSite: 'lax' as const, httpOnly: true, path: '/' },
     });
   } else {
     fastify.log.warn('Google OAuth is disabled: GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET is missing.');
