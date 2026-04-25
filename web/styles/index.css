@@ -8,67 +8,68 @@
 
 :root,
 .dark-theme {
-  --bg-primary: #020617;
-  --bg-secondary: #0f172a;
-  --bg-surface: #1e293b;
-  --bg-surface-hover: #334155;
-  --bg-card: rgba(30, 41, 59, 0.6);
-  --bg-card-solid: #1e293b;
-  --bg-input: rgba(30, 41, 59, 0.8);
-  --bg-overlay: rgba(2, 6, 23, 0.8);
+  /* Deeper, richer surfaces with proper layering */
+  --bg-primary: #0a0d14;
+  --bg-secondary: #11151d;
+  --bg-surface: #161b25;
+  --bg-surface-hover: #1d2330;
+  --bg-card: #11151d;
+  --bg-card-solid: #11151d;
+  --bg-input: #161b25;
+  --bg-overlay: rgba(10, 13, 20, 0.85);
 
-  --border-primary: rgba(51, 65, 85, 0.5);
-  --border-subtle: rgba(51, 65, 85, 0.3);
+  --border-primary: rgba(148, 163, 184, 0.12);
+  --border-subtle: rgba(148, 163, 184, 0.08);
   --border-hover: rgba(16, 185, 129, 0.4);
 
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --text-faint: #475569;
+  --text-primary: #e6edf3;
+  --text-secondary: #9ba8b8;
+  --text-muted: #6d7888;
+  --text-faint: #4f5867;
 
-  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
-  --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
-  --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.3);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(148, 163, 184, 0.04);
+  --shadow-hover: 0 8px 24px -4px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 24px rgba(16, 185, 129, 0.2);
 
-  --scrollbar-track: #0f172a;
-  --scrollbar-thumb: #334155;
-  --scrollbar-thumb-hover: #475569;
+  --scrollbar-track: #0a0d14;
+  --scrollbar-thumb: #2a3140;
+  --scrollbar-thumb-hover: #3a4253;
 
-  --code-bg: #0f172a;
-  --code-add-bg: rgba(16, 185, 129, 0.05);
-  --code-remove-bg: rgba(239, 68, 68, 0.05);
+  --code-bg: #0a0d14;
+  --code-add-bg: rgba(16, 185, 129, 0.07);
+  --code-remove-bg: rgba(239, 68, 68, 0.07);
 }
 
 .light-theme {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-surface: #f1f5f9;
-  --bg-surface-hover: #e2e8f0;
-  --bg-card: rgba(255, 255, 255, 0.9);
+  --bg-primary: #fbfbfd;
+  --bg-secondary: #f5f6f8;
+  --bg-surface: #ffffff;
+  --bg-surface-hover: #f5f6f8;
+  --bg-card: #ffffff;
   --bg-card-solid: #ffffff;
-  --bg-input: rgba(241, 245, 249, 0.9);
-  --bg-overlay: rgba(255, 255, 255, 0.9);
+  --bg-input: #f5f6f8;
+  --bg-overlay: rgba(255, 255, 255, 0.92);
 
-  --border-primary: rgba(203, 213, 225, 0.8);
-  --border-subtle: rgba(226, 232, 240, 0.6);
-  --border-hover: rgba(16, 185, 129, 0.5);
+  --border-primary: rgba(15, 23, 42, 0.10);
+  --border-subtle: rgba(15, 23, 42, 0.06);
+  --border-hover: rgba(16, 185, 129, 0.45);
 
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
-  --text-faint: #94a3b8;
+  --text-primary: #0d1117;
+  --text-secondary: #555f6d;
+  --text-muted: #7b8693;
+  --text-faint: #a3aab4;
 
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.06);
-  --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.15);
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(15, 23, 42, 0.04);
+  --shadow-hover: 0 6px 16px -4px rgba(15, 23, 42, 0.08);
+  --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.12);
 
-  --scrollbar-track: #f1f5f9;
-  --scrollbar-thumb: #cbd5e1;
-  --scrollbar-thumb-hover: #94a3b8;
+  --scrollbar-track: #f5f6f8;
+  --scrollbar-thumb: #d0d6de;
+  --scrollbar-thumb-hover: #a3aab4;
 
-  --code-bg: #f8fafc;
-  --code-add-bg: rgba(16, 185, 129, 0.08);
-  --code-remove-bg: rgba(239, 68, 68, 0.08);
+  --code-bg: #fbfbfd;
+  --code-add-bg: rgba(16, 185, 129, 0.06);
+  --code-remove-bg: rgba(239, 68, 68, 0.06);
 }
 
 /* =============================================

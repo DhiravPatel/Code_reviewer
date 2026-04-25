@@ -1,30 +1,161 @@
-import { useState, useEffect } from 'react'
-import { RefreshCw, Star, GitBranch, ExternalLink, Lock, Globe, CheckCircle, Search, Loader2, AlertCircle } from 'lucide-react'
+import { useState, useEffect, useMemo } from 'react'
+import {
+  RefreshCw, Star, ExternalLink, Lock, Search, Loader2, AlertCircle,
+  Code2, GitFork, Github, ArrowRight, X, Check
+} from 'lucide-react'
 import { api } from '../../shared/api/axios'
 import { useAuth } from '../../shared/context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 
 const LANGUAGE_COLORS = {
-  JavaScript: '#f1e05a',
-  TypeScript: '#3178c6',
-  Python: '#3572A5',
-  Go: '#00ADD8',
-  Rust: '#dea584',
-  Java: '#b07219',
-  Ruby: '#701516',
-  PHP: '#4F5D95',
-  'C++': '#f34b7d',
-  C: '#555555',
-  'C#': '#178600',
-  Swift: '#F05138',
-  Kotlin: '#A97BFF',
-  HTML: '#e34c26',
-  CSS: '#563d7c',
-  Shell: '#89e051',
-  Dart: '#00B4AB',
-  Vue: '#41b883',
+  JavaScript: '#f1e05a', TypeScript: '#3178c6', Python: '#3572A5',
+  Go: '#00ADD8', Rust: '#dea584', Java: '#b07219', Ruby: '#701516',
+  PHP: '#4F5D95', 'C++': '#f34b7d', C: '#555555', 'C#': '#178600',
+  Swift: '#F05138', Kotlin: '#A97BFF', HTML: '#e34c26', CSS: '#563d7c',
+  Shell: '#89e051', Dart: '#00B4AB', Vue: '#41b883',
 }
 
+function timeAgoShort(dateStr) {
+  if (!dateStr) return ''
+  const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000)
+  if (diff < 60) return 'now'
+  if (diff < 3600) return `${Math.floor(diff / 60)}m`
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h`
+  if (diff < 30 * 86400) return `${Math.floor(diff / 86400)}d`
+  if (diff < 365 * 86400) return `${Math.floor(diff / (30 * 86400))}mo`
+  return `${Math.floor(diff / (365 * 86400))}y`
+}
+
+// ─── Skeleton row ──────────────────────────────────────────────
+function RowSkeleton() {
+  return (
+    <div className="flex items-center gap-4 px-5 py-3.5 border-b t-border-subtle animate-pulse last:border-b-0">
+      <div className="w-8 h-8 rounded-md bg-[var(--bg-input)] flex-shrink-0" />
+      <div className="flex-1 min-w-0 space-y-2">
+        <div className="h-3.5 w-2/5 bg-[var(--bg-input)] rounded" />
+        <div className="h-3 w-3/5 bg-[var(--bg-input)] opacity-60 rounded" />
+      </div>
+      <div className="w-20 h-7 bg-[var(--bg-input)] rounded-md flex-shrink-0" />
+    </div>
+  )
+}
+
+// ─── Empty state ───────────────────────────────────────────────
+function StateContainer({ icon: Icon, title, description, action }) {
+  return (
+    <div className="flex flex-col items-center justify-center text-center py-20 px-6">
+      <div className="w-12 h-12 rounded-xl t-bg-input flex items-center justify-center mb-4">
+        <Icon size={20} className="t-text-muted" />
+      </div>
+      <h3 className="text-base font-semibold t-text mb-1.5">{title}</h3>
+      <p className="t-text-muted text-sm max-w-sm mb-5 leading-relaxed">{description}</p>
+      {action}
+    </div>
+  )
+}
+
+// ─── Repo Row ──────────────────────────────────────────────────
+function RepoRow({ repo, isToggling, canEnable, onToggle }) {
+  const langColor = LANGUAGE_COLORS[repo.language] || '#94a3b8'
+
+  return (
+    <div className="group flex items-center gap-4 px-5 py-3.5 border-b t-border-subtle hover:bg-[var(--bg-surface-hover)] transition-colors duration-150 last:border-b-0">
+      {/* Left: icon + name */}
+      <div className="flex items-center gap-3 min-w-0 flex-1">
+        <div className="w-8 h-8 rounded-md t-bg-input flex items-center justify-center flex-shrink-0">
+          <Code2 size={14} className="t-text-muted" />
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2 min-w-0">
+            <a
+              href={repo.htmlUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="text-[13.5px] font-semibold t-text hover:text-brand-400 transition-colors truncate"
+            >
+              {repo.name}
+            </a>
+            {repo.isPrivate && (
+              <Lock size={11} className="t-text-muted flex-shrink-0" />
+            )}
+            {repo.enabled && (
+              <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-brand-500/10 text-brand-400 flex-shrink-0">
+                <span className="w-1 h-1 rounded-full bg-brand-400" />
+                Active
+              </span>
+            )}
+          </div>
+          <p className="text-xs t-text-muted truncate mt-0.5">
+            {repo.fullName}
+            {repo.description && (
+              <>
+                <span className="opacity-60 mx-1.5">·</span>
+                <span>{repo.description}</span>
+              </>
+            )}
+          </p>
+        </div>
+      </div>
+
+      {/* Middle: stats (large screens) */}
+      <div className="hidden md:flex items-center gap-5 text-xs t-text-muted flex-shrink-0 w-[280px] justify-end">
+        {repo.language && (
+          <div className="flex items-center gap-1.5 min-w-[80px]">
+            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: langColor }} />
+            <span className="t-text-secondary truncate">{repo.language}</span>
+          </div>
+        )}
+        <div className="flex items-center gap-1 min-w-[44px] justify-end">
+          <Star size={11} />
+          <span className="tabular-nums t-text-secondary">{(repo.stars || 0).toLocaleString()}</span>
+        </div>
+        <div className="flex items-center gap-1 min-w-[40px] justify-end">
+          <GitFork size={11} />
+          <span className="tabular-nums t-text-secondary">{repo.forks || 0}</span>
+        </div>
+        {repo.updatedAt && (
+          <div className="text-[11px] t-text-faint min-w-[28px] text-right">
+            {timeAgoShort(repo.updatedAt)}
+          </div>
+        )}
+      </div>
+
+      {/* Right: actions */}
+      <div className="flex items-center gap-1 flex-shrink-0">
+        <a
+          href={repo.htmlUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="opacity-0 group-hover:opacity-100 w-7 h-7 rounded-md flex items-center justify-center t-text-muted hover:t-text hover:t-bg-input transition-all"
+          title="Open on GitHub"
+        >
+          <ExternalLink size={12} />
+        </a>
+        <button
+          onClick={() => onToggle(repo)}
+          disabled={isToggling || (!canEnable && !repo.enabled)}
+          className={`inline-flex items-center justify-center gap-1.5 h-7 px-3 rounded-md text-xs font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap min-w-[78px] border ${
+            repo.enabled
+              ? 't-bg-input t-border-subtle t-text-secondary hover:text-red-400 hover:border-red-500/30'
+              : 'border-transparent bg-brand-500 hover:bg-brand-600 text-white'
+          }`}
+        >
+          {isToggling ? (
+            <Loader2 size={11} className="animate-spin" />
+          ) : repo.enabled ? (
+            <Check size={11} />
+          ) : null}
+          {isToggling ? '' : repo.enabled ? 'Enabled' : !canEnable ? 'Limit' : 'Enable'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ─── Main Page ─────────────────────────────────────────────────
 export default function RepositoriesPage() {
   const { githubConnected } = useAuth()
   const navigate = useNavigate()
@@ -35,6 +166,7 @@ export default function RepositoriesPage() {
   const [enabledCount, setEnabledCount] = useState(0)
   const [togglingId, setTogglingId] = useState(null)
   const [refreshing, setRefreshing] = useState(false)
+  const [filter, setFilter] = useState('all')
 
   const fetchRepos = async () => {
     try {
@@ -69,9 +201,7 @@ export default function RepositoriesPage() {
     try {
       if (repo.enabled) {
         await api.post('/repos/disable', { githubRepoId: repo.githubRepoId })
-        setRepos((prev) =>
-          prev.map((r) => r.githubRepoId === repo.githubRepoId ? { ...r, enabled: false } : r)
-        )
+        setRepos((p) => p.map((r) => (r.githubRepoId === repo.githubRepoId ? { ...r, enabled: false } : r)))
         setEnabledCount((c) => c - 1)
       } else {
         await api.post('/repos/enable', {
@@ -84,9 +214,7 @@ export default function RepositoriesPage() {
           isPrivate: repo.isPrivate,
           defaultBranch: repo.defaultBranch,
         })
-        setRepos((prev) =>
-          prev.map((r) => r.githubRepoId === repo.githubRepoId ? { ...r, enabled: true } : r)
-        )
+        setRepos((p) => p.map((r) => (r.githubRepoId === repo.githubRepoId ? { ...r, enabled: true } : r)))
         setEnabledCount((c) => c + 1)
       }
     } catch (err) {
@@ -97,199 +225,187 @@ export default function RepositoriesPage() {
     }
   }
 
-  const filteredRepos = repos.filter((r) =>
-    r.fullName.toLowerCase().includes(search.toLowerCase()) ||
-    (r.description || '').toLowerCase().includes(search.toLowerCase())
-  )
+  const filteredRepos = useMemo(() => {
+    return repos.filter((r) => {
+      if (filter === 'enabled' && !r.enabled) return false
+      if (filter === 'disabled' && r.enabled) return false
+      if (search) {
+        const q = search.toLowerCase()
+        return (
+          r.fullName.toLowerCase().includes(q) ||
+          r.name.toLowerCase().includes(q) ||
+          (r.description || '').toLowerCase().includes(q)
+        )
+      }
+      return true
+    })
+  }, [repos, filter, search])
 
-  // Not connected state
-  if (!githubConnected) {
+  // ─── Not connected ──────────────────────────────────────────
+  if (!githubConnected && !loading) {
     return (
-      <div className="p-6 lg:p-8 max-w-7xl animate-fade-in">
-        <div className="t-card p-12 text-center">
-          <GitBranch size={48} className="t-text-secondary mx-auto mb-4" />
-          <h3 className="text-lg font-semibold t-text mb-2">GitHub Not Connected</h3>
-          <p className="t-text-muted text-sm mb-6">Connect your GitHub account to see your repositories.</p>
-          <button
-            onClick={() => navigate('/dashboard/integrations')}
-            className="btn-primary text-sm px-6"
-          >
-            Connect GitHub
-          </button>
+      <div className="max-w-5xl mx-auto px-6 lg:px-8 py-10 animate-fade-in">
+        <div className="mb-8">
+          <h1 className="text-2xl font-semibold t-text mb-1 tracking-tight">Repositories</h1>
+          <p className="t-text-muted text-sm">Enable AI code review on up to 5 repositories.</p>
         </div>
-      </div>
-    )
-  }
-
-  // Loading state
-  if (loading) {
-    return (
-      <div className="p-6 lg:p-8 max-w-7xl animate-fade-in">
-        <div className="flex items-center justify-center py-20">
-          <Loader2 size={32} className="animate-spin text-brand-400" />
-          <span className="ml-3 t-text-muted">Fetching repositories from GitHub...</span>
-        </div>
+        <StateContainer
+          icon={Github}
+          title="Connect GitHub"
+          description="Link your GitHub account to view your repositories and enable AI reviews."
+          action={
+            <button
+              onClick={() => navigate('/dashboard/integrations')}
+              className="inline-flex items-center gap-2 h-9 px-4 rounded-md bg-brand-500 hover:bg-brand-600 text-white text-sm font-medium transition-all"
+            >
+              <Github size={14} />
+              Connect GitHub
+              <ArrowRight size={13} />
+            </button>
+          }
+        />
       </div>
     )
   }
 
   return (
-    <div className="p-6 lg:p-8 max-w-7xl animate-fade-in">
-      {/* Error toast */}
+    <div className="max-w-5xl mx-auto px-6 lg:px-8 py-10 animate-fade-in">
+      {/* Error banner */}
       {error && (
-        <div className="mb-6 p-4 rounded-xl border bg-red-500/10 border-red-500/20 text-red-400 text-sm font-medium flex items-center gap-2 animate-fade-in">
-          <AlertCircle size={16} />
-          {error}
+        <div className="mb-5 p-3.5 rounded-lg border bg-red-500/10 border-red-500/20 text-red-400 text-sm flex items-center gap-2">
+          <AlertCircle size={14} />
+          <span className="flex-1">{error}</span>
+          <button onClick={() => setError(null)} className="hover:text-red-300">
+            <X size={14} />
+          </button>
         </div>
       )}
 
       {/* Header */}
-      <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <header className="mb-6 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold t-text tracking-tight mb-1">Repositories</h1>
-          <p className="t-text-muted">
-            {repos.length} repositories found &middot;{' '}
-            <span className="text-brand-400 font-medium">{enabledCount}/5 enabled</span> for AI review
+          <h1 className="text-2xl font-semibold t-text mb-1 tracking-tight">Repositories</h1>
+          <p className="t-text-muted text-sm">
+            {loading ? (
+              <span>Loading…</span>
+            ) : (
+              <>
+                <span className="t-text-secondary">{repos.length}</span> repositories
+                <span className="opacity-50 mx-1.5">·</span>
+                <span className="text-brand-400 font-medium">{enabledCount} of 5</span> enabled for AI review
+              </>
+            )}
           </p>
         </div>
         <button
           onClick={handleRefresh}
-          disabled={refreshing}
-          className="btn-primary text-sm"
+          disabled={refreshing || loading}
+          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md t-bg-input border t-border-subtle t-text-secondary hover:t-text text-xs font-medium transition-all disabled:opacity-50 self-start"
         >
-          <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
-          {refreshing ? 'Refreshing...' : 'Refresh'}
+          <RefreshCw size={12} className={refreshing ? 'animate-spin' : ''} />
+          {refreshing ? 'Refreshing' : 'Refresh'}
         </button>
-      </div>
+      </header>
 
-      {/* Search */}
-      <div className="relative mb-6">
-        <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 t-text-muted" />
-        <input
-          type="text"
-          placeholder="Search repositories..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-11 pr-4 py-3 rounded-xl t-bg-input border t-border-subtle t-text placeholder:t-text-muted focus:outline-none focus:border-brand-500/50 text-sm transition-colors"
-        />
-      </div>
-
-      {/* Enabled repos limit indicator */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-xs t-text-muted font-medium">AI Review Slots</span>
-          <span className="text-xs text-brand-400 font-semibold">{enabledCount}/5</span>
+      {/* Slot meter card */}
+      <div className="mb-5 t-bg-card border t-border-subtle rounded-lg px-4 py-3 flex items-center gap-4">
+        <div className="flex flex-col gap-1.5 flex-1">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] uppercase tracking-wider font-semibold t-text-muted">AI Review Slots</span>
+            <span className={`text-xs font-bold tabular-nums ${enabledCount >= 5 ? 'text-amber-400' : 'text-brand-400'}`}>
+              {enabledCount}<span className="t-text-muted font-medium"> / 5</span>
+            </span>
+          </div>
+          <div className="h-1 rounded-full t-bg-input overflow-hidden">
+            <div
+              className={`h-full rounded-full transition-all duration-500 ${
+                enabledCount >= 5 ? 'bg-amber-500' : 'bg-gradient-to-r from-brand-500 to-cyan-500'
+              }`}
+              style={{ width: `${(enabledCount / 5) * 100}%` }}
+            />
+          </div>
         </div>
-        <div className="w-full h-1.5 rounded-full bg-surface-200 dark:bg-surface-800 overflow-hidden">
-          <div
-            className={`h-full rounded-full transition-all duration-500 ${
-              enabledCount >= 5 ? 'bg-red-500' : 'bg-gradient-to-r from-brand-500 to-cyan-500'
-            }`}
-            style={{ width: `${(enabledCount / 5) * 100}%` }}
+      </div>
+
+      {/* Search + Filter row */}
+      <div className="mb-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <div className="relative flex-1">
+          <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 t-text-muted pointer-events-none" />
+          <input
+            type="text"
+            placeholder="Search repositories..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-9 pr-3 h-9 rounded-md t-bg-input border t-border-subtle t-text placeholder:t-text-muted focus:outline-none focus:border-brand-500/50 text-sm transition-colors"
           />
         </div>
-      </div>
-
-      {/* Repos Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
-        {filteredRepos.map((repo, idx) => {
-          const isToggling = togglingId === repo.githubRepoId
-          const canEnable = enabledCount < 5 || repo.enabled
-
-          return (
-            <div
-              key={repo.githubRepoId}
-              className={`t-bg-card border p-5 lg:p-6 rounded-2xl shadow-sm flex flex-col transition-all hover:shadow-md ${
-                repo.enabled ? 'border-brand-500/30 bg-brand-500/[0.02]' : 't-border-subtle'
+        <div className="flex items-center gap-0.5 t-bg-input border t-border-subtle rounded-md p-0.5">
+          {[
+            { key: 'all', label: 'All' },
+            { key: 'enabled', label: 'Enabled' },
+            { key: 'disabled', label: 'Available' },
+          ].map((f) => (
+            <button
+              key={f.key}
+              onClick={() => setFilter(f.key)}
+              className={`px-3 h-7 rounded text-xs font-medium transition-all whitespace-nowrap ${
+                filter === f.key ? 't-bg-surface t-text shadow-sm' : 't-text-muted hover:t-text'
               }`}
-              style={{ animationDelay: `${idx * 40}ms` }}
             >
-              {/* Header */}
-              <div className="flex justify-between items-start mb-3">
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    {repo.isPrivate ? (
-                      <Lock size={13} className="t-text-muted flex-shrink-0" />
-                    ) : (
-                      <Globe size={13} className="t-text-muted flex-shrink-0" />
-                    )}
-                    <h3 className="text-base font-semibold t-text truncate">{repo.name}</h3>
-                  </div>
-                  <p className="t-text-faint text-xs font-mono truncate">{repo.fullName}</p>
-                </div>
-                {repo.enabled && (
-                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-1 rounded-md bg-brand-500/15 text-brand-400 border border-brand-500/20 flex items-center gap-1 flex-shrink-0 ml-2">
-                    <CheckCircle size={10} />
-                    Active
-                  </span>
-                )}
-              </div>
-
-              {/* Description */}
-              <p className="t-text-muted text-sm mb-4 line-clamp-2 leading-relaxed flex-1">
-                {repo.description || 'No description'}
-              </p>
-
-              {/* Stats row */}
-              <div className="flex gap-4 mb-4">
-                {repo.language && (
-                  <div className="flex items-center gap-1.5">
-                    <span
-                      className="w-2.5 h-2.5 rounded-full"
-                      style={{ backgroundColor: LANGUAGE_COLORS[repo.language] || '#8b8b8b' }}
-                    />
-                    <span className="t-text-secondary text-xs font-medium">{repo.language}</span>
-                  </div>
-                )}
-                <div className="flex items-center gap-1 t-text-muted">
-                  <Star size={13} />
-                  <span className="text-xs font-medium t-text-secondary">{repo.stars?.toLocaleString() || 0}</span>
-                </div>
-                <div className="flex items-center gap-1 t-text-muted">
-                  <GitBranch size={13} />
-                  <span className="text-xs font-medium t-text-secondary">{repo.forks || 0}</span>
-                </div>
-              </div>
-
-              {/* Action */}
-              <div className="flex items-center gap-2 pt-4 border-t t-border-subtle">
-                <button
-                  onClick={() => handleToggle(repo)}
-                  disabled={isToggling || (!canEnable && !repo.enabled)}
-                  className={`flex-1 py-2.5 rounded-xl font-medium text-sm transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
-                    repo.enabled
-                      ? 'border border-red-500/30 text-red-400 hover:bg-red-500/10'
-                      : 'bg-brand-500 hover:bg-brand-600 text-white shadow-sm shadow-brand-500/20'
-                  }`}
-                >
-                  {isToggling ? (
-                    <Loader2 size={14} className="animate-spin" />
-                  ) : null}
-                  {isToggling
-                    ? repo.enabled ? 'Disabling...' : 'Enabling...'
-                    : repo.enabled ? 'Disable Review' : enabledCount >= 5 ? 'Limit Reached (5/5)' : 'Enable AI Review'}
-                </button>
-                <a
-                  href={repo.htmlUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-xl t-bg-input border t-border-subtle flex items-center justify-center t-text-muted hover:t-text transition-colors flex-shrink-0"
-                >
-                  <ExternalLink size={14} />
-                </a>
-              </div>
-            </div>
-          )
-        })}
+              {f.label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Empty search */}
-      {filteredRepos.length === 0 && repos.length > 0 && (
-        <div className="t-card p-12 text-center">
-          <Search size={48} className="t-text-secondary mx-auto mb-4 opacity-50" />
-          <h3 className="text-lg font-semibold t-text mb-2">No repositories match your search</h3>
-          <p className="t-text-muted text-sm">Try a different search term.</p>
-        </div>
+      {/* List */}
+      <div className="t-bg-card border t-border-subtle rounded-lg overflow-hidden">
+        {loading ? (
+          <div>
+            {Array.from({ length: 7 }).map((_, i) => <RowSkeleton key={i} />)}
+          </div>
+        ) : filteredRepos.length === 0 ? (
+          repos.length === 0 ? (
+            <StateContainer
+              icon={Code2}
+              title="No repositories found"
+              description="We couldn't find any repositories on your GitHub account."
+            />
+          ) : (
+            <StateContainer
+              icon={Search}
+              title="No matches"
+              description="Try adjusting your search or filter."
+              action={
+                <button
+                  onClick={() => { setSearch(''); setFilter('all') }}
+                  className="text-brand-400 hover:text-brand-300 text-sm font-medium"
+                >
+                  Clear filters
+                </button>
+              }
+            />
+          )
+        ) : (
+          <div>
+            {filteredRepos.map((repo) => (
+              <RepoRow
+                key={repo.githubRepoId}
+                repo={repo}
+                isToggling={togglingId === repo.githubRepoId}
+                canEnable={enabledCount < 5 || repo.enabled}
+                onToggle={handleToggle}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Footer count */}
+      {!loading && filteredRepos.length > 0 && (
+        <p className="text-center text-xs t-text-muted mt-4">
+          Showing {filteredRepos.length} of {repos.length}
+        </p>
       )}
     </div>
   )

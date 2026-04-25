@@ -18,7 +18,7 @@ export default function LoginPage() {
   const { isAuthenticated, loading } = useAuth()
   const [mounted, setMounted] = useState(false)
 
-  const from = location.state?.from?.pathname || '/dashboard'
+  const from = location.state?.from?.pathname || '/dashboard/integrations'
 
   useEffect(() => {
     setMounted(true)

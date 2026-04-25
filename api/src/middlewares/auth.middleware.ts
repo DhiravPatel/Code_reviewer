@@ -3,17 +3,20 @@ import { errorResponse } from '../utils/response';
 import '@fastify/jwt';
 
 /**
- * Auth middleware — verifies the standard JWT from cookies
- * Attaches the authenticated user to `request.user` for downstream handlers.
+ * Verifies the access JWT from the `token` cookie.
+ * Rejects refresh tokens (those have type:'refresh' and must use /auth/refresh).
  */
 export const authMiddleware = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
-    // fastify-jwt decorator validates the cookie (or auth header)
     await request.jwtVerify();
+    const payload = request.user as any;
+
+    // Reject if this is a refresh token being used as an access token
+    // (legacy tokens without `type` are accepted as access for backward compat)
+    if (payload && payload.type && payload.type !== 'access') {
+      return reply.code(401).send(errorResponse('Invalid token type', 401));
+    }
   } catch (err) {
-    request.log.error(err, 'Auth middleware error');
-    return reply.code(401).send(
-      errorResponse('Authentication failed', 401)
-    );
+    return reply.code(401).send(errorResponse('Authentication failed', 401));
   }
 };
