@@ -6,15 +6,14 @@ import { env } from '../config/env';
 import '@fastify/cookie';
 import '@fastify/jwt';
 
-/**
- * Shared cookie options for the session `token` cookie.
- *
- * In production the frontend and backend are on different domains
- * (e.g. code-reviewer07.vercel.app and code-reviewer-backend07.vercel.app),
- * so we need sameSite:'none' + secure:true for the browser to send the cookie
- * on cross-site requests.
- */
-function getSessionCookieOptions() {
+// ─── Token Lifetimes ───────────────────────────────────────────
+const ACCESS_TOKEN_TTL_SECONDS = 15 * 60;          // 15 minutes
+const REFRESH_TOKEN_TTL_SECONDS = 3 * 24 * 60 * 60; // 3 days
+
+// ─── Cookie Helpers ────────────────────────────────────────────
+
+/** Base cookie options — cross-site safe in production. */
+function getBaseCookieOptions() {
   if (env.IS_PRODUCTION) {
     return {
       path: '/',
@@ -31,13 +30,48 @@ function getSessionCookieOptions() {
   };
 }
 
-/** Short-lived state cookie for OAuth CSRF protection */
-function getStateCookieOptions() {
-  return {
-    ...getSessionCookieOptions(),
-    maxAge: 60 * 10, // 10 minutes
-  };
+/** Short-lived access token cookie (15min). */
+function getAccessCookieOptions() {
+  return { ...getBaseCookieOptions(), maxAge: ACCESS_TOKEN_TTL_SECONDS };
 }
+
+/** Long-lived refresh token cookie (3 days). */
+function getRefreshCookieOptions() {
+  return { ...getBaseCookieOptions(), maxAge: REFRESH_TOKEN_TTL_SECONDS };
+}
+
+/** Short-lived OAuth CSRF state cookie. */
+function getStateCookieOptions() {
+  return { ...getBaseCookieOptions(), maxAge: 60 * 10 };
+}
+
+// ─── Token Helpers ─────────────────────────────────────────────
+
+/**
+ * Issue both access and refresh tokens for a user, set them as cookies.
+ * Access token has type:'access', refresh has type:'refresh'.
+ */
+async function issueSessionCookies(
+  reply: FastifyReply,
+  user: { id: string; email: string }
+): Promise<void> {
+  const basePayload = { id: user.id, email: user.email };
+
+  const accessToken = await reply.jwtSign(
+    { ...basePayload, type: 'access' },
+    { expiresIn: ACCESS_TOKEN_TTL_SECONDS }
+  );
+
+  const refreshToken = await reply.jwtSign(
+    { ...basePayload, type: 'refresh' },
+    { expiresIn: REFRESH_TOKEN_TTL_SECONDS }
+  );
+
+  reply.setCookie('token', accessToken, getAccessCookieOptions());
+  reply.setCookie('refresh_token', refreshToken, getRefreshCookieOptions());
+}
+
+// ─── Routes ────────────────────────────────────────────────────
 
 /**
  * GET /api/v1/auth/google
@@ -49,9 +83,7 @@ export const googleStart = async (_request: FastifyRequest, reply: FastifyReply)
       return reply.redirect(`${env.FRONTEND_URL}/login?error=oauth_not_configured`);
     }
 
-    // CSRF state token stored in a cookie and echoed in the redirect
     const state = crypto.randomBytes(32).toString('hex');
-
     reply.setCookie('g_oauth_state', state, getStateCookieOptions());
 
     const params = new URLSearchParams({
@@ -73,9 +105,6 @@ export const googleStart = async (_request: FastifyRequest, reply: FastifyReply)
 
 /**
  * GET /api/v1/auth/google/callback
- * Google redirects here after the user grants consent. We verify state, exchange
- * the code for an access token, fetch the user profile, upsert the user, and
- * issue a JWT session cookie before redirecting to the dashboard.
  */
 export const googleCallback = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
@@ -91,21 +120,18 @@ export const googleCallback = async (request: FastifyRequest, reply: FastifyRepl
     }
 
     if (!code || !state) {
-      request.log.warn('Google callback missing code or state');
       return reply.redirect(`${env.FRONTEND_URL}/login?error=auth_invalid_request`);
     }
 
-    // Verify state cookie matches the state in the query
     const cookieState = (request.cookies as any)?.g_oauth_state;
     if (!cookieState || cookieState !== state) {
-      request.log.warn({ cookieState, state }, 'Google state mismatch');
+      request.log.warn('Google state mismatch');
       return reply.redirect(`${env.FRONTEND_URL}/login?error=auth_state_mismatch`);
     }
 
-    // Clear the state cookie — one-time use
     reply.clearCookie('g_oauth_state', { path: '/' });
 
-    // Exchange authorization code for an access token
+    // Exchange code for token
     const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -126,30 +152,23 @@ export const googleCallback = async (request: FastifyRequest, reply: FastifyRepl
 
     const tokenData = (await tokenResponse.json()) as any;
     const accessToken = tokenData.access_token;
-
     if (!accessToken) {
-      request.log.error({ tokenData }, 'Google token response missing access_token');
       return reply.redirect(`${env.FRONTEND_URL}/login?error=auth_no_token`);
     }
 
-    // Fetch user profile from Google
+    // Fetch profile
     const profileResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
-
     if (!profileResponse.ok) {
-      request.log.error({ status: profileResponse.status }, 'Failed to fetch Google user profile');
       return reply.redirect(`${env.FRONTEND_URL}/login?error=auth_profile_fetch`);
     }
 
     const profile = (await profileResponse.json()) as any;
-
     if (!profile.email) {
-      request.log.error({ profile }, 'Google profile missing email');
       return reply.redirect(`${env.FRONTEND_URL}/login?error=auth_no_email`);
     }
 
-    // Upsert user in database
     const user = await AuthService.syncUser({
       email: profile.email,
       name: profile.name || profile.email.split('@')[0],
@@ -157,17 +176,9 @@ export const googleCallback = async (request: FastifyRequest, reply: FastifyRepl
       provider: 'google',
     });
 
-    // Create JWT session token
-    const jwtPayload = { id: user.id, email: user.email };
-    const signedToken = await reply.jwtSign(jwtPayload);
+    await issueSessionCookies(reply, { id: user.id, email: user.email });
 
-    // Set session cookie (cross-site in production)
-    reply.setCookie('token', signedToken, {
-      ...getSessionCookieOptions(),
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-    });
-
-    return reply.redirect(`${env.FRONTEND_URL}/dashboard`);
+    return reply.redirect(`${env.FRONTEND_URL}/dashboard/integrations`);
   } catch (error: any) {
     request.log.error({ err: error?.message, stack: error?.stack }, 'Google auth callback failed');
     return reply.redirect(`${env.FRONTEND_URL}/login?error=auth_failed`);
@@ -175,19 +186,60 @@ export const googleCallback = async (request: FastifyRequest, reply: FastifyRepl
 };
 
 /**
+ * POST /api/v1/auth/refresh
+ * Trade a valid refresh_token cookie for a fresh access token cookie.
+ * Returns 401 if the refresh token is missing/expired/invalid.
+ */
+export const refresh = async (request: FastifyRequest, reply: FastifyReply) => {
+  try {
+    const refreshToken = (request.cookies as any)?.refresh_token;
+    if (!refreshToken) {
+      return reply.code(401).send(errorResponse('No refresh token', 401));
+    }
+
+    let payload: any;
+    try {
+      payload = (request.server as any).jwt.verify(refreshToken);
+    } catch (err) {
+      request.log.warn('Invalid or expired refresh token');
+      return reply.code(401).send(errorResponse('Refresh token invalid or expired', 401));
+    }
+
+    if (payload?.type !== 'refresh' || !payload.id || !payload.email) {
+      return reply.code(401).send(errorResponse('Invalid refresh token payload', 401));
+    }
+
+    // Confirm the user still exists
+    const user = await AuthService.getUserById(payload.id);
+    if (!user) {
+      return reply.code(401).send(errorResponse('User no longer exists', 401));
+    }
+
+    // Issue a new access token (rotate access only — keep the same refresh until expiry)
+    const newAccessToken = await reply.jwtSign(
+      { id: user.id, email: user.email, type: 'access' },
+      { expiresIn: ACCESS_TOKEN_TTL_SECONDS }
+    );
+    reply.setCookie('token', newAccessToken, getAccessCookieOptions());
+
+    return reply.status(200).send(successResponse({ refreshed: true }, 'Access token refreshed'));
+  } catch (error) {
+    request.log.error(error, 'Refresh failed');
+    return reply.code(500).send(errorResponse('Refresh failed', 500));
+  }
+};
+
+/**
  * GET /api/v1/auth/me
- * Returns the currently authenticated user's profile + GitHub integration status.
  */
 export const getMe = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const authUser = request.user as any;
-
     if (!authUser?.id) {
       return reply.code(401).send(errorResponse('Not authenticated', 401));
     }
 
     const user = await AuthService.getUserWithIntegrations(authUser.id);
-
     if (!user) {
       return reply.code(404).send(errorResponse('User not found', 404));
     }
@@ -215,7 +267,8 @@ export const getMe = async (request: FastifyRequest, reply: FastifyReply) => {
  * POST /api/v1/auth/logout
  */
 export const logout = async (_request: FastifyRequest, reply: FastifyReply) => {
-  reply.clearCookie('token', getSessionCookieOptions());
+  reply.clearCookie('token', getBaseCookieOptions());
+  reply.clearCookie('refresh_token', getBaseCookieOptions());
   reply.clearCookie('g_oauth_state', { path: '/' });
 
   return reply.status(200).send(successResponse(null, 'Logged out successfully'));

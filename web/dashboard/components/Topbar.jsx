@@ -4,12 +4,7 @@ import { useAuth } from '../../shared/context/AuthContext'
 
 function getInitials(name) {
   if (!name) return '?'
-  return name
-    .split(' ')
-    .map((w) => w[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2)
+  return name.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2)
 }
 
 export default function Topbar() {
@@ -20,57 +15,51 @@ export default function Topbar() {
   const displayName = user?.name || 'User'
 
   return (
-    <div id="dashboard-topbar" className="h-16 t-bg-surface backdrop-blur-xl border-b t-border flex items-center justify-between px-6 flex-shrink-0 transition-colors duration-300">
-      {/* Left side — Mobile menu */}
-      <div className="flex items-center gap-4 flex-1">
-        <button className="md:hidden t-text-secondary hover:t-text transition-colors">
-          <Menu size={20} />
-        </button>
-      </div>
+    <div className="h-14 t-bg border-b t-border-subtle flex items-center justify-between px-4 lg:px-6 flex-shrink-0">
+      {/* Mobile menu */}
+      <button className="md:hidden w-8 h-8 rounded-md flex items-center justify-center t-text-secondary hover:t-text hover:t-bg-input transition-colors">
+        <Menu size={16} />
+      </button>
 
-      {/* Right Section */}
-      <div className="flex items-center gap-2">
+      <div className="flex-1" />
+
+      {/* Right side */}
+      <div className="flex items-center gap-1">
         {/* Theme toggle */}
         <button
-          id="theme-toggle"
           onClick={toggleTheme}
-          className="w-9 h-9 rounded-xl t-bg-input border t-border-subtle flex items-center justify-center t-text-secondary hover:t-text hover:bg-[var(--bg-surface-hover)] transition-all"
+          title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+          className="w-8 h-8 rounded-md flex items-center justify-center t-text-secondary hover:t-text hover:t-bg-input transition-colors"
         >
-          {isDark ? <Sun size={16} /> : <Moon size={16} />}
+          {isDark ? <Sun size={15} /> : <Moon size={15} />}
         </button>
 
         {/* Notifications */}
         <button
-          id="notifications-btn"
-          className="relative w-9 h-9 rounded-xl t-bg-input border t-border-subtle flex items-center justify-center t-text-secondary hover:t-text hover:bg-[var(--bg-surface-hover)] transition-all"
+          title="Notifications"
+          className="relative w-8 h-8 rounded-md flex items-center justify-center t-text-secondary hover:t-text hover:t-bg-input transition-colors"
         >
-          <Bell size={16} />
-          <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-            <span className="text-[9px] text-white font-bold">3</span>
-          </span>
+          <Bell size={15} />
+          <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full" />
         </button>
 
         {/* Divider */}
-        <div className="w-px h-8 t-bg-input mx-2 hidden sm:block border-l t-border-subtle" />
+        <div className="w-px h-5 t-bg-input mx-2 hidden sm:block" />
 
-        {/* User avatar */}
-        <button id="user-avatar" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+        {/* User */}
+        <div className="flex items-center gap-2.5 px-2">
           {user?.avatarUrl ? (
-            <img
-              src={user.avatarUrl}
-              alt={displayName}
-              className="w-9 h-9 rounded-xl object-cover shadow-glow"
-            />
+            <img src={user.avatarUrl} alt={displayName} className="w-7 h-7 rounded-full object-cover" />
           ) : (
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-cyan-500 flex items-center justify-center text-white font-bold text-sm shadow-glow">
+            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-brand-500 to-cyan-500 flex items-center justify-center text-white text-[10px] font-bold">
               {initials}
             </div>
           )}
           <div className="hidden sm:block text-left">
-            <p className="t-text text-sm font-medium leading-tight">{displayName}</p>
-            <p className="t-text-muted text-[11px]">Free Plan</p>
+            <p className="t-text text-[12.5px] font-medium leading-tight">{displayName}</p>
+            <p className="t-text-muted text-[10.5px] leading-tight">Free Plan</p>
           </div>
-        </button>
+        </div>
       </div>
     </div>
   )
