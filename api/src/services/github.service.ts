@@ -1,19 +1,37 @@
 import { env } from '../config/env';
 
 interface ReviewComment {
+  priority?: 'P1' | 'P2' | 'P3';
   type: string;
   severity: string;
   title: string;
   description: string;
   file: string;
-  line: number | null;
-  details: string[];
+  startLine?: number | null;
+  endLine?: number | null;
+  line?: number | null; // legacy
+  codeBefore?: string;
+  codeAfter?: string;
+  rationale?: string[];
+  details?: string[]; // legacy
+}
+
+interface FileOverview {
+  filename: string;
+  overview: string;
+  concerns: string[];
 }
 
 interface ReviewData {
   score: number;
   verdict: string;
+  confidenceScore?: number;
+  confidenceReason?: string;
   overallFeedback: string;
+  keyChanges?: string[];
+  issuesFound?: string[];
+  fileOverviews?: FileOverview[];
+  flowchart?: string | null;
   comments: ReviewComment[];
   summary: { criticalIssues: number; warnings: number; suggestions: number };
 }
@@ -216,47 +234,143 @@ export class GithubService {
   private static buildReviewCommentBody(review: ReviewData): string {
     const scoreEmoji = review.score >= 80 ? '🟢' : review.score >= 60 ? '🟡' : '🔴';
     const verdictText = review.verdict === 'approved' ? '✅ Approved' : '⚠️ Changes Requested';
+    const conf = review.confidenceScore || 0;
 
-    const lines: string[] = [
-      '## <img src="https://img.icons8.com/fluency/24/artificial-intelligence.png" width="20" /> CodeReview AI',
-      '',
-      `> ${review.overallFeedback || 'Review completed.'}`,
-      '',
-      '### Summary',
-      '',
-      `| Metric | Value |`,
-      `|--------|-------|`,
-      `| **Score** | ${scoreEmoji} **${review.score}/100** |`,
-      `| **Verdict** | ${verdictText} |`,
-      `| **Critical Issues** | ${review.summary.criticalIssues} |`,
-      `| **Warnings** | ${review.summary.warnings} |`,
-      `| **Suggestions** | ${review.summary.suggestions} |`,
-      '',
-    ];
+    const lines: string[] = [];
 
-    if (review.comments.length > 0) {
-      lines.push('### Review Comments', '');
+    // ─── Header ────────────────────────────────────────────
+    lines.push('## 🤖 CodeReview AI — Summary');
+    lines.push('');
+    lines.push(review.overallFeedback || 'Review completed.');
+    lines.push('');
 
-      for (const comment of review.comments) {
-        const icon = comment.type === 'security' ? '🔴' : comment.type === 'warning' ? '🟡' : '🔵';
-        const severity = comment.severity === 'critical' ? '**CRITICAL**' : comment.severity === 'warning' ? '**WARNING**' : 'info';
-        const fileRef = comment.file ? `\`${comment.file}${comment.line ? `:${comment.line}` : ''}\`` : '';
+    // ─── Key Changes ───────────────────────────────────────
+    if (review.keyChanges && review.keyChanges.length > 0) {
+      lines.push('**Key changes:**');
+      lines.push('');
+      for (const c of review.keyChanges) lines.push(`- ${c}`);
+      lines.push('');
+    }
 
-        lines.push(`#### ${icon} ${comment.title} ${fileRef ? `— ${fileRef}` : ''}`);
-        lines.push(`> ${severity}`);
+    // ─── Issues Found ──────────────────────────────────────
+    if (review.issuesFound && review.issuesFound.length > 0) {
+      lines.push('**Issues found:**');
+      lines.push('');
+      for (const i of review.issuesFound) lines.push(`- ${i}`);
+      lines.push('');
+    }
+
+    // ─── Confidence + Score Table ──────────────────────────
+    if (conf > 0) {
+      lines.push(`### Confidence Score: ${conf}/5`);
+      lines.push('');
+      if (review.confidenceReason) {
+        lines.push(review.confidenceReason);
         lines.push('');
-        lines.push(comment.description);
+      }
+    }
 
-        if (comment.details && comment.details.length > 0) {
+    lines.push('### Summary');
+    lines.push('');
+    lines.push('| Metric | Value |');
+    lines.push('|--------|-------|');
+    lines.push(`| **Score** | ${scoreEmoji} **${review.score}/100** |`);
+    lines.push(`| **Verdict** | ${verdictText} |`);
+    lines.push(`| **Critical Issues (P1)** | ${review.summary.criticalIssues} |`);
+    lines.push(`| **Warnings (P2)** | ${review.summary.warnings} |`);
+    lines.push(`| **Suggestions (P3)** | ${review.summary.suggestions} |`);
+    lines.push('');
+
+    // ─── Important Files Changed Table ─────────────────────
+    if (review.fileOverviews && review.fileOverviews.length > 0) {
+      lines.push('### Important Files Changed');
+      lines.push('');
+      lines.push('| Filename | Overview |');
+      lines.push('|----------|----------|');
+      for (const f of review.fileOverviews) {
+        const overview = f.overview.replace(/\|/g, '\\|').replace(/\n/g, ' ');
+        lines.push(`| \`${f.filename}\` | ${overview} |`);
+      }
+      lines.push('');
+    }
+
+    // ─── Mermaid Flowchart ─────────────────────────────────
+    if (review.flowchart && review.flowchart.trim()) {
+      lines.push('### Flowchart');
+      lines.push('');
+      lines.push('```mermaid');
+      lines.push(review.flowchart);
+      lines.push('```');
+      lines.push('');
+    }
+
+    // ─── Review Comments (with code suggestions) ───────────
+    if (review.comments.length > 0) {
+      lines.push('### Review Comments');
+      lines.push('');
+
+      for (const c of review.comments) {
+        const priority = c.priority || derivePriority(c);
+        const priorityBadge = priorityBadgeFor(priority);
+        const startLine = c.startLine ?? c.line;
+        const endLine = c.endLine ?? c.line;
+        const lineRef = startLine
+          ? `:${startLine}${endLine && endLine !== startLine ? `-${endLine}` : ''}`
+          : '';
+        const fileRef = c.file ? ` — \`${c.file}${lineRef}\`` : '';
+
+        lines.push(`#### ${priorityBadge} ${c.title}${fileRef}`);
+        lines.push('');
+        lines.push(c.description);
+        lines.push('');
+
+        // Rationale bullets (fall back to legacy `details`)
+        const reasons = (c.rationale && c.rationale.length > 0)
+          ? c.rationale
+          : (c.details || []);
+        if (reasons.length > 0) {
+          for (const r of reasons) lines.push(`- ${r}`);
           lines.push('');
-          for (const detail of comment.details) {
-            lines.push(`- ${detail}`);
-          }
         }
+
+        // Suggested code change
+        if (c.codeAfter && c.codeAfter.trim()) {
+          lines.push('<details><summary><b>Suggested change</b></summary>');
+          lines.push('');
+          if (c.codeBefore && c.codeBefore.trim()) {
+            lines.push('**Before:**');
+            lines.push('```');
+            lines.push(c.codeBefore);
+            lines.push('```');
+            lines.push('');
+          }
+          lines.push('**After:**');
+          lines.push('```');
+          lines.push(c.codeAfter);
+          lines.push('```');
+          lines.push('');
+          lines.push('</details>');
+          lines.push('');
+        }
+
+        lines.push('---');
         lines.push('');
       }
     }
 
     return lines.join('\n');
   }
+}
+
+// ─── Helpers ─────────────────────────────────────────────────
+function priorityBadgeFor(p: 'P1' | 'P2' | 'P3'): string {
+  if (p === 'P1') return '🔴 **P1**';
+  if (p === 'P2') return '🟡 **P2**';
+  return '🔵 **P3**';
+}
+
+function derivePriority(c: ReviewComment): 'P1' | 'P2' | 'P3' {
+  if (c.severity === 'critical' || c.type === 'security') return 'P1';
+  if (c.severity === 'warning' || c.type === 'bug' || c.type === 'performance') return 'P2';
+  return 'P3';
 }
