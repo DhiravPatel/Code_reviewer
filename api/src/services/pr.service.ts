@@ -326,6 +326,16 @@ export class PrService {
 
       return completedReview;
     } catch (error: any) {
+      console.error('runReview failed:', {
+        userId,
+        repoId,
+        prNumber,
+        message: error?.message,
+        status: error?.status,
+        stack: error?.stack,
+        error
+      });
+
       // Mark as failed
       await prisma.prReview.update({
         where: { id: review.id },
