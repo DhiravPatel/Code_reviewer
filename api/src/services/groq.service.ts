@@ -83,7 +83,7 @@ export class GroqService {
     const filesList = onlyWithDiff.map((f) => `- ${f.filename} (${f.status})`).join('\n');
 
     const systemPrompt = `You are a senior staff engineer doing a rigorous code review.
-Output ONLY a valid JSON object — no markdown, no prose, no code fences. Every comment cites file + line range, includes verbatim "codeBefore" from the diff and a working drop-in "codeAfter", and explains WHY it matters. Be specific (not "add validation" — name the schema/check). Priorities: P1=security/correctness, P2=bugs/perf, P3=polish.`;
+Output ONLY a valid JSON object — no markdown, no prose, no code fences. Every comment cites file + line range using HEAD-side (new file) line numbers from the diff, includes verbatim "codeBefore" and a "codeAfter" that is a drop-in replacement for exactly the lines from startLine through endLine (so it can be applied as a GitHub suggestion). Explain WHY it matters. Be specific (not "add validation" — name the schema/check). Priorities: P1=security/correctness, P2=bugs/perf, P3=polish.`;
 
     const userPrompt = `Review this PR. Return ONLY the JSON object.
 
@@ -115,10 +115,10 @@ ${truncatedDiff}
     "title": "<5-10 words>",
     "description": "<2-5 sentences: what, WHY it matters, broader impact>",
     "file": "<exact path from diff>",
-    "startLine": <int|null>,
-    "endLine": <int|null>,
-    "codeBefore": "<verbatim from diff, 2-6 lines>",
-    "codeAfter": "<drop-in working replacement>",
+    "startLine": <int|null; HEAD-side line in the new file from a + or context line of the diff>,
+    "endLine": <int|null; HEAD-side line, >= startLine; for single-line use same value>,
+    "codeBefore": "<verbatim lines startLine..endLine copied from the diff>",
+    "codeAfter": "<replacement for EXACTLY lines startLine..endLine — must be a clean drop-in so it can be applied as a GitHub \`\`\`suggestion>",
     "rationale": ["<reason>", ...]
   }]
 }

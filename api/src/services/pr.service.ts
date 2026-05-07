@@ -1,7 +1,8 @@
 import { prisma } from '../config/db';
 import { RepositoryService } from './repository.service';
 import { GroqService } from './groq.service';
-import { GithubService } from './github.service';
+import { GithubService, InlineReviewComment } from './github.service';
+import { buildAnchorIndex, snapToAnchor } from '../utils/diff-parser';
 
 export class PrService {
   /**
@@ -280,7 +281,53 @@ export class PrService {
         language: repo.language || undefined,
       });
 
-      // Update the GitHub comment with the full review
+      // ─── Inline review with ```suggestion blocks ─────────────────
+      // Validate every AI comment against the actual diff hunks; only those
+      // anchored to a commentable line can be posted inline. The rest still
+      // appear in the summary issue-comment so nothing is lost.
+      if (postToGithub) {
+        const anchorIndex = buildAnchorIndex(
+          files.map((f: any) => ({ filename: f.filename, patch: f.patch || '' }))
+        );
+
+        const inlineComments: InlineReviewComment[] = [];
+        for (const c of aiResult.comments) {
+          const snapped = snapToAnchor(anchorIndex, c.file, c.startLine, c.endLine);
+          if (!snapped) continue;
+
+          const useSuggestion = !!(c.codeAfter && c.codeAfter.trim());
+          inlineComments.push({
+            path: c.file,
+            startLine: snapped.startLine,
+            endLine: snapped.endLine,
+            side: 'RIGHT',
+            body: GithubService.buildInlineCommentBody(c, useSuggestion),
+          });
+        }
+
+        // Clean up prior bot comments before posting new ones (re-run safety)
+        try {
+          await GithubService.deleteOurReviewComments(accessToken, repo.owner, repo.name, prNumber);
+        } catch (err) {
+          console.error('Failed to clean up prior inline comments:', err);
+        }
+
+        if (inlineComments.length > 0) {
+          try {
+            await GithubService.submitPrReview(
+              accessToken,
+              repo.owner,
+              repo.name,
+              prNumber,
+              inlineComments
+            );
+          } catch (err) {
+            console.error('Failed to submit inline PR review:', err);
+          }
+        }
+      }
+
+      // Update the GitHub summary comment with the full review
       const finalCommentId = githubCommentId || review.githubCommentId;
       if (postToGithub && finalCommentId) {
         try {

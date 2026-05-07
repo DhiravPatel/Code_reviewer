@@ -36,7 +36,21 @@ interface ReviewData {
   summary: { criticalIssues: number; warnings: number; suggestions: number };
 }
 
+/** Hidden marker embedded in every comment we post so re-runs can identify them. */
+const COMMENT_MARKER = '<!-- codereview-ai:v1 -->';
+
+export interface InlineReviewComment {
+  path: string;
+  startLine: number;
+  endLine: number;
+  side?: 'RIGHT' | 'LEFT';
+  body: string;
+}
+
 export class GithubService {
+  static get COMMENT_MARKER() {
+    return COMMENT_MARKER;
+  }
   // ─── Webhook Management ────────────────────────────────────────
 
   /**
@@ -221,10 +235,149 @@ export class GithubService {
     return BigInt(data.id);
   }
 
+  // ─── Inline Review (PR Reviews API) ────────────────────────────
+
+  /**
+   * Submit a PR review with inline comments (each can carry a ```suggestion block).
+   * Uses event="COMMENT" so we never auto-approve or block; the score-based verdict
+   * is communicated through the summary issue-comment instead.
+   */
+  static async submitPrReview(
+    accessToken: string,
+    owner: string,
+    repo: string,
+    prNumber: number,
+    comments: InlineReviewComment[]
+  ): Promise<number | null> {
+    if (comments.length === 0) return null;
+
+    const body = {
+      event: 'COMMENT',
+      body: '',
+      comments: comments.map((c) => {
+        const base: Record<string, unknown> = {
+          path: c.path,
+          line: c.endLine,
+          side: c.side || 'RIGHT',
+          body: c.body,
+        };
+        if (c.startLine !== c.endLine) {
+          base.start_line = c.startLine;
+          base.start_side = c.side || 'RIGHT';
+        }
+        return base;
+      }),
+    };
+
+    const response = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}/reviews`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'User-Agent': 'CodeReview-App',
+          Accept: 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      }
+    );
+
+    if (!response.ok) {
+      const errBody = await response.text();
+      throw new Error(`Failed to submit PR review: ${response.status} ${errBody}`);
+    }
+
+    const data = (await response.json()) as { id: number };
+    return data.id;
+  }
+
+  /**
+   * Delete inline review comments previously posted by this app, identified by
+   * the hidden COMMENT_MARKER. Best-effort — individual failures are swallowed
+   * so a stuck comment never blocks a re-run.
+   */
+  static async deleteOurReviewComments(
+    accessToken: string,
+    owner: string,
+    repo: string,
+    prNumber: number
+  ): Promise<number> {
+    const response = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}/comments?per_page=100`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'User-Agent': 'CodeReview-App',
+          Accept: 'application/vnd.github.v3+json',
+        },
+      }
+    );
+
+    if (!response.ok) return 0;
+
+    const all = (await response.json()) as Array<{ id: number; body?: string }>;
+    const ours = all.filter((c) => c.body && c.body.includes(COMMENT_MARKER));
+
+    let deleted = 0;
+    await Promise.all(
+      ours.map(async (c) => {
+        try {
+          const del = await fetch(
+            `https://api.github.com/repos/${owner}/${repo}/pulls/comments/${c.id}`,
+            {
+              method: 'DELETE',
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'User-Agent': 'CodeReview-App',
+                Accept: 'application/vnd.github.v3+json',
+              },
+            }
+          );
+          if (del.ok || del.status === 404) deleted++;
+        } catch {
+          // best-effort
+        }
+      })
+    );
+
+    return deleted;
+  }
+
+  /**
+   * Render an inline review comment body — includes the hidden marker, a
+   * priority/title header, the rationale, and (if codeAfter is present and
+   * applies cleanly) a GitHub ```suggestion block.
+   */
+  static buildInlineCommentBody(c: ReviewComment, useSuggestion: boolean): string {
+    const priority = c.priority || derivePriority(c);
+    const badge = priorityBadgeFor(priority);
+    const lines: string[] = [];
+    lines.push(COMMENT_MARKER);
+    lines.push(`**${badge} ${c.title}**`);
+    lines.push('');
+    if (c.description) {
+      lines.push(c.description);
+      lines.push('');
+    }
+    const reasons = (c.rationale && c.rationale.length > 0) ? c.rationale : (c.details || []);
+    if (reasons.length > 0) {
+      for (const r of reasons) lines.push(`- ${r}`);
+      lines.push('');
+    }
+    if (useSuggestion && c.codeAfter && c.codeAfter.trim()) {
+      lines.push('```suggestion');
+      lines.push(stripTrailingNewline(c.codeAfter));
+      lines.push('```');
+    }
+    return lines.join('\n');
+  }
+
   // ─── Comment Body Formatting ───────────────────────────────────
 
   private static buildLoadingCommentBody(): string {
     return [
+      COMMENT_MARKER,
       '## <img src="https://img.icons8.com/fluency/24/artificial-intelligence.png" width="20" /> CodeReview AI',
       '',
       '> **Analyzing your pull request...** This usually takes 15–30 seconds.',
@@ -238,6 +391,7 @@ export class GithubService {
 
     const lines: string[] = [];
 
+    lines.push(COMMENT_MARKER);
     // ─── Header ────────────────────────────────────────────
     lines.push('## 🤖 CodeReview AI — Summary');
     lines.push('');
@@ -373,4 +527,8 @@ function derivePriority(c: ReviewComment): 'P1' | 'P2' | 'P3' {
   if (c.severity === 'critical' || c.type === 'security') return 'P1';
   if (c.severity === 'warning' || c.type === 'bug' || c.type === 'performance') return 'P2';
   return 'P3';
+}
+
+function stripTrailingNewline(s: string): string {
+  return s.replace(/\n+$/, '');
 }
