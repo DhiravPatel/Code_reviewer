@@ -235,6 +235,112 @@ export class GithubService {
     return BigInt(data.id);
   }
 
+  // ─── Apply Fix (Contents API) ──────────────────────────────────
+
+  /**
+   * Apply a code fix by replacing lines [startLine, endLine] in `filePath`
+   * with `codeAfter`, committing directly to `branch`.
+   *
+   * Uses GitHub's Contents API (read → splice → PUT) which atomically rejects
+   * the write if the file's SHA changed in between (no stale writes).
+   *
+   * If `codeBefore` is provided we sanity-check that the existing lines still
+   * match (whitespace-insensitive) before writing — if the file moved on
+   * since the review ran, we refuse instead of clobbering unrelated code.
+   */
+  static async applyFileFix(params: {
+    accessToken: string;
+    owner: string;
+    repo: string;
+    branch: string;
+    filePath: string;
+    startLine: number;
+    endLine: number;
+    codeBefore: string;
+    codeAfter: string;
+    commitMessage: string;
+  }): Promise<{ commitSha: string; commitUrl: string }> {
+    const { accessToken, owner, repo, branch, filePath, startLine, endLine, codeBefore, codeAfter, commitMessage } = params;
+
+    // 1) Read the current file at the branch tip
+    const getRes = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/contents/${encodeFilePath(filePath)}?ref=${encodeURIComponent(branch)}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'User-Agent': 'CodeReview-App',
+          Accept: 'application/vnd.github.v3+json',
+        },
+      }
+    );
+    if (!getRes.ok) {
+      throw new Error(`Failed to read file: ${getRes.status} ${await getRes.text()}`);
+    }
+    const fileData = (await getRes.json()) as { content: string; sha: string; encoding: string };
+    if (fileData.encoding !== 'base64') {
+      throw new Error(`Unexpected file encoding: ${fileData.encoding}`);
+    }
+
+    const original = Buffer.from(fileData.content, 'base64').toString('utf8');
+    const lines = original.split('\n');
+
+    if (startLine < 1 || endLine < startLine || endLine > lines.length) {
+      throw new Error(
+        `Line range ${startLine}-${endLine} is out of bounds (file has ${lines.length} lines)`
+      );
+    }
+
+    // 2) Sanity-check that the targeted lines still look like codeBefore.
+    if (codeBefore && codeBefore.trim()) {
+      const targeted = lines.slice(startLine - 1, endLine).join('\n');
+      if (normalize(targeted) !== normalize(codeBefore)) {
+        throw new Error(
+          'File contents at the target lines have changed since the review was generated. Re-run the review and try again.'
+        );
+      }
+    }
+
+    // 3) Splice in codeAfter
+    const replacement = codeAfter.replace(/\r\n/g, '\n').split('\n');
+    const updatedLines = [
+      ...lines.slice(0, startLine - 1),
+      ...replacement,
+      ...lines.slice(endLine),
+    ];
+    const updated = updatedLines.join('\n');
+
+    if (updated === original) {
+      throw new Error('Fix is a no-op — codeAfter matches the current file contents.');
+    }
+
+    // 4) Commit via PUT
+    const putRes = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/contents/${encodeFilePath(filePath)}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'User-Agent': 'CodeReview-App',
+          Accept: 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: commitMessage,
+          content: Buffer.from(updated, 'utf8').toString('base64'),
+          sha: fileData.sha,
+          branch,
+        }),
+      }
+    );
+
+    if (!putRes.ok) {
+      throw new Error(`Failed to commit fix: ${putRes.status} ${await putRes.text()}`);
+    }
+
+    const putData = (await putRes.json()) as { commit: { sha: string; html_url: string } };
+    return { commitSha: putData.commit.sha, commitUrl: putData.commit.html_url };
+  }
+
   // ─── Inline Review (PR Reviews API) ────────────────────────────
 
   /**
@@ -531,4 +637,12 @@ function derivePriority(c: ReviewComment): 'P1' | 'P2' | 'P3' {
 
 function stripTrailingNewline(s: string): string {
   return s.replace(/\n+$/, '');
+}
+
+function normalize(s: string): string {
+  return s.replace(/\r\n/g, '\n').replace(/[ \t]+\n/g, '\n').trim();
+}
+
+function encodeFilePath(path: string): string {
+  return path.split('/').map(encodeURIComponent).join('/');
 }

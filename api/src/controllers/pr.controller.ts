@@ -66,6 +66,31 @@ export const getReview = async (request: FastifyRequest, reply: FastifyReply) =>
 };
 
 /**
+ * POST /api/v1/prs/review/:id/apply-fix
+ * Apply an AI-suggested fix by committing codeAfter to the PR's head branch.
+ * Body: { commentIndex: number }
+ */
+export const applyFix = async (request: FastifyRequest, reply: FastifyReply) => {
+  try {
+    const authUser = request.user as any;
+    const { id } = request.params as any;
+    const body = request.body as any;
+
+    if (typeof body?.commentIndex !== 'number' || body.commentIndex < 0) {
+      return reply.code(400).send(errorResponse('Missing or invalid commentIndex', 400));
+    }
+
+    const result = await PrService.applyFix(authUser.id, id, body.commentIndex);
+    return reply.status(200).send(successResponse(result, 'Fix applied'));
+  } catch (error: any) {
+    request.log.error(error, 'Apply fix failed');
+    const msg = error?.message || 'Failed to apply fix';
+    const status = /not found|fork|already|completed|no-op|out of bounds|changed since/i.test(msg) ? 400 : 500;
+    return reply.status(status).send(errorResponse(msg, status));
+  }
+};
+
+/**
  * GET /api/v1/prs/reviews
  * Get all reviews for the current user.
  */

@@ -1,6 +1,7 @@
 import {
   ArrowLeft, AlertTriangle, Lightbulb, Shield, FileText, GitBranch, Plus, Minus,
-  CheckCircle, Clock, Loader2, Bug, Zap, Wrench, Sparkles, ChevronDown, ChevronRight
+  CheckCircle, Clock, Loader2, Bug, Zap, Wrench, Sparkles, ChevronDown, ChevronRight,
+  Wand2, ExternalLink
 } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
@@ -61,8 +62,10 @@ const timeAgo = (dateStr) => {
 
 // ─── Components ─────────────────────────────────────────────────
 
-function ReviewCommentCard({ comment }) {
+function ReviewCommentCard({ comment, reviewId, commentIndex, prState, onApplied }) {
   const [expanded, setExpanded] = useState(true)
+  const [applying, setApplying] = useState(false)
+  const [applyError, setApplyError] = useState(null)
   const priority = derivePriority(comment)
   const pConf = priorityConfig[priority]
   const TypeIcon = typeIcons[comment.type] || Lightbulb
@@ -75,8 +78,34 @@ function ReviewCommentCard({ comment }) {
   const rationale = (comment.rationale && comment.rationale.length > 0)
     ? comment.rationale
     : (comment.details || [])
-  const hasCode = (comment.codeBefore && comment.codeBefore.trim()) ||
-                  (comment.codeAfter && comment.codeAfter.trim())
+  const hasCodeAfter = !!(comment.codeAfter && comment.codeAfter.trim())
+  const hasCode = (comment.codeBefore && comment.codeBefore.trim()) || hasCodeAfter
+  const canApply =
+    hasCodeAfter &&
+    !!comment.file &&
+    typeof startLine === 'number' &&
+    !comment.applied &&
+    prState !== 'closed'
+
+  const handleApply = async () => {
+    if (!canApply || applying) return
+    setApplying(true)
+    setApplyError(null)
+    try {
+      const res = await api.post(`/prs/review/${reviewId}/apply-fix`, { commentIndex })
+      const data = res.data?.data || {}
+      onApplied?.(commentIndex, {
+        applied: true,
+        appliedAt: new Date().toISOString(),
+        appliedCommitSha: data.commitSha,
+        appliedCommitUrl: data.commitUrl,
+      })
+    } catch (err) {
+      setApplyError(err.response?.data?.message || err.message || 'Failed to apply fix')
+    } finally {
+      setApplying(false)
+    }
+  }
 
   return (
     <div className={`rounded-2xl t-bg-card border ${pConf.border} p-5 lg:p-6 transition-all hover:shadow-lg`}>
@@ -115,13 +144,48 @@ function ReviewCommentCard({ comment }) {
 
           {hasCode && (
             <div className="mt-3">
-              <button
-                onClick={() => setExpanded(!expanded)}
-                className="flex items-center gap-1.5 text-xs font-semibold text-brand-400 hover:text-brand-300 transition-colors mb-2"
-              >
-                {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                Suggested change
-              </button>
+              <div className="flex flex-wrap items-center gap-2 mb-2">
+                <button
+                  onClick={() => setExpanded(!expanded)}
+                  className="flex items-center gap-1.5 text-xs font-semibold text-brand-400 hover:text-brand-300 transition-colors"
+                >
+                  {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                  Suggested change
+                </button>
+
+                {comment.applied ? (
+                  <a
+                    href={comment.appliedCommitUrl || '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-brand-500/15 border border-brand-500/30 text-brand-300 text-[11px] font-semibold hover:bg-brand-500/20 transition-colors"
+                  >
+                    <CheckCircle size={12} />
+                    Applied
+                    {comment.appliedCommitSha && (
+                      <span className="font-mono opacity-70">
+                        · {String(comment.appliedCommitSha).slice(0, 7)}
+                      </span>
+                    )}
+                    <ExternalLink size={10} />
+                  </a>
+                ) : canApply ? (
+                  <button
+                    onClick={handleApply}
+                    disabled={applying}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-brand-500/10 border border-brand-500/30 text-brand-300 text-[11px] font-semibold hover:bg-brand-500/20 hover:border-brand-500/50 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {applying ? <Loader2 size={12} className="animate-spin" /> : <Wand2 size={12} />}
+                    {applying ? 'Applying…' : 'Apply Fix'}
+                  </button>
+                ) : null}
+              </div>
+
+              {applyError && (
+                <div className="mb-2 px-3 py-2 rounded-md bg-red-500/10 border border-red-500/30 text-red-300 text-xs leading-relaxed">
+                  {applyError}
+                </div>
+              )}
 
               {expanded && (
                 <div className="space-y-2">
@@ -442,7 +506,21 @@ export default function PRDetailPage() {
               </h2>
               <div className="space-y-4">
                 {comments.map((comment, idx) => (
-                  <ReviewCommentCard key={idx} comment={comment} />
+                  <ReviewCommentCard
+                    key={idx}
+                    comment={comment}
+                    reviewId={review.id}
+                    commentIndex={idx}
+                    prState={review.state}
+                    onApplied={(i, patch) => {
+                      setReview((prev) => {
+                        if (!prev) return prev
+                        const next = Array.isArray(prev.reviewComments) ? [...prev.reviewComments] : []
+                        next[i] = { ...next[i], ...patch }
+                        return { ...prev, reviewComments: next }
+                      })
+                    }}
+                  />
                 ))}
               </div>
             </div>

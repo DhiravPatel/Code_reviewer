@@ -416,6 +416,91 @@ export class PrService {
   }
 
   /**
+   * Apply an AI-suggested fix by committing codeAfter directly to the PR's
+   * head branch. Idempotent: refuses to re-apply an already-applied comment.
+   * Refuses fork PRs (we don't have write access to forks).
+   */
+  static async applyFix(userId: string, reviewId: string, commentIndex: number) {
+    const review = await prisma.prReview.findUnique({
+      where: { id: reviewId },
+      include: { repo: true },
+    });
+    if (!review || review.userId !== userId) {
+      throw new Error('Review not found');
+    }
+    if (review.status !== 'completed') {
+      throw new Error('Review is not completed yet');
+    }
+
+    const comments = Array.isArray(review.reviewComments) ? (review.reviewComments as any[]) : [];
+    const comment = comments[commentIndex];
+    if (!comment) throw new Error('Comment not found');
+    if (comment.applied) throw new Error('Fix already applied');
+
+    const codeAfter = String(comment.codeAfter || '');
+    const codeBefore = String(comment.codeBefore || '');
+    const file = String(comment.file || '');
+    const startLine = comment.startLine ?? comment.line;
+    const endLine = comment.endLine ?? comment.line ?? startLine;
+
+    if (!codeAfter.trim()) throw new Error('Comment has no codeAfter to apply');
+    if (!file) throw new Error('Comment has no target file');
+    if (typeof startLine !== 'number' || typeof endLine !== 'number') {
+      throw new Error('Comment has no target line numbers');
+    }
+
+    const accessToken = await RepositoryService.getAccessToken(userId);
+    if (!accessToken) throw new Error('GitHub not connected');
+
+    // Verify the PR isn't from a fork — we can only write to the same repo.
+    const prDetail = await this.fetchPrDetail(accessToken, review.repo.owner, review.repo.name, review.prNumber);
+    const headRepoFullName: string | undefined = prDetail.head?.repo?.full_name;
+    const baseRepoFullName: string | undefined = prDetail.base?.repo?.full_name;
+    if (headRepoFullName && baseRepoFullName && headRepoFullName !== baseRepoFullName) {
+      throw new Error('Cannot apply fix: PR is from a fork. Apply the suggestion on GitHub instead.');
+    }
+    if (prDetail.state !== 'open') {
+      throw new Error(`Cannot apply fix: PR is ${prDetail.state}.`);
+    }
+
+    const branch = prDetail.head?.ref || review.prBranch;
+    const commitMessage = `Apply CodeReview AI fix: ${comment.title || 'suggested fix'}\n\nApplied from review ${reviewId} (comment #${commentIndex + 1}).`;
+
+    const result = await GithubService.applyFileFix({
+      accessToken,
+      owner: review.repo.owner,
+      repo: review.repo.name,
+      branch,
+      filePath: file,
+      startLine,
+      endLine,
+      codeBefore,
+      codeAfter,
+      commitMessage,
+    });
+
+    // Persist applied state on the comment so the UI reflects it.
+    const updatedComments = comments.map((c, i) =>
+      i === commentIndex
+        ? {
+            ...c,
+            applied: true,
+            appliedAt: new Date().toISOString(),
+            appliedCommitSha: result.commitSha,
+            appliedCommitUrl: result.commitUrl,
+          }
+        : c
+    );
+
+    await prisma.prReview.update({
+      where: { id: reviewId },
+      data: { reviewComments: updatedComments as any },
+    });
+
+    return result;
+  }
+
+  /**
    * Get a specific review by ID.
    */
   static async getReview(reviewId: string, userId: string) {

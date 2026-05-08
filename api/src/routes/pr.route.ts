@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { listPullRequests, triggerReview, getReview, listReviews } from '../controllers/pr.controller';
+import { listPullRequests, triggerReview, getReview, listReviews, applyFix } from '../controllers/pr.controller';
 import { authMiddleware } from '../middlewares/auth.middleware';
 
 export async function prRoutes(fastify: FastifyInstance) {
@@ -16,4 +16,7 @@ export async function prRoutes(fastify: FastifyInstance) {
 
   // GET /api/v1/prs/review/:id — get a specific review
   fastify.get('/review/:id', getReview);
+
+  // POST /api/v1/prs/review/:id/apply-fix — apply an AI fix to the PR branch
+  fastify.post('/review/:id/apply-fix', applyFix);
 }
