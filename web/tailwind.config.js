@@ -32,6 +32,26 @@ export default {
           900: '#0f172a',
           950: '#020617',
         },
+        // ─── Editorial luxury palette ───────────────────────
+        primary: {
+          DEFAULT: '#a42832',
+          dark: '#7c1c25',
+        },
+        ink: '#1a1612',
+        cream: '#faf8f3',
+        ivory: '#f4f2ec',
+        sand: {
+          50: '#fafaf7',
+          100: '#f4f2ec',
+          200: '#e8e4da',
+          300: '#d4cfc1',
+          400: '#a39d8c',
+          500: '#797466',
+          600: '#56524a',
+          700: '#3b3833',
+          800: '#26241f',
+          900: '#161412',
+        },
       },
       backgroundImage: {
         'gradient-dark': 'linear-gradient(135deg, #0f172a 0%, #020617 50%, #0f172a 100%)',
@@ -42,6 +62,11 @@ export default {
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+        display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+        ui: ['Montserrat', 'Inter', 'system-ui', 'sans-serif'],
+      },
+      transitionTimingFunction: {
+        editorial: 'cubic-bezier(0.22, 1, 0.36, 1)',
       },
       animation: {
         'fade-in': 'fadeIn 0.6s ease-out',

@@ -1,7 +1,6 @@
 import {
   ArrowLeft, AlertTriangle, Lightbulb, Shield, FileText, GitBranch, Plus, Minus,
   CheckCircle, Clock, Loader2, Bug, Zap, Wrench, Sparkles, ChevronDown, ChevronRight,
-  Wand2, ExternalLink
 } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
@@ -62,10 +61,8 @@ const timeAgo = (dateStr) => {
 
 // ─── Components ─────────────────────────────────────────────────
 
-function ReviewCommentCard({ comment, reviewId, commentIndex, prState, onApplied }) {
+function ReviewCommentCard({ comment }) {
   const [expanded, setExpanded] = useState(true)
-  const [applying, setApplying] = useState(false)
-  const [applyError, setApplyError] = useState(null)
   const priority = derivePriority(comment)
   const pConf = priorityConfig[priority]
   const TypeIcon = typeIcons[comment.type] || Lightbulb
@@ -80,62 +77,59 @@ function ReviewCommentCard({ comment, reviewId, commentIndex, prState, onApplied
     : (comment.details || [])
   const hasCodeAfter = !!(comment.codeAfter && comment.codeAfter.trim())
   const hasCode = (comment.codeBefore && comment.codeBefore.trim()) || hasCodeAfter
-  const canApply =
-    hasCodeAfter &&
-    !!comment.file &&
-    typeof startLine === 'number' &&
-    !comment.applied &&
-    prState !== 'closed'
-
-  const handleApply = async () => {
-    if (!canApply || applying) return
-    setApplying(true)
-    setApplyError(null)
-    try {
-      const res = await api.post(`/prs/review/${reviewId}/apply-fix`, { commentIndex })
-      const data = res.data?.data || {}
-      onApplied?.(commentIndex, {
-        applied: true,
-        appliedAt: new Date().toISOString(),
-        appliedCommitSha: data.commitSha,
-        appliedCommitUrl: data.commitUrl,
-      })
-    } catch (err) {
-      setApplyError(err.response?.data?.message || err.message || 'Failed to apply fix')
-    } finally {
-      setApplying(false)
-    }
-  }
 
   return (
-    <div className={`rounded-2xl t-bg-card border ${pConf.border} p-5 lg:p-6 transition-all hover:shadow-lg`}>
-      <div className="flex gap-4">
-        <div className={`w-10 h-10 rounded-xl ${pConf.bg} border ${pConf.border} flex items-center justify-center flex-shrink-0`}>
-          <TypeIcon className={typeColor} size={20} />
+    <div className="t-bg-card border t-border-subtle p-7 lg:p-8 card-hover-glow"
+         style={{ borderRadius: 0 }}>
+      <div className="flex gap-6">
+        {/* Icon column with rule */}
+        <div className="flex flex-col items-center flex-shrink-0 pt-1">
+          <div
+            className={`w-11 h-11 flex items-center justify-center ${pConf.bg} border ${pConf.border}`}
+            style={{ borderRadius: 0 }}
+          >
+            <TypeIcon className={typeColor} size={20} />
+          </div>
+          <span className="w-px flex-1 mt-3" style={{ background: 'var(--border-subtle)', minHeight: 24 }} />
         </div>
+
         <div className="flex-1 min-w-0">
-          <div className="flex flex-wrap items-center gap-2 mb-2">
-            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md ${pConf.bg} ${pConf.color} text-[10px] font-bold uppercase tracking-wider border ${pConf.border}`}>
-              <span className={`w-1.5 h-1.5 rounded-full ${pConf.dot}`} />
+          {/* Priority pill + type eyebrow + serif title */}
+          <div className="flex items-center gap-3 mb-3">
+            <span
+              className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.2em] ${pConf.bg} ${pConf.color} border ${pConf.border}`}
+              style={{ borderRadius: 999 }}
+            >
+              <span className={`w-1 h-1 rounded-full ${pConf.dot}`} />
               {pConf.label}
             </span>
-            <span className="text-[10px] t-text-muted uppercase tracking-wider font-semibold">{comment.type || 'suggestion'}</span>
-            <h3 className="font-semibold t-text flex-1 min-w-0">{comment.title}</h3>
+            <span className="eyebrow text-[9.5px]">{comment.type || 'suggestion'}</span>
           </div>
+
+          <h3
+            className="page-display t-text mb-3"
+            style={{ fontSize: 24, lineHeight: 1.1 }}
+          >
+            {comment.title}
+          </h3>
+
           {comment.file && (
-            <div className="mb-3">
-              <span className="text-[11px] t-text-faint font-mono t-bg-surface px-2 py-1 rounded border t-border-subtle">
+            <div className="mb-4">
+              <span
+                className="text-[11px] t-text-faint font-mono inline-block px-2.5 py-1"
+                style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: 0 }}
+              >
                 {comment.file}{lineRef}
               </span>
             </div>
           )}
-          <p className="t-text-secondary text-sm leading-relaxed mb-3">{comment.description}</p>
+          <p className="t-text-secondary text-[14px] leading-[1.75] mb-4">{comment.description}</p>
 
           {rationale.length > 0 && (
-            <ul className="space-y-1.5 mb-4">
+            <ul className="space-y-2 mb-5">
               {rationale.map((r, i) => (
-                <li key={i} className="flex items-start gap-2 t-text-secondary text-sm">
-                  <span className={`w-1 h-1 rounded-full mt-2 flex-shrink-0 ${pConf.dot}`} />
+                <li key={i} className="flex items-start gap-2.5 t-text-secondary text-[13.5px] leading-[1.7]">
+                  <span className={`w-1 h-1 rounded-full mt-2.5 flex-shrink-0 ${pConf.dot}`} />
                   {r}
                 </li>
               ))}
@@ -143,65 +137,51 @@ function ReviewCommentCard({ comment, reviewId, commentIndex, prState, onApplied
           )}
 
           {hasCode && (
-            <div className="mt-3">
-              <div className="flex flex-wrap items-center gap-2 mb-2">
-                <button
-                  onClick={() => setExpanded(!expanded)}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-brand-400 hover:text-brand-300 transition-colors"
-                >
-                  {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                  Suggested change
-                </button>
-
-                {comment.applied ? (
-                  <a
-                    href={comment.appliedCommitUrl || '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-brand-500/15 border border-brand-500/30 text-brand-300 text-[11px] font-semibold hover:bg-brand-500/20 transition-colors"
-                  >
-                    <CheckCircle size={12} />
-                    Applied
-                    {comment.appliedCommitSha && (
-                      <span className="font-mono opacity-70">
-                        · {String(comment.appliedCommitSha).slice(0, 7)}
-                      </span>
-                    )}
-                    <ExternalLink size={10} />
-                  </a>
-                ) : canApply ? (
-                  <button
-                    onClick={handleApply}
-                    disabled={applying}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-brand-500/10 border border-brand-500/30 text-brand-300 text-[11px] font-semibold hover:bg-brand-500/20 hover:border-brand-500/50 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
-                  >
-                    {applying ? <Loader2 size={12} className="animate-spin" /> : <Wand2 size={12} />}
-                    {applying ? 'Applying…' : 'Apply Fix'}
-                  </button>
-                ) : null}
-              </div>
-
-              {applyError && (
-                <div className="mb-2 px-3 py-2 rounded-md bg-red-500/10 border border-red-500/30 text-red-300 text-xs leading-relaxed">
-                  {applyError}
-                </div>
-              )}
+            <div className="mt-5 pt-5" style={{ borderTop: '1px solid var(--border-subtle)' }}>
+              <button
+                onClick={() => setExpanded(!expanded)}
+                className="flex items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-[0.18em] mb-4 transition-colors duration-500 ease-editorial"
+                style={{ color: '#10b981' }}
+              >
+                {expanded ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+                Suggested change
+              </button>
 
               {expanded && (
-                <div className="space-y-2">
+                <div className="space-y-4">
                   {comment.codeBefore && comment.codeBefore.trim() && (
                     <div>
-                      <div className="text-[10px] font-semibold t-text-muted uppercase tracking-wider mb-1">Before</div>
-                      <pre className="bg-red-500/5 border border-red-500/20 rounded-lg p-3 text-xs overflow-x-auto">
-                        <code className="text-red-300 font-mono whitespace-pre">{comment.codeBefore}</code>
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="rule" style={{ background: '#dc2626' }} />
+                        <span className="eyebrow text-[9.5px]">Before</span>
+                      </div>
+                      <pre
+                        className="p-4 text-[12px] overflow-x-auto"
+                        style={{
+                          background: 'rgba(220, 38, 38, 0.04)',
+                          border: '1px solid rgba(220, 38, 38, 0.2)',
+                          borderRadius: 0,
+                        }}
+                      >
+                        <code className="font-mono whitespace-pre" style={{ color: '#dc2626' }}>{comment.codeBefore}</code>
                       </pre>
                     </div>
                   )}
                   {comment.codeAfter && comment.codeAfter.trim() && (
                     <div>
-                      <div className="text-[10px] font-semibold t-text-muted uppercase tracking-wider mb-1">After</div>
-                      <pre className="bg-brand-500/5 border border-brand-500/20 rounded-lg p-3 text-xs overflow-x-auto">
-                        <code className="text-brand-300 font-mono whitespace-pre">{comment.codeAfter}</code>
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="rule" />
+                        <span className="eyebrow text-[9.5px]">After</span>
+                      </div>
+                      <pre
+                        className="p-4 text-[12px] overflow-x-auto"
+                        style={{
+                          background: 'rgba(16, 185, 129, 0.05)',
+                          border: '1px solid rgba(16, 185, 129, 0.25)',
+                          borderRadius: 0,
+                        }}
+                      >
+                        <code className="font-mono whitespace-pre" style={{ color: '#047857' }}>{comment.codeAfter}</code>
                       </pre>
                     </div>
                   )}
@@ -268,72 +248,83 @@ export default function PRDetailPage() {
   const confidenceReason = review.confidenceReason || ''
 
   return (
-    <div className="p-6 lg:p-8 max-w-5xl animate-fade-in">
-      {/* Back Button */}
+    <div className="p-6 lg:p-10 max-w-6xl animate-fade-in">
+      {/* Back Button — editorial text link */}
       <button
         onClick={() => navigate('/dashboard/pull-requests')}
-        className="flex items-center gap-2 t-text-secondary hover:t-text transition-colors mb-6 text-sm font-medium group"
+        className="inline-flex items-center gap-2 mb-10 group press-scale text-[10.5px] font-semibold uppercase tracking-[0.22em] pb-1 relative"
+        style={{ color: '#1a1612' }}
       >
-        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+        <ArrowLeft size={13} className="group-hover:-translate-x-1 transition-transform duration-500 ease-editorial" />
         Back to Pull Requests
       </button>
 
-      {/* Header */}
-      <div className="t-card p-6 mb-6">
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-          <div className="flex-1">
-            <h1 className="text-xl lg:text-2xl font-bold t-text leading-tight mb-2">{review.prTitle}</h1>
-            <div className="flex flex-wrap items-center gap-2 text-xs t-text-muted">
-              <span className="font-mono t-text-secondary">{review.repo?.fullName || ''}</span>
-              <span>&middot;</span>
-              <span>PR #{review.prNumber}</span>
-              <span>&middot;</span>
-              <span>by {review.prAuthor}</span>
-              <span>&middot;</span>
-              <span>Reviewed {timeAgo(review.reviewedAt)}</span>
-            </div>
-          </div>
+      {/* Editorial header — eyebrow → big serif title → meta */}
+      <div className="mb-12">
+        <div className="flex items-center gap-3 mb-5">
+          <span className="rule rule-grow" />
+          <span className="eyebrow">Review · {timeAgo(review.reviewedAt)}</span>
+        </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="badge-info">
-              <GitBranch size={12} />
-              {review.prBranch}
-            </span>
-            <div className="flex items-center gap-2 text-xs">
-              <span className="flex items-center gap-1 text-brand-400 bg-brand-500/10 px-2 py-1 rounded-md">
-                <Plus size={12} />{review.additions}
-              </span>
-              <span className="flex items-center gap-1 text-red-400 bg-red-500/10 px-2 py-1 rounded-md">
-                <Minus size={12} />{review.deletions}
-              </span>
-              <span className="flex items-center gap-1 t-text-secondary t-bg-input px-2 py-1 rounded-md">
-                <FileText size={12} />{review.filesChanged} files
-              </span>
-            </div>
-          </div>
+        <h1 className="page-display t-text" style={{ fontSize: 48, lineHeight: 1.04 }}>
+          {review.prTitle}
+        </h1>
+
+        <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 text-[12.5px] t-text-muted">
+          <span className="font-mono t-text-secondary">{review.repo?.fullName || ''}</span>
+          <span className="opacity-50">·</span>
+          <span>PR #{review.prNumber}</span>
+          <span className="opacity-50">·</span>
+          <span>by {review.prAuthor}</span>
+          <span className="opacity-50">·</span>
+          <span className="inline-flex items-center gap-1.5">
+            <GitBranch size={11} />
+            <span className="font-mono">{review.prBranch}</span>
+          </span>
+        </div>
+
+        {/* Diff stats — editorial chips */}
+        <div className="mt-5 flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em]">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5"
+                style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.3)', color: '#047857' }}>
+            <Plus size={11} />{review.additions}
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5"
+                style={{ background: 'rgba(220,38,38,0.06)', border: '1px solid rgba(220,38,38,0.25)', color: '#dc2626' }}>
+            <Minus size={11} />{review.deletions}
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 t-bg-input t-text-secondary border t-border-subtle">
+            <FileText size={11} />{review.filesChanged} files
+          </span>
         </div>
       </div>
 
       {/* In-progress / failed state */}
       {review.status !== 'completed' && (
-        <div className="t-card p-8 text-center mb-6">
+        <div className="t-bg-card border t-border-subtle p-12 text-center mb-8" style={{ borderRadius: 0 }}>
           {review.status === 'reviewing' ? (
             <>
-              <Loader2 size={36} className="animate-spin text-brand-400 mx-auto mb-3" />
-              <h3 className="t-text font-semibold">AI Review in Progress...</h3>
-              <p className="t-text-muted text-sm mt-1">This usually takes 15-30 seconds.</p>
+              <Loader2 size={28} className="animate-spin mx-auto mb-5" style={{ color: '#10b981' }} />
+              <h3 className="page-display t-text" style={{ fontSize: 28 }}>
+                AI review <span className="italic-accent">in progress.</span>
+              </h3>
+              <p className="t-text-muted text-[14px] mt-3">This usually takes 15–30 seconds.</p>
             </>
           ) : review.status === 'failed' ? (
             <>
-              <AlertTriangle size={36} className="text-red-400 mx-auto mb-3" />
-              <h3 className="t-text font-semibold">Review Failed</h3>
-              <p className="t-text-muted text-sm mt-1">The AI review encountered an error. Please try again.</p>
+              <AlertTriangle size={28} className="text-red-400 mx-auto mb-5" />
+              <h3 className="page-display t-text" style={{ fontSize: 28 }}>
+                Review <span className="italic-accent" style={{ color: '#dc2626' }}>failed.</span>
+              </h3>
+              <p className="t-text-muted text-[14px] mt-3">The AI review encountered an error. Please try again.</p>
             </>
           ) : (
             <>
-              <Clock size={36} className="t-text-secondary mx-auto mb-3" />
-              <h3 className="t-text font-semibold">Pending Review</h3>
-              <p className="t-text-muted text-sm mt-1">This PR hasn't been reviewed yet.</p>
+              <Clock size={28} className="t-text-secondary mx-auto mb-5" />
+              <h3 className="page-display t-text" style={{ fontSize: 28 }}>
+                Pending <span className="italic-accent">review.</span>
+              </h3>
+              <p className="t-text-muted text-[14px] mt-3">This PR hasn't been reviewed yet.</p>
             </>
           )}
         </div>
@@ -342,30 +333,103 @@ export default function PRDetailPage() {
       {/* ═══ COMPLETED REVIEW SECTIONS ═══ */}
       {review.status === 'completed' && (
         <>
-          {/* Overall Feedback */}
+          {/* Overall Feedback — editorial pull quote */}
           {review.overallFeedback && (
-            <div className="t-card p-6 mb-6">
-              <div className="flex items-center gap-2 mb-3">
-                <Sparkles size={16} className="text-brand-400" />
-                <h2 className="text-base font-semibold t-text">Summary</h2>
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-5">
+                <span className="rule" />
+                <span className="eyebrow">Summary</span>
               </div>
-              <p className="t-text-secondary leading-relaxed">{review.overallFeedback}</p>
+              <p
+                className="t-text leading-[1.5] max-w-3xl"
+                style={{
+                  fontFamily: '"Cormorant Garamond", Georgia, serif',
+                  fontWeight: 400,
+                  fontSize: 26,
+                  fontStyle: 'italic',
+                }}
+              >
+                <span style={{ color: '#10b981' }}>“</span>
+                {review.overallFeedback}
+                <span style={{ color: '#10b981' }}>”</span>
+              </p>
             </div>
           )}
 
+          {/* Stats strip — flat editorial cells */}
+          <div className="mb-12 grid grid-cols-2 md:grid-cols-5 gap-px" style={{ background: 'var(--border-subtle)' }}>
+            <div className="t-bg-card p-6 md:col-span-1">
+              <div className="eyebrow text-[9.5px] mb-3">Confidence</div>
+              {confidenceScore > 0 ? (
+                <>
+                  <div className="page-display tabular-nums" style={{ fontSize: 40, lineHeight: 1, color: '#10b981' }}>
+                    {confidenceScore}
+                    <span className="t-text-muted" style={{ fontSize: 18 }}> / 5</span>
+                  </div>
+                  <div className="flex gap-1 mt-3">
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <div
+                        key={n}
+                        className="h-[2px] flex-1"
+                        style={{ background: n <= confidenceScore ? '#10b981' : 'var(--bg-input)' }}
+                      />
+                    ))}
+                  </div>
+                  {confidenceReason && (
+                    <p className="text-[11.5px] t-text-muted leading-[1.6] mt-3">{confidenceReason}</p>
+                  )}
+                </>
+              ) : (
+                <p className="page-display t-text-muted" style={{ fontSize: 32 }}>N/A</p>
+              )}
+            </div>
+            <div className="t-bg-card p-6">
+              <div className="eyebrow text-[9.5px] mb-3">P1 · Critical</div>
+              <div className="page-display tabular-nums" style={{ fontSize: 40, lineHeight: 1, color: '#dc2626' }}>
+                {summary.criticalIssues || 0}
+              </div>
+            </div>
+            <div className="t-bg-card p-6">
+              <div className="eyebrow text-[9.5px] mb-3">P2 · Warning</div>
+              <div className="page-display tabular-nums" style={{ fontSize: 40, lineHeight: 1, color: '#b45309' }}>
+                {summary.warnings || 0}
+              </div>
+            </div>
+            <div className="t-bg-card p-6">
+              <div className="eyebrow text-[9.5px] mb-3">P3 · Suggestion</div>
+              <div className="page-display tabular-nums" style={{ fontSize: 40, lineHeight: 1, color: '#0891b2' }}>
+                {summary.suggestions || 0}
+              </div>
+            </div>
+            <div className="t-bg-card p-6">
+              <div className="eyebrow text-[9.5px] mb-3">Score</div>
+              <div
+                className="page-display tabular-nums"
+                style={{
+                  fontSize: 40,
+                  lineHeight: 1,
+                  color: review.score >= 80 ? '#10b981' : review.score >= 60 ? '#b45309' : '#dc2626',
+                }}
+              >
+                {review.score}
+                <span className="t-text-muted" style={{ fontSize: 18 }}> / 100</span>
+              </div>
+            </div>
+          </div>
+
           {/* Key Changes + Issues Found */}
           {(keyChanges.length > 0 || issuesFound.length > 0) && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-px mb-12" style={{ background: 'var(--border-subtle)' }}>
               {keyChanges.length > 0 && (
-                <div className="t-card p-5">
-                  <h3 className="text-sm font-semibold t-text mb-3 flex items-center gap-2">
-                    <CheckCircle size={14} className="text-brand-400" />
-                    Key Changes
-                  </h3>
-                  <ul className="space-y-2">
+                <div className="t-bg-card p-7">
+                  <div className="flex items-center gap-3 mb-5">
+                    <span className="rule" />
+                    <span className="eyebrow">Key changes</span>
+                  </div>
+                  <ul className="space-y-3">
                     {keyChanges.map((c, i) => (
-                      <li key={i} className="flex items-start gap-2 t-text-secondary text-sm">
-                        <span className="w-1 h-1 rounded-full bg-brand-400 mt-2 flex-shrink-0" />
+                      <li key={i} className="flex items-start gap-3 t-text-secondary text-[14px] leading-[1.65]">
+                        <span className="w-1 h-1 rounded-full mt-2.5 flex-shrink-0" style={{ background: '#10b981' }} />
                         {c}
                       </li>
                     ))}
@@ -373,15 +437,15 @@ export default function PRDetailPage() {
                 </div>
               )}
               {issuesFound.length > 0 && (
-                <div className="t-card p-5">
-                  <h3 className="text-sm font-semibold t-text mb-3 flex items-center gap-2">
-                    <AlertTriangle size={14} className="text-amber-400" />
-                    Issues Found
-                  </h3>
-                  <ul className="space-y-2">
+                <div className="t-bg-card p-7">
+                  <div className="flex items-center gap-3 mb-5">
+                    <span className="rule" style={{ background: '#b45309' }} />
+                    <span className="eyebrow">Issues found</span>
+                  </div>
+                  <ul className="space-y-3">
                     {issuesFound.map((c, i) => (
-                      <li key={i} className="flex items-start gap-2 t-text-secondary text-sm">
-                        <span className="w-1 h-1 rounded-full bg-amber-400 mt-2 flex-shrink-0" />
+                      <li key={i} className="flex items-start gap-3 t-text-secondary text-[14px] leading-[1.65]">
+                        <span className="w-1 h-1 rounded-full mt-2.5 flex-shrink-0" style={{ background: '#b45309' }} />
                         {c}
                       </li>
                     ))}
@@ -391,87 +455,33 @@ export default function PRDetailPage() {
             </div>
           )}
 
-          {/* Confidence + Score */}
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-            <div className="md:col-span-2 t-card p-5">
-              <p className="t-text-muted text-xs font-semibold uppercase tracking-wider mb-2">Confidence</p>
-              {confidenceScore > 0 ? (
-                <>
-                  <div className="flex items-baseline gap-2 mb-2">
-                    <span className="text-3xl font-bold text-brand-400">{confidenceScore}</span>
-                    <span className="t-text-muted text-sm">/ 5</span>
-                  </div>
-                  <div className="flex gap-1 mb-3">
-                    {[1, 2, 3, 4, 5].map((n) => (
-                      <div
-                        key={n}
-                        className={`h-1.5 flex-1 rounded-full ${
-                          n <= confidenceScore ? 'bg-brand-500' : 'bg-surface-700'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  {confidenceReason && (
-                    <p className="text-xs t-text-muted leading-relaxed">{confidenceReason}</p>
-                  )}
-                </>
-              ) : (
-                <p className="t-text-muted text-sm">N/A</p>
-              )}
-            </div>
-
-            <div className="md:col-span-3 grid grid-cols-4 gap-3">
-              <div className="text-center p-4 rounded-xl t-bg-surface border t-border-subtle">
-                <p className="t-text-muted text-[10px] font-semibold uppercase tracking-wider mb-2">P1</p>
-                <p className="text-2xl font-bold text-red-400">{summary.criticalIssues || 0}</p>
-              </div>
-              <div className="text-center p-4 rounded-xl t-bg-surface border t-border-subtle">
-                <p className="t-text-muted text-[10px] font-semibold uppercase tracking-wider mb-2">P2</p>
-                <p className="text-2xl font-bold text-amber-400">{summary.warnings || 0}</p>
-              </div>
-              <div className="text-center p-4 rounded-xl t-bg-surface border t-border-subtle">
-                <p className="t-text-muted text-[10px] font-semibold uppercase tracking-wider mb-2">P3</p>
-                <p className="text-2xl font-bold text-cyan-400">{summary.suggestions || 0}</p>
-              </div>
-              <div className="text-center p-4 rounded-xl t-bg-surface border t-border-subtle">
-                <p className="t-text-muted text-[10px] font-semibold uppercase tracking-wider mb-2">Score</p>
-                <p className={`text-2xl font-bold ${getScoreColor(review.score)}`}>
-                  {review.score}
-                </p>
-              </div>
-            </div>
-          </div>
-
           {/* Important Files Changed */}
           {fileOverviews.length > 0 && (
-            <div className="t-card p-6 mb-6">
-              <h2 className="text-base font-semibold t-text mb-4 flex items-center gap-2">
-                <FileText size={16} className="text-brand-400" />
-                Important Files Changed
-              </h2>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b t-border-subtle">
-                      <th className="text-left t-text-muted text-xs font-semibold uppercase tracking-wider pb-3 pr-4">Filename</th>
-                      <th className="text-left t-text-muted text-xs font-semibold uppercase tracking-wider pb-3">Overview</th>
-                    </tr>
-                  </thead>
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="rule" />
+                <span className="eyebrow">Important files changed</span>
+              </div>
+              <div className="t-bg-card border t-border-subtle overflow-x-auto" style={{ borderRadius: 0 }}>
+                <table className="w-full text-[14px]">
                   <tbody>
                     {fileOverviews.map((f, i) => (
                       <tr key={i} className="border-b t-border-subtle last:border-b-0">
-                        <td className="py-3 pr-4 align-top">
-                          <code className="text-xs font-mono t-text-secondary bg-surface-800/50 px-2 py-1 rounded">
+                        <td className="py-5 px-6 pr-4 align-top w-[280px]">
+                          <code
+                            className="text-[11.5px] font-mono t-text-secondary inline-block px-2 py-1"
+                            style={{ background: 'var(--bg-input)', borderRadius: 0 }}
+                          >
                             {f.filename}
                           </code>
                         </td>
-                        <td className="py-3 t-text-secondary leading-relaxed align-top">
+                        <td className="py-5 px-6 pl-0 t-text-secondary leading-[1.7] align-top">
                           {f.overview}
                           {f.concerns && f.concerns.length > 0 && (
-                            <ul className="mt-2 space-y-1">
+                            <ul className="mt-3 space-y-1.5">
                               {f.concerns.map((c, ci) => (
-                                <li key={ci} className="text-xs text-amber-400 flex items-start gap-1.5">
-                                  <AlertTriangle size={10} className="mt-0.5 flex-shrink-0" />
+                                <li key={ci} className="text-[12.5px] flex items-start gap-2" style={{ color: '#b45309' }}>
+                                  <AlertTriangle size={11} className="mt-0.5 flex-shrink-0" />
                                   {c}
                                 </li>
                               ))}
@@ -488,53 +498,65 @@ export default function PRDetailPage() {
 
           {/* Flowchart */}
           {flowchart && flowchart.trim() && (
-            <div className="t-card p-6 mb-6">
-              <h2 className="text-base font-semibold t-text mb-4 flex items-center gap-2">
-                <GitBranch size={16} className="text-brand-400" />
-                Flowchart
-              </h2>
-              <Mermaid chart={flowchart} />
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="rule" />
+                <span className="eyebrow">Flow</span>
+              </div>
+              <div className="t-bg-card border t-border-subtle p-6" style={{ borderRadius: 0 }}>
+                <Mermaid chart={flowchart} />
+              </div>
             </div>
           )}
 
           {/* Review Comments */}
           {comments.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-lg font-semibold t-text mb-4 flex items-center gap-2">
-                <Sparkles size={18} className="text-brand-400" />
-                Review Comments ({comments.length})
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="rule" />
+                <span className="eyebrow">Review comments</span>
+              </div>
+              <h2 className="page-display t-text mb-8" style={{ fontSize: 40, lineHeight: 1.04 }}>
+                {comments.length} {comments.length === 1 ? 'observation' : 'observations'}{' '}
+                <span className="italic-accent">worth reading.</span>
               </h2>
-              <div className="space-y-4">
+              <div className="space-y-px" style={{ background: 'var(--border-subtle)' }}>
                 {comments.map((comment, idx) => (
-                  <ReviewCommentCard
-                    key={idx}
-                    comment={comment}
-                    reviewId={review.id}
-                    commentIndex={idx}
-                    prState={review.state}
-                    onApplied={(i, patch) => {
-                      setReview((prev) => {
-                        if (!prev) return prev
-                        const next = Array.isArray(prev.reviewComments) ? [...prev.reviewComments] : []
-                        next[i] = { ...next[i], ...patch }
-                        return { ...prev, reviewComments: next }
-                      })
-                    }}
-                  />
+                  <ReviewCommentCard key={idx} comment={comment} />
                 ))}
               </div>
             </div>
           )}
 
           {/* Verdict Footer */}
-          <div className="t-card p-6">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-semibold t-text">Verdict</h3>
-              <span className={review.verdict === 'approved' ? 'badge-success' : 'badge-danger'}>
-                {review.verdict === 'approved' ? <CheckCircle size={12} /> : <AlertTriangle size={12} />}
-                {review.verdict === 'approved' ? 'Approved' : 'Changes Requested'}
-              </span>
+          <div
+            className="mt-16 pt-10 flex items-center justify-between"
+            style={{ borderTop: '1px solid var(--border-subtle)' }}
+          >
+            <div>
+              <div className="flex items-center gap-3 mb-3">
+                <span className="rule" />
+                <span className="eyebrow">Verdict</span>
+              </div>
+              <h3 className="page-display t-text" style={{ fontSize: 36 }}>
+                {review.verdict === 'approved' ? (
+                  <>Looks <span className="italic-accent">good to ship.</span></>
+                ) : (
+                  <>Changes <span className="italic-accent" style={{ color: '#dc2626' }}>requested.</span></>
+                )}
+              </h3>
             </div>
+            <span
+              className="inline-flex items-center gap-2 px-4 py-2.5 text-[10.5px] font-semibold uppercase tracking-[0.2em] flex-shrink-0"
+              style={{
+                background: review.verdict === 'approved' ? 'rgba(16,185,129,0.08)' : 'rgba(220,38,38,0.06)',
+                border: `1px solid ${review.verdict === 'approved' ? 'rgba(16,185,129,0.35)' : 'rgba(220,38,38,0.3)'}`,
+                color: review.verdict === 'approved' ? '#10b981' : '#dc2626',
+              }}
+            >
+              {review.verdict === 'approved' ? <CheckCircle size={13} /> : <AlertTriangle size={13} />}
+              {review.verdict === 'approved' ? 'Approved' : 'Changes Requested'}
+            </span>
           </div>
         </>
       )}

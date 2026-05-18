@@ -61,66 +61,88 @@ function IntegrationCard({
   onConnect,
   onDisconnect,
   loading = false,
+  delay = 0,
 }) {
   const isConnected = status === 'connected'
   const isSoon = status === 'soon'
 
   return (
-    <div className={`group relative t-bg-card border rounded-xl p-5 transition-all ${
-      isConnected
-        ? 'border-brand-500/25'
-        : isSoon
-        ? 't-border-subtle opacity-60'
-        : 't-border-subtle hover:border-brand-500/20'
-    }`}>
-      {/* Top row */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="w-11 h-11 rounded-lg t-bg-input border t-border-subtle flex items-center justify-center">
+    <div
+      className={`group relative t-bg-card border rounded-none p-7 card-hover-glow ${
+        isConnected ? 'border-brand-500/30' : 't-border-subtle'
+      } ${isSoon ? 'opacity-60' : ''}`}
+      style={{ animation: `rowFadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms both` }}
+    >
+      {/* Top row: logo + status */}
+      <div className="flex items-start justify-between mb-6">
+        <div className="w-12 h-12 rounded-md t-bg-input border t-border-subtle flex items-center justify-center transition-transform duration-700 ease-editorial group-hover:scale-110">
           <Logo className="t-text" />
         </div>
         {isConnected ? (
-          <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-brand-500/10 text-brand-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-400" />
+          <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] px-2.5 py-1 rounded-full bg-brand-500/10 text-brand-500 border border-brand-500/30">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full rounded-full bg-brand-500 opacity-75 animate-ping" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-brand-500" />
+            </span>
             Connected
           </span>
         ) : isSoon ? (
-          <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-surface-700/40 t-text-muted">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.18em] px-2.5 py-1 rounded-full t-bg-input border t-border-subtle t-text-muted">
             Soon
           </span>
         ) : null}
       </div>
 
-      {/* Title + meta */}
-      <h3 className="text-base font-semibold t-text mb-1">{name}</h3>
+      {/* Title + meta — serif display */}
+      <h3
+        className="page-display t-text mb-1"
+        style={{ fontSize: 30, lineHeight: 1.05 }}
+      >
+        {name}
+      </h3>
       {isConnected && username && (
-        <p className="text-xs font-mono text-brand-400 mb-2">@{username}</p>
+        <p className="text-[11.5px] font-mono mb-3 mt-2" style={{ color: '#10b981' }}>
+          @{username}
+        </p>
       )}
-      <p className="t-text-muted text-sm leading-relaxed mb-5 min-h-[40px]">
+      <p className="t-text-muted text-[13.5px] leading-[1.7] mb-7 mt-2 min-h-[44px]">
         {description}
       </p>
 
       {/* Action */}
       {isSoon ? (
-        <button disabled className="w-full h-9 rounded-md t-bg-input border t-border-subtle t-text-muted text-sm font-medium cursor-not-allowed">
+        <button
+          disabled
+          className="w-full h-10 rounded-none t-bg-input border t-border-subtle t-text-muted text-[11px] font-semibold uppercase tracking-[0.18em] cursor-not-allowed"
+        >
           Coming soon
         </button>
       ) : isConnected ? (
         <button
           onClick={onDisconnect}
           disabled={loading}
-          className="w-full h-9 rounded-md border t-border-subtle t-bg-input t-text-secondary hover:text-red-400 hover:border-red-500/30 text-sm font-medium transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+          className="w-full h-10 rounded-none border t-border-subtle t-bg-input t-text-secondary hover:text-red-400 hover:border-red-500/30 text-[11px] font-semibold uppercase tracking-[0.18em] press-scale flex items-center justify-center gap-2 disabled:opacity-50"
         >
           {loading ? <Loader2 size={13} className="animate-spin" /> : null}
-          {loading ? 'Disconnecting…' : 'Disconnect'}
+          {loading ? 'Disconnecting' : 'Disconnect'}
         </button>
       ) : (
         <button
           onClick={onConnect}
-          className="w-full h-9 rounded-md bg-brand-500 hover:bg-brand-600 text-white text-sm font-medium shadow-sm transition-all flex items-center justify-center gap-2"
+          className="w-full h-10 rounded-none press-scale text-[11px] font-semibold uppercase tracking-[0.18em] flex items-center justify-center gap-2"
+          style={{ background: '#1a1612', color: '#ffffff', border: '1px solid #1a1612' }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#10b981'
+            e.currentTarget.style.borderColor = '#10b981'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = '#1a1612'
+            e.currentTarget.style.borderColor = '#1a1612'
+          }}
         >
-          <Plug size={13} />
+          <Plug size={12} />
           Connect
-          <ArrowRight size={13} />
+          <ArrowRight size={12} />
         </button>
       )}
     </div>
@@ -186,19 +208,26 @@ export default function IntegrationsPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-6 lg:px-8 py-8 animate-fade-in">
+    <div className="max-w-6xl mx-auto px-6 lg:px-10 py-12 animate-fade-in">
       {toast && <Toast toast={toast} onClose={() => setToast(null)} />}
 
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold t-text mb-1">Integrations</h1>
-        <p className="t-text-muted text-sm">
-          Connect platforms to sync repositories and enable AI code reviews on every pull request.
+      {/* Editorial header */}
+      <div className="mb-14">
+        <div className="flex items-center gap-3 mb-5">
+          <span className="rule rule-grow" />
+          <span className="eyebrow">Integrations</span>
+        </div>
+        <h1 className="page-display t-text" style={{ fontSize: 56, lineHeight: 1.04 }}>
+          Connect your{' '}
+          <span className="italic-accent">platforms.</span>
+        </h1>
+        <p className="t-text-muted text-[15px] leading-[1.7] mt-5 max-w-xl">
+          Sync repositories and enable AI code reviews on every pull request.
         </p>
       </div>
 
       {/* Cards grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px" style={{ background: 'var(--border-subtle)' }}>
         <IntegrationCard
           Logo={GithubLogo}
           name="GitHub"
@@ -208,37 +237,44 @@ export default function IntegrationsPage() {
           onConnect={handleConnect}
           onDisconnect={handleDisconnect}
           loading={disconnecting}
+          delay={0}
         />
-
         <IntegrationCard
           Logo={GitlabLogo}
           name="GitLab"
           description="Support for merge requests on GitLab repositories."
           status="soon"
+          delay={100}
         />
-
         <IntegrationCard
           Logo={BitbucketLogo}
           name="Bitbucket"
           description="Support for Bitbucket pull request reviews."
           status="soon"
+          delay={200}
         />
       </div>
 
       {/* Help row */}
-      <div className="mt-8 flex items-center justify-between p-4 rounded-lg t-bg-card border t-border-subtle">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-brand-500/10 flex items-center justify-center">
-            <Plug size={14} className="text-brand-400" />
-          </div>
+      <div
+        className="mt-12 flex items-center justify-between p-6 t-bg-card border t-border-subtle rounded-none card-hover-glow"
+        style={{ animation: 'rowFadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 320ms both' }}
+      >
+        <div className="flex items-center gap-5">
+          <span className="rule" />
           <div>
-            <p className="t-text text-sm font-medium">Need a different integration?</p>
-            <p className="t-text-muted text-xs">Let us know what you'd like us to support next.</p>
+            <p className="page-display t-text" style={{ fontSize: 22 }}>
+              Need a different <span className="italic-accent">integration?</span>
+            </p>
+            <p className="t-text-muted text-[13px] mt-1.5 leading-[1.6]">
+              Let us know what you'd like us to support next.
+            </p>
           </div>
         </div>
         <a
           href="mailto:hello@codereview.ai"
-          className="inline-flex items-center gap-1.5 text-xs t-text-secondary hover:t-text font-medium transition-colors"
+          className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] pb-1 relative"
+          style={{ color: '#10b981', borderBottom: '1px solid #10b981' }}
         >
           Contact us
           <ExternalLink size={11} />

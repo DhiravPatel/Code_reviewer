@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom'
-import { ArrowRight, Github, Sparkles, Shield, Zap, CheckCircle, Star } from 'lucide-react'
-import { useState, useEffect, useRef } from 'react'
+import { ArrowRight, Sparkles } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 
-const typewriterWords = ['Pull Requests', 'Code Quality', 'Security Bugs', 'Performance', 'Best Practices']
+/* ─── A magazine-style typewriter that swaps italic accent words ──── */
+const typewriterWords = ['Pull Requests', 'Code Quality', 'Security', 'Performance', 'Best Practices']
 
-function useTypewriter(words, typingSpeed = 100, deletingSpeed = 60, pauseTime = 2000) {
+function useTypewriter(words, typingSpeed = 90, deletingSpeed = 50, pauseTime = 2200) {
   const [text, setText] = useState('')
   const [wordIndex, setWordIndex] = useState(0)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -12,332 +13,296 @@ function useTypewriter(words, typingSpeed = 100, deletingSpeed = 60, pauseTime =
   useEffect(() => {
     const currentWord = words[wordIndex]
     let timeout
-
     if (!isDeleting && text === currentWord) {
       timeout = setTimeout(() => setIsDeleting(true), pauseTime)
     } else if (isDeleting && text === '') {
       setIsDeleting(false)
-      setWordIndex((prev) => (prev + 1) % words.length)
+      setWordIndex((p) => (p + 1) % words.length)
     } else {
-      timeout = setTimeout(() => {
-        setText(currentWord.substring(0, isDeleting ? text.length - 1 : text.length + 1))
-      }, isDeleting ? deletingSpeed : typingSpeed)
+      timeout = setTimeout(
+        () => setText(currentWord.substring(0, isDeleting ? text.length - 1 : text.length + 1)),
+        isDeleting ? deletingSpeed : typingSpeed
+      )
     }
-
     return () => clearTimeout(timeout)
   }, [text, isDeleting, wordIndex, words, typingSpeed, deletingSpeed, pauseTime])
 
   return text
 }
 
-function useAnimatedCounter(target, duration = 2000, startOnMount = true) {
-  const [value, setValue] = useState(0)
-  const ref = useRef(null)
-
+/* ─── Animated stat counter, eases to target on mount ─────────────── */
+function useAnimatedCounter(target, duration = 2200) {
+  const [v, setV] = useState(0)
   useEffect(() => {
-    if (!startOnMount) return
     const start = performance.now()
-    const numericTarget = typeof target === 'number' ? target : parseFloat(target) || 0
-
-    let frame
+    let raf
     const tick = (now) => {
-      const progress = Math.min((now - start) / duration, 1)
-      const eased = 1 - Math.pow(1 - progress, 3)
-      setValue(Math.floor(numericTarget * eased))
-      if (progress < 1) frame = requestAnimationFrame(tick)
+      const p = Math.min((now - start) / duration, 1)
+      const eased = 1 - Math.pow(1 - p, 3)
+      setV(Math.floor(target * eased))
+      if (p < 1) raf = requestAnimationFrame(tick)
     }
-    frame = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(frame)
-  }, [target, duration, startOnMount])
-
-  return { value, ref }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [target, duration])
+  return v
 }
 
-function StatCard({ targetValue, suffix = '', label, delay = 0, startOnMount }) {
-  const { value } = useAnimatedCounter(targetValue, 2200, startOnMount)
+function Stat({ value, suffix = '', label }) {
+  const n = useAnimatedCounter(value)
   return (
-    <div
-      className="relative p-5 rounded-2xl bg-gradient-to-br from-surface-800/40 to-surface-900/40 border border-surface-700/40 hover:border-brand-500/40 backdrop-blur-sm transition-all duration-500 group overflow-hidden"
-      style={{ animationDelay: `${delay}ms` }}
-    >
-      <div className="absolute -inset-1 bg-gradient-to-r from-brand-500/0 via-brand-500/10 to-cyan-500/0 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
-      <div className="relative">
-        <div className="text-2xl md:text-3xl font-bold gradient-text mb-1 tabular-nums">
-          {value.toLocaleString()}{suffix}
-        </div>
-        <p className="text-surface-500 text-xs md:text-sm font-medium">{label}</p>
+    <div>
+      <div className="display text-[42px] md:text-[56px] leading-none tabular-nums">
+        {n.toLocaleString()}
+        <span className="display-italic text-[36px] md:text-[48px]" style={{ color: '#10b981' }}>
+          {suffix}
+        </span>
       </div>
+      <div className="eyebrow mt-3">{label}</div>
     </div>
   )
 }
 
 export default function Hero() {
   const navigate = useNavigate()
-  const typedText = useTypewriter(typewriterWords)
-  const [mounted, setMounted] = useState(false)
+  const typed = useTypewriter(typewriterWords)
   const heroRef = useRef(null)
+  const [mounted, setMounted] = useState(false)
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  useEffect(() => setMounted(true), [])
 
-  // Mouse-tracking spotlight
+  // Subtle parallax on serif heading
   useEffect(() => {
-    const hero = heroRef.current
-    if (!hero) return
-    const handleMove = (e) => {
-      const rect = hero.getBoundingClientRect()
-      const x = ((e.clientX - rect.left) / rect.width) * 100
-      const y = ((e.clientY - rect.top) / rect.height) * 100
-      hero.style.setProperty('--mouse-x', `${x}%`)
-      hero.style.setProperty('--mouse-y', `${y}%`)
+    const el = heroRef.current
+    if (!el) return
+    const onScroll = () => {
+      const y = window.scrollY
+      el.style.setProperty('--hero-y', `${y * 0.15}px`)
     }
-    hero.addEventListener('mousemove', handleMove)
-    return () => hero.removeEventListener('mousemove', handleMove)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const handleGithubConnect = () => navigate('/login')
+  // Warm cursor highlight
+  const handleMouseMove = (e) => {
+    const el = heroRef.current
+    if (!el) return
+    const r = el.getBoundingClientRect()
+    el.style.setProperty('--mx', `${e.clientX - r.left}px`)
+    el.style.setProperty('--my', `${e.clientY - r.top}px`)
+  }
 
   return (
     <section
       id="hero"
       ref={heroRef}
-      className="relative overflow-hidden pt-28 lg:pt-36 pb-20 lg:pb-32"
+      onMouseMove={handleMouseMove}
+      className="relative pt-28 md:pt-36 pb-24 overflow-hidden"
     >
-      {/* Aurora gradient */}
-      <div className="aurora" />
+      {/* Warm cursor spotlight */}
+      <div className="warm-spot show" />
 
-      {/* Mouse spotlight */}
-      <div className="spotlight" />
-
-      {/* Noise texture */}
-      <div className="noise" />
-
-      {/* Animated glow orbs */}
+      {/* Soft cream wash band on the right */}
       <div
-        className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[700px] bg-brand-500/[0.08] rounded-full blur-[140px] animate-pulse pointer-events-none"
-        style={{ animationDuration: '4s' }}
-      />
-      <div
-        className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-cyan-500/[0.05] rounded-full blur-[120px] animate-pulse pointer-events-none"
-        style={{ animationDuration: '6s', animationDelay: '1s' }}
-      />
-      <div
-        className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-violet-500/[0.05] rounded-full blur-[100px] animate-pulse pointer-events-none"
-        style={{ animationDuration: '5s', animationDelay: '2s' }}
+        className="absolute top-0 right-0 w-1/2 h-full pointer-events-none"
+        style={{ background: 'linear-gradient(180deg, transparent, rgba(244,242,236,0.6))' }}
       />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          {/* Badge with glow ring */}
-          <div
-            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-500/10 border border-brand-500/30 mb-8 backdrop-blur-sm transition-all duration-700 ${
-              mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`}
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-500" />
-            </span>
-            <span className="text-sm text-brand-300 font-medium">Now in Public Beta — Try for Free</span>
-            <Sparkles size={12} className="text-brand-400" />
-          </div>
-
-          {/* Main heading */}
-          <h1
-            className={`text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-extrabold text-white mb-4 leading-[1.05] tracking-tight transition-all duration-700 delay-100 ${
-              mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-            }`}
-          >
-            AI-Powered{' '}
-            <span className="gradient-flow inline-block">Code Reviews</span>
-          </h1>
-
-          {/* Typewriter */}
-          <div
-            className={`text-2xl sm:text-3xl md:text-4xl font-bold text-surface-400 mb-6 h-12 transition-all duration-700 delay-200 ${
-              mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-            }`}
-          >
-            <span>for </span>
-            <span className="gradient-text">{typedText}</span>
-            <span className="typewriter-cursor" />
-          </div>
-
-          {/* Subheading */}
-          <p
-            className={`text-base md:text-lg text-surface-400 max-w-2xl mx-auto mb-10 leading-relaxed transition-all duration-700 delay-300 ${
-              mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-            }`}
-          >
-            Automatically review pull requests, detect bugs, and ship better code
-            with AI that understands your codebase.{' '}
-            <span className="text-surface-200 font-medium">Get started in 30 seconds.</span>
-          </p>
-
-          {/* CTA Buttons */}
-          <div
-            className={`flex flex-col sm:flex-row gap-4 justify-center mb-10 transition-all duration-700 delay-[400ms] ${
-              mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-            }`}
-          >
-            <button
-              onClick={handleGithubConnect}
-              className="shimmer-btn group btn-primary text-base px-8 py-4 shadow-glow hover:shadow-glow-lg"
+      <div className="container-editorial relative">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-14 items-start">
+          {/* Left column — copy */}
+          <div className="lg:col-span-6" style={{ transform: 'translateY(calc(-1 * var(--hero-y, 0px)))' }}>
+            <div
+              className={`flex items-center gap-3 mb-8 ${mounted ? 'ed-fade-up' : 'opacity-0'}`}
+              style={{ animationDelay: '0.05s' }}
             >
-              <Github size={20} />
-              Connect GitHub
-              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button
-              onClick={handleGithubConnect}
-              className="btn-ghost text-base px-8 py-4 group backdrop-blur-sm"
-            >
-              <Sparkles size={18} className="group-hover:rotate-12 transition-transform" />
-              View Live Demo
-            </button>
-          </div>
-
-          {/* Social proof */}
-          <div
-            className={`flex items-center justify-center gap-3 mb-12 transition-all duration-700 delay-[500ms] ${
-              mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-            }`}
-          >
-            <div className="flex -space-x-2">
-              {['from-brand-500 to-cyan-500', 'from-violet-500 to-pink-500', 'from-amber-500 to-red-500', 'from-blue-500 to-indigo-500', 'from-emerald-500 to-teal-500'].map((c, i) => (
-                <div
-                  key={i}
-                  className={`w-8 h-8 rounded-full bg-gradient-to-br ${c} border-2 border-surface-950`}
-                />
-              ))}
+              <span className="rule rule-grow" />
+              <span className="eyebrow">A new chapter in code review</span>
             </div>
-            <div className="text-left">
-              <div className="flex items-center gap-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={12} className="text-amber-400 fill-amber-400" />
-                ))}
-              </div>
-              <p className="text-surface-400 text-xs mt-0.5">
-                <span className="text-white font-semibold">500+ teams</span> trust CodeReview AI
-              </p>
+
+            <h1
+              className={`display text-[48px] sm:text-[60px] md:text-[76px] lg:text-[88px] xl:text-[104px] leading-[0.98] tracking-tight ${
+                mounted ? 'ed-fade-up' : 'opacity-0'
+              }`}
+              style={{ animationDelay: '0.15s' }}
+            >
+              AI&#8209;powered{' '}
+              <span className="display-italic" style={{ color: '#10b981' }}>
+                code reviews
+              </span>
+            </h1>
+
+            <div
+              className={`mt-8 display text-[28px] md:text-[36px] text-sand-700 ${
+                mounted ? 'ed-fade-up' : 'opacity-0'
+              }`}
+              style={{ animationDelay: '0.3s', color: '#3b3833' }}
+            >
+              for <span className="display-italic" style={{ color: '#10b981' }}>{typed}</span>
+              <span
+                className="inline-block w-[2px] h-7 ml-1 align-middle"
+                style={{ background: '#10b981', animation: 'blink 1s steps(2) infinite' }}
+              />
+            </div>
+
+            <p
+              className={`mt-10 max-w-xl text-[16px] md:text-[17px] leading-[1.75] ${
+                mounted ? 'ed-fade-up' : 'opacity-0'
+              }`}
+              style={{ animationDelay: '0.45s', color: '#3b3833' }}
+            >
+              Automatically review pull requests, detect bugs, and ship better code with
+              AI that understands your codebase.{' '}
+              <span style={{ color: '#1a1612', fontWeight: 500 }}>Get started in 30 seconds.</span>
+            </p>
+
+            <div
+              className={`mt-12 flex flex-wrap items-center gap-x-10 gap-y-6 ${
+                mounted ? 'ed-fade-up' : 'opacity-0'
+              }`}
+              style={{ animationDelay: '0.55s' }}
+            >
+              <button onClick={() => navigate('/login')} className="btn-ed">
+                Connect GitHub
+                <ArrowRight size={14} />
+              </button>
+              <button onClick={() => navigate('/login')} className="btn-link-ed">
+                View live demo
+                <span className="arrow">→</span>
+              </button>
+            </div>
+
+            {/* Stats row */}
+            <div
+              className={`mt-20 grid grid-cols-3 gap-10 max-w-2xl ${mounted ? 'ed-fade-up' : 'opacity-0'}`}
+              style={{ animationDelay: '0.75s' }}
+            >
+              <Stat value={10000} suffix="+" label="Pull requests reviewed" />
+              <Stat value={98} suffix="%" label="Accuracy" />
+              <Stat value={500} suffix="+" label="Teams" />
             </div>
           </div>
 
-          {/* Stats with animated counters */}
+          {/* Right column — editorial code card */}
           <div
-            className={`grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto mb-16 transition-all duration-700 delay-[600ms] ${
-              mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-            }`}
+            className={`lg:col-span-6 ${mounted ? 'ed-fade-up' : 'opacity-0'}`}
+            style={{ animationDelay: '0.4s' }}
           >
-            <StatCard targetValue={10000} suffix="+" label="PRs Reviewed" startOnMount={mounted} />
-            <StatCard targetValue={98} suffix="%" label="Accuracy Rate" startOnMount={mounted} />
-            <StatCard targetValue={2000000} suffix="+" label="Issues Found" startOnMount={mounted} />
-            <StatCard targetValue={500} suffix="+" label="Teams Active" startOnMount={mounted} />
-          </div>
+            <div className="relative">
+              {/* Floating accent */}
+              <div
+                className="absolute -top-6 -left-6 w-24 h-24 rounded-full opacity-30"
+                style={{ background: 'radial-gradient(circle, #10b981 0%, transparent 70%)' }}
+              />
 
-          {/* Code preview mockup */}
-          <div
-            className={`max-w-4xl mx-auto transition-all duration-1000 delay-[700ms] ${
-              mounted ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
-            }`}
-          >
-            <div className="glow-border rounded-2xl">
-              <div className="glass-card overflow-hidden rounded-2xl">
-                {/* Window chrome */}
-                <div className="flex items-center gap-2 px-4 py-3 bg-surface-900/90 border-b border-surface-700/50">
-                  <div className="flex gap-1.5">
-                    <div className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors" />
-                    <div className="w-3 h-3 rounded-full bg-yellow-500/80 hover:bg-yellow-500 transition-colors" />
-                    <div className="w-3 h-3 rounded-full bg-green-500/80 hover:bg-green-500 transition-colors" />
+              <div className="ed-card ed-reveal relative overflow-hidden" style={{ background: '#ffffff' }}>
+                {/* Card chrome */}
+                <div className="flex items-center justify-between px-6 py-4 border-b" style={{ borderColor: '#e8e4da' }}>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#10b981' }} />
+                    <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#d4cfc1' }} />
+                    <span className="w-2.5 h-2.5 rounded-full" style={{ background: '#d4cfc1' }} />
                   </div>
-                  <div className="flex-1 text-center">
-                    <span className="text-xs text-surface-500 font-mono">
-                      PR #234 — auth-service / authenticate.ts
-                    </span>
-                  </div>
-                  <span className="badge-success text-[10px] py-0.5 px-2">
-                    <CheckCircle size={10} />
-                    AI Reviewed
+                  <span className="eyebrow text-[11px]">PR #234 · authenticate.ts</span>
+                  <span className="inline-flex items-center gap-2 text-[11px]" style={{ color: '#10b981', letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#10b981', animation: 'pulse 2s infinite' }} />
+                    Reviewing
                   </span>
                 </div>
 
-                {/* Code content */}
-                <div className="p-4 md:p-6 font-mono text-xs md:text-sm leading-relaxed text-left overflow-x-auto">
+                {/* Code diff */}
+                <div className="font-mono text-[13.5px] leading-[1.85] p-7 reveal-target">
                   {[
-                    { type: 'remove', line: 12, content: 'async function login(email, password) {' },
-                    { type: 'add', line: 12, content: 'async function authenticate(email: string, password: string) {' },
-                    { type: 'neutral', line: 13, content: '  const user = await db.findUser(email)' },
-                    { type: 'add', line: 14, content: '  await logAuthAttempt(email, \'attempt\')' },
-                    { type: 'neutral', line: 15, content: '  if (!user) throw new AuthError(\'User not found\')' },
-                    { type: 'add', line: 16, content: '  const isValid = await verifyPassword(password, user.hash)' },
-                    { type: 'neutral', line: 17, content: '  return generateToken(user)' },
-                    { type: 'neutral', line: 18, content: '}' },
-                  ].map((line, idx) => (
+                    { type: 'remove', n: 12, c: 'async function login(email, password) {' },
+                    { type: 'add',    n: 12, c: 'async function authenticate(email: string, password: string) {' },
+                    { type: 'context',n: 13, c: '  const user = await db.findUser(email)' },
+                    { type: 'add',    n: 14, c: "  await logAuthAttempt(email, 'attempt')" },
+                    { type: 'context',n: 15, c: "  if (!user) throw new AuthError('User not found')" },
+                    { type: 'add',    n: 16, c: '  const ok = await verifyPassword(password, user.hash)' },
+                    { type: 'context',n: 17, c: '  return generateToken(user)' },
+                    { type: 'context',n: 18, c: '}' },
+                  ].map((l, i) => (
                     <div
-                      key={idx}
-                      className={`stagger-item px-3 py-0.5 rounded-sm ${
-                        line.type === 'add' ? 'code-line-add' :
-                        line.type === 'remove' ? 'code-line-remove' :
-                        'code-line-neutral'
-                      }`}
-                      style={{ animationDelay: `${800 + idx * 100}ms` }}
+                      key={i}
+                      className="flex gap-3 px-2 py-0.5 rounded-sm"
+                      style={{
+                        background:
+                          l.type === 'add' ? 'rgba(16, 185, 129, 0.08)' :
+                          l.type === 'remove' ? 'rgba(220, 38, 38, 0.08)' : 'transparent',
+                        color:
+                          l.type === 'add' ? '#047857' :
+                          l.type === 'remove' ? '#dc2626' : '#3b3833',
+                        textDecoration: l.type === 'remove' ? 'line-through' : 'none',
+                        opacity: 0,
+                        animation: `editorialFadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) ${0.5 + i * 0.1}s forwards`,
+                      }}
                     >
-                      <span className="text-surface-600 select-none inline-block w-8 text-right mr-3">{line.line}</span>
-                      <span className="select-none mr-2 inline-block w-3 text-center">
-                        {line.type === 'add' ? '+' : line.type === 'remove' ? '−' : ' '}
+                      <span style={{ color: '#a39d8c', width: 22, textAlign: 'right' }}>{l.n}</span>
+                      <span style={{ width: 14, color: '#a39d8c' }}>
+                        {l.type === 'add' ? '+' : l.type === 'remove' ? '−' : ' '}
                       </span>
-                      {line.content}
+                      <span className="truncate">{l.c}</span>
                     </div>
                   ))}
 
-                  {/* AI comment */}
+                  {/* AI suggestion */}
                   <div
-                    className="stagger-item mt-4 p-3 rounded-xl bg-brand-500/10 border border-brand-500/20 relative overflow-hidden"
-                    style={{ animationDelay: '1600ms' }}
+                    className="mt-5 pt-5 border-t flex gap-3"
+                    style={{
+                      borderColor: '#e8e4da',
+                      opacity: 0,
+                      animation: 'editorialFadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) 1.3s forwards',
+                    }}
                   >
-                    <div className="absolute -inset-1 bg-gradient-to-r from-brand-500/20 to-cyan-500/20 blur-xl" />
-                    <div className="relative">
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <div className="w-5 h-5 bg-gradient-to-r from-brand-500 to-cyan-500 rounded-md flex items-center justify-center">
-                          <Sparkles size={10} className="text-white" />
-                        </div>
-                        <span className="text-brand-400 text-xs font-semibold">AI Suggestion — Security</span>
-                      </div>
-                      <p className="text-surface-400 text-xs leading-relaxed">
-                        Consider adding rate limiting on authentication attempts to prevent brute-force attacks.
-                        Use <code className="text-brand-300 bg-brand-500/10 px-1 rounded">express-rate-limit</code> with a 5 request/min window.
+                    <Sparkles size={16} style={{ color: '#10b981', marginTop: 3 }} />
+                    <div>
+                      <div className="eyebrow text-[11px]" style={{ color: '#10b981' }}>Security · suggestion</div>
+                      <p className="display-italic text-[19px] mt-2 leading-snug" style={{ color: '#1a1612' }}>
+                        Consider rate-limiting authentication attempts to prevent brute-force.
                       </p>
                     </div>
                   </div>
                 </div>
+
+                {/* Footer meta strip */}
+                <div
+                  className="flex items-center justify-between px-6 py-4 border-t"
+                  style={{ borderColor: '#e8e4da', background: '#faf8f3' }}
+                >
+                  <div className="flex items-center gap-4 text-[11px]" style={{ color: '#56524a', letterSpacing: '0.18em', textTransform: 'uppercase', fontWeight: 600 }}>
+                    <span className="inline-flex items-center gap-1.5">
+                      <span style={{ color: '#10b981' }}>+3</span>
+                      <span className="opacity-60">added</span>
+                    </span>
+                    <span className="opacity-30">·</span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <span style={{ color: '#dc2626' }}>−1</span>
+                      <span className="opacity-60">removed</span>
+                    </span>
+                  </div>
+                  <div className="flex items-baseline gap-1.5">
+                    <span
+                      className="page-display tabular-nums"
+                      style={{ fontSize: 32, color: '#10b981', lineHeight: 1 }}
+                    >
+                      92
+                    </span>
+                    <span
+                      className="display-italic"
+                      style={{ fontSize: 16, color: '#56524a' }}
+                    >
+                      / 100
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Caption under the card, magazine-style */}
+              <div className="mt-6 flex items-center gap-3">
+                <span className="rule" />
+                <span className="eyebrow">Live review · reviewed in 18 seconds</span>
               </div>
             </div>
-          </div>
-
-          {/* Trust pill row */}
-          <div
-            className={`flex flex-wrap justify-center gap-x-8 gap-y-4 mt-14 transition-all duration-700 delay-[900ms] ${
-              mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-            }`}
-          >
-            {[
-              { icon: Shield, text: 'SOC2 Compliant' },
-              { icon: Zap, text: 'Reviews in <30s' },
-              { icon: Github, text: 'GitHub Native' },
-              { icon: CheckCircle, text: 'Free to Start' },
-            ].map(({ icon: Icon, text }, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-2 text-surface-500 hover:text-surface-200 transition-colors cursor-default group"
-              >
-                <Icon
-                  size={15}
-                  className="text-brand-500 group-hover:scale-110 transition-transform"
-                />
-                <span className="text-xs sm:text-sm font-medium">{text}</span>
-              </div>
-            ))}
           </div>
         </div>
       </div>

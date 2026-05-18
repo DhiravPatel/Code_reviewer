@@ -35,15 +35,20 @@ export default function Sidebar() {
         {collapsed ? <ChevronRight size={11} /> : <ChevronLeft size={11} />}
       </button>
 
-      {/* Logo */}
-      <div className={`flex items-center gap-2.5 px-4 h-14 border-b t-border-subtle ${collapsed ? 'justify-center px-0' : ''}`}>
-        <div className="w-7 h-7 bg-gradient-to-br from-brand-500 to-cyan-500 rounded-md flex items-center justify-center flex-shrink-0">
-          <span className="text-white font-bold text-[11px]">CR</span>
-        </div>
-        {!collapsed && (
-          <div className="min-w-0 leading-tight">
-            <h1 className="t-text font-semibold text-[13px] tracking-tight">CodeReview</h1>
-            <p className="text-[10px] t-text-muted">AI-powered reviews</p>
+      {/* Wordmark */}
+      <div className={`flex items-center gap-2 px-4 h-16 border-b t-border-subtle ${collapsed ? 'justify-center px-0' : ''}`}>
+        {collapsed ? (
+          <span style={{ fontFamily: '"Cormorant Garamond", Georgia, serif', fontWeight: 500, fontSize: 22, lineHeight: 1 }}>
+            CR
+          </span>
+        ) : (
+          <div className="flex items-baseline gap-1.5">
+            <span style={{ fontFamily: '"Cormorant Garamond", Georgia, serif', fontWeight: 500, fontSize: 22, letterSpacing: '-0.01em' }}>
+              CodeReview
+            </span>
+            <span style={{ fontFamily: '"Cormorant Garamond", Georgia, serif', fontStyle: 'italic', fontWeight: 400, fontSize: 18, color: '#10b981' }}>
+              AI
+            </span>
           </div>
         )}
       </div>

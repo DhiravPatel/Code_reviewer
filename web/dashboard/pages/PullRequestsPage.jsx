@@ -36,118 +36,186 @@ function StateContainer({ icon: Icon, title, description, action }) {
   )
 }
 
-// ─── PR Row ──────────────────────────────────────────────────
-function PRRow({ pr, onClick, onTriggerReview, reviewingId, timeAgo }) {
+// ─── PR Row — magazine article preview style ─────────────────
+function PRRow({ pr, onClick, onTriggerReview, reviewingId, timeAgo, delay = 0 }) {
   const isReviewingNow = reviewingId === `${pr.repoId}:${pr.number}` || pr.reviewStatus === 'reviewing'
+  const isCompleted = pr.reviewStatus === 'completed'
 
-  const StatusBadge = () => {
-    if (pr.reviewStatus === 'completed') {
-      if (pr.reviewVerdict === 'approved') {
-        return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide bg-brand-500/10 text-brand-400">
-            <Check size={10} />
-            Approved
-          </span>
-        )
-      }
-      return (
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide bg-red-500/10 text-red-400">
-          <AlertCircle size={10} />
-          Changes
-        </span>
-      )
-    }
-    if (pr.reviewStatus === 'reviewing') {
-      return (
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide bg-amber-500/10 text-amber-400">
-          <Loader2 size={10} className="animate-spin" />
-          Reviewing
-        </span>
-      )
-    }
-    return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide bg-surface-700/40 t-text-muted">
-        <Clock size={10} />
-        Pending
-      </span>
-    )
-  }
+  const scoreColor =
+    pr.reviewScore == null ? 'var(--text-faint)' :
+    pr.reviewScore >= 80 ? '#10b981' :
+    pr.reviewScore >= 60 ? '#b45309' : '#dc2626'
+
+  const statusText = (() => {
+    if (isCompleted) return pr.reviewVerdict === 'approved' ? 'Approved' : 'Changes Requested'
+    if (pr.reviewStatus === 'reviewing') return 'Reviewing'
+    return 'Pending'
+  })()
+
+  const statusColor = (() => {
+    if (isCompleted) return pr.reviewVerdict === 'approved' ? '#10b981' : '#dc2626'
+    if (pr.reviewStatus === 'reviewing') return '#b45309'
+    return 'var(--text-muted)'
+  })()
+
+  const StatusIcon = (() => {
+    if (isCompleted) return pr.reviewVerdict === 'approved' ? Check : AlertCircle
+    if (pr.reviewStatus === 'reviewing') return Loader2
+    return Clock
+  })()
 
   return (
-    <div
+    <article
       onClick={() => pr.reviewId && onClick(pr.reviewId)}
-      className={`group flex items-center gap-4 px-5 py-3.5 border-b t-border-subtle transition-colors ${
-        pr.reviewId ? 'cursor-pointer hover:bg-[var(--bg-surface-hover)]' : ''
-      } ${pr.reviewStatus === 'reviewing' ? 'bg-brand-500/[0.02]' : ''}`}
+      className={`group relative transition-all duration-500 ease-editorial border-b t-border-subtle last:border-b-0 ${
+        pr.reviewId ? 'cursor-pointer' : ''
+      } ${pr.reviewStatus === 'reviewing' ? 'bg-brand-500/[0.025]' : ''}`}
+      style={{
+        animation: `rowFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms both`,
+      }}
+      onMouseEnter={(e) => {
+        if (pr.reviewId) e.currentTarget.style.background = 'var(--bg-surface-hover)'
+      }}
+      onMouseLeave={(e) => {
+        if (pr.reviewStatus !== 'reviewing') e.currentTarget.style.background = ''
+      }}
     >
-      {/* Avatar */}
-      {pr.authorAvatar ? (
-        <img src={pr.authorAvatar} alt={pr.author} className="w-9 h-9 rounded-full object-cover flex-shrink-0 border t-border-subtle" />
-      ) : (
-        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-surface-700 to-surface-800 flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">
-          {pr.author?.substring(0, 2).toUpperCase()}
-        </div>
-      )}
+      {/* Animated left-edge accent that grows on hover */}
+      <span
+        className="absolute left-0 top-6 bottom-6 w-[2px] origin-top transition-transform duration-700 ease-editorial group-hover:scale-y-100 scale-y-0"
+        style={{ background: '#10b981' }}
+      />
 
-      {/* Title + meta */}
-      <div className="flex-1 min-w-0">
-        <h3 className="text-sm font-semibold t-text group-hover:text-brand-400 transition-colors truncate">
-          {pr.title}
-        </h3>
-        <div className="flex items-center gap-1.5 text-xs t-text-muted mt-1 truncate">
-          <span className="font-mono t-text-secondary truncate">{pr.repoName}</span>
-          <span className="opacity-50">·</span>
-          <span>#{pr.number}</span>
-          <span className="opacity-50 hidden sm:inline">·</span>
-          <span className="hidden sm:inline">by {pr.author}</span>
-          <span className="opacity-50 hidden md:inline">·</span>
-          <span className="hidden md:inline">{timeAgo(pr.updatedAt)}</span>
+      <div className="flex items-start gap-8 lg:gap-10 px-8 lg:px-10 py-8">
+        {/* LEAD: Big serif score */}
+        <div className="flex-shrink-0 w-[88px] flex flex-col items-start">
+          {pr.reviewScore != null ? (
+            <>
+              <span
+                className="page-display tabular-nums leading-none"
+                style={{ fontSize: 60, color: scoreColor, letterSpacing: '-0.02em' }}
+              >
+                {pr.reviewScore}
+              </span>
+              <span className="eyebrow text-[9px] mt-2">/ 100</span>
+            </>
+          ) : (
+            <span
+              style={{
+                fontFamily: '"Cormorant Garamond", Georgia, serif',
+                fontStyle: 'italic',
+                fontSize: 56,
+                color: 'var(--text-faint)',
+                lineHeight: 1,
+              }}
+            >
+              —
+            </span>
+          )}
+        </div>
+
+        {/* BODY: title + meta + status */}
+        <div className="flex-1 min-w-0 pt-1">
+          {/* Meta eyebrow line */}
+          <div className="flex items-center gap-2.5 text-[10.5px] uppercase tracking-[0.22em] font-semibold mb-3 t-text-muted">
+            <span className="font-mono normal-case tracking-normal text-[11.5px]" style={{ color: '#10b981' }}>
+              {pr.repoName}
+            </span>
+            <span className="opacity-50">·</span>
+            <span>#{pr.number}</span>
+            <span className="opacity-50">·</span>
+            <span className="normal-case tracking-normal text-[11.5px] t-text-secondary">by {pr.author}</span>
+            <span className="opacity-50">·</span>
+            <span className="normal-case tracking-normal text-[11.5px]">{timeAgo(pr.updatedAt)}</span>
+          </div>
+
+          {/* Title (serif, generous size, no truncate) */}
+          <h3
+            className="page-display t-text transition-colors duration-500 ease-editorial mb-4"
+            style={{ fontSize: 28, lineHeight: 1.08 }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = '#10b981')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = '')}
+          >
+            {pr.title}
+          </h3>
+
+          {/* Footer: status badge */}
+          <div className="flex items-center gap-2 text-[10.5px] font-semibold uppercase tracking-[0.22em]" style={{ color: statusColor }}>
+            <StatusIcon size={11} className={pr.reviewStatus === 'reviewing' ? 'animate-spin' : ''} />
+            {statusText}
+          </div>
+        </div>
+
+        {/* TAIL: action */}
+        <div className="flex-shrink-0 self-center">
+          {isCompleted && pr.reviewId ? (
+            <span
+              className="inline-flex items-center text-[10.5px] font-semibold uppercase tracking-[0.22em] overflow-hidden"
+              style={{ color: '#10b981' }}
+            >
+              <span
+                className="inline-block whitespace-nowrap transition-all duration-500 ease-editorial"
+                style={{
+                  maxWidth: 0,
+                  opacity: 0,
+                  transform: 'translateX(8px)',
+                }}
+                ref={(el) => {
+                  if (!el) return
+                  const row = el.closest('article')
+                  if (!row || row.dataset.readHover) return
+                  row.dataset.readHover = '1'
+                  row.addEventListener('mouseenter', () => {
+                    el.style.maxWidth = '160px'
+                    el.style.opacity = '1'
+                    el.style.transform = 'translateX(0)'
+                    el.style.marginRight = '10px'
+                  })
+                  row.addEventListener('mouseleave', () => {
+                    el.style.maxWidth = '0'
+                    el.style.opacity = '0'
+                    el.style.transform = 'translateX(8px)'
+                    el.style.marginRight = '0'
+                  })
+                }}
+              >
+                Read review
+              </span>
+              <ArrowRight
+                size={16}
+                className="transition-transform duration-500 ease-editorial group-hover:translate-x-1 flex-shrink-0"
+                style={{ color: '#10b981' }}
+              />
+            </span>
+          ) : pr.reviewStatus === 'reviewing' ? (
+            <span className="inline-flex items-center gap-2 text-[10.5px] font-semibold uppercase tracking-[0.22em]" style={{ color: '#b45309' }}>
+              <Loader2 size={13} className="animate-spin" />
+              <span className="hidden lg:inline">Analyzing</span>
+            </span>
+          ) : (
+            <button
+              onClick={(e) => { e.stopPropagation(); onTriggerReview(e, pr) }}
+              disabled={isReviewingNow}
+              className="press-scale inline-flex items-center gap-2 h-9 px-5 rounded-none text-[10px] font-semibold uppercase tracking-[0.22em] whitespace-nowrap disabled:opacity-60"
+              style={{ background: '#1a1612', color: '#fff', border: '1px solid #1a1612' }}
+              onMouseEnter={(e) => {
+                if (!e.currentTarget.disabled) {
+                  e.currentTarget.style.background = '#10b981'
+                  e.currentTarget.style.borderColor = '#10b981'
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#1a1612'
+                e.currentTarget.style.borderColor = '#1a1612'
+              }}
+            >
+              <Sparkles size={11} />
+              Run review
+            </button>
+          )}
         </div>
       </div>
-
-      {/* Status + score */}
-      <div className="flex items-center gap-3 flex-shrink-0">
-        {pr.reviewScore != null && (
-          <span
-            className={`text-xs font-bold tabular-nums hidden sm:inline ${
-              pr.reviewScore >= 80
-                ? 'text-brand-400'
-                : pr.reviewScore >= 60
-                ? 'text-amber-400'
-                : 'text-red-400'
-            }`}
-          >
-            {pr.reviewScore}
-          </span>
-        )}
-        <StatusBadge />
-
-        {/* Action */}
-        {pr.reviewStatus === 'completed' && pr.reviewId ? (
-          <button
-            onClick={(e) => { e.stopPropagation(); onClick(pr.reviewId) }}
-            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md t-bg-input border t-border-subtle text-xs font-medium t-text-secondary hover:t-text transition-all whitespace-nowrap"
-          >
-            <Eye size={12} />
-            View
-          </button>
-        ) : pr.reviewStatus === 'reviewing' ? (
-          <span className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md text-xs font-medium text-amber-400 whitespace-nowrap">
-            <Loader2 size={12} className="animate-spin" />
-            Analyzing
-          </span>
-        ) : (
-          <button
-            onClick={(e) => onTriggerReview(e, pr)}
-            disabled={isReviewingNow}
-            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-brand-500 hover:bg-brand-600 text-white text-xs font-medium shadow-sm transition-all disabled:opacity-60 whitespace-nowrap"
-          >
-            <Sparkles size={12} />
-            Review
-          </button>
-        )}
-      </div>
-    </div>
+    </article>
   )
 }
 
@@ -251,13 +319,25 @@ export default function PullRequestsPage() {
 
   const reviewingCount = prs.filter((p) => p.reviewStatus === 'reviewing').length
 
+  const darkBtnHover = (e) => { e.currentTarget.style.background = '#10b981'; e.currentTarget.style.borderColor = '#10b981' }
+  const darkBtnLeave = (e) => { e.currentTarget.style.background = '#1a1612'; e.currentTarget.style.borderColor = '#1a1612' }
+
   // ─── Not connected ─────────────────────────────────────
   if (!githubConnected && !loading) {
     return (
-      <div className="max-w-5xl mx-auto px-6 lg:px-8 py-8 animate-fade-in">
-        <div className="mb-8">
-          <h1 className="text-xl font-semibold t-text mb-1">Pull Requests</h1>
-          <p className="t-text-muted text-sm">AI-reviewed pull requests across your enabled repositories.</p>
+      <div className="max-w-6xl mx-auto px-6 lg:px-10 py-12 animate-fade-in">
+        <div className="mb-14">
+          <div className="flex items-center gap-3 mb-5">
+            <span className="rule rule-grow" />
+            <span className="eyebrow">Pull requests</span>
+          </div>
+          <h1 className="page-display t-text" style={{ fontSize: 56, lineHeight: 1.04 }}>
+            AI-reviewed{' '}
+            <span className="italic-accent">pull requests.</span>
+          </h1>
+          <p className="t-text-muted text-[15px] mt-5 leading-[1.7] max-w-xl">
+            Across your enabled repositories.
+          </p>
         </div>
         <StateContainer
           icon={Github}
@@ -266,7 +346,10 @@ export default function PullRequestsPage() {
           action={
             <button
               onClick={() => navigate('/dashboard/integrations')}
-              className="inline-flex items-center gap-2 h-9 px-4 rounded-md bg-brand-500 hover:bg-brand-600 text-white text-sm font-medium shadow-sm transition-all"
+              className="press-scale inline-flex items-center gap-2 h-10 px-6 rounded-none text-[11px] font-semibold uppercase tracking-[0.18em]"
+              style={{ background: '#1a1612', color: '#fff', border: '1px solid #1a1612' }}
+              onMouseEnter={darkBtnHover}
+              onMouseLeave={darkBtnLeave}
             >
               <Github size={14} />
               Connect GitHub
@@ -279,10 +362,10 @@ export default function PullRequestsPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-6 lg:px-8 py-8 animate-fade-in">
+    <div className="max-w-6xl mx-auto px-6 lg:px-10 py-12 animate-fade-in">
       {/* Error banner */}
       {error && (
-        <div className="mb-5 p-3.5 rounded-lg border bg-red-500/10 border-red-500/20 text-red-400 text-sm flex items-center gap-2">
+        <div className="mb-5 p-3.5 border bg-red-500/10 border-red-500/30 text-red-400 text-sm flex items-center gap-2">
           <AlertCircle size={14} />
           <span className="flex-1">{error}</span>
           <button onClick={() => setError(null)} className="hover:text-red-300">
@@ -293,26 +376,37 @@ export default function PullRequestsPage() {
 
       {/* Reviewing notice */}
       {reviewingCount > 0 && (
-        <div className="mb-5 p-3 rounded-lg border bg-brand-500/5 border-brand-500/20 text-brand-400 text-sm flex items-center gap-2">
+        <div className="mb-5 p-4 border border-brand-500/30 bg-brand-500/[0.04] text-brand-500 text-sm flex items-center gap-3">
           <Loader2 size={14} className="animate-spin" />
-          <span>
-            <span className="font-semibold">{reviewingCount}</span> pull request{reviewingCount > 1 ? 's' : ''} being analyzed
+          <span className="page-display" style={{ fontSize: 18 }}>
+            <span className="italic-accent">{reviewingCount}</span> pull request{reviewingCount > 1 ? 's' : ''} being analyzed
           </span>
         </div>
       )}
 
-      {/* Header */}
-      <div className="mb-6 flex items-end justify-between gap-4">
+      {/* Editorial header */}
+      <div className="mb-12 flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold t-text mb-1">Pull Requests</h1>
-          <p className="t-text-muted text-sm">
-            {loading ? 'Loading...' : `${prs.length} pull requests`}
+          <div className="flex items-center gap-3 mb-5">
+            <span className="rule rule-grow" />
+            <span className="eyebrow">Pull requests</span>
+          </div>
+          <h1 className="page-display t-text" style={{ fontSize: 56, lineHeight: 1.04 }}>
+            Your{' '}
+            <span className="italic-accent">pull requests.</span>
+          </h1>
+          <p className="t-text-muted text-[15px] mt-5 leading-[1.7]">
+            {loading ? 'Loading…' : (
+              <>
+                <span className="t-text-secondary">{prs.length}</span> pull requests
+              </>
+            )}
           </p>
         </div>
         <button
           onClick={fetchPrs}
           disabled={loading}
-          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md t-bg-input border t-border-subtle t-text-secondary hover:t-text text-xs font-medium transition-all disabled:opacity-50"
+          className="press-scale inline-flex items-center gap-1.5 h-9 px-4 rounded-none t-bg-input border t-border-subtle t-text-secondary hover:t-text text-[10.5px] font-semibold uppercase tracking-[0.18em] disabled:opacity-50"
         >
           <RefreshCw size={12} />
           Refresh
@@ -320,7 +414,7 @@ export default function PullRequestsPage() {
       </div>
 
       {/* Filter row */}
-      <div className="mb-5 flex items-center gap-1 t-bg-input border t-border-subtle rounded-md p-0.5 w-fit">
+      <div className="mb-6 flex items-center gap-0 t-bg-input border t-border-subtle p-1 rounded-none w-fit">
         {[
           { key: 'all', label: 'All', count: prs.length },
           { key: 'reviewed', label: 'Reviewed', count: prs.filter((p) => p.reviewStatus === 'completed').length },
@@ -330,18 +424,18 @@ export default function PullRequestsPage() {
           <button
             key={f.key}
             onClick={() => setFilter(f.key)}
-            className={`px-3 h-7 rounded text-xs font-medium transition-all whitespace-nowrap ${
-              filter === f.key ? 't-bg-surface t-text shadow-sm' : 't-text-muted hover:t-text'
+            className={`px-4 h-8 text-[10.5px] font-semibold uppercase tracking-[0.18em] whitespace-nowrap transition-all duration-500 ease-editorial ${
+              filter === f.key ? 't-bg-surface t-text' : 't-text-muted hover:t-text'
             }`}
           >
             {f.label}
-            <span className="ml-1.5 opacity-60 tabular-nums">{f.count}</span>
+            <span className="ml-2 opacity-60 tabular-nums">{f.count}</span>
           </button>
         ))}
       </div>
 
       {/* List */}
-      <div className="t-bg-card border t-border-subtle rounded-lg overflow-hidden">
+      <div className="t-bg-card border t-border-subtle rounded-none overflow-hidden">
         {loading ? (
           <div>
             {Array.from({ length: 4 }).map((_, i) => <RowSkeleton key={i} />)}
@@ -354,7 +448,10 @@ export default function PullRequestsPage() {
             action={
               <button
                 onClick={() => navigate('/dashboard/repositories')}
-                className="inline-flex items-center gap-2 h-9 px-4 rounded-md bg-brand-500 hover:bg-brand-600 text-white text-sm font-medium shadow-sm transition-all"
+                className="press-scale inline-flex items-center gap-2 h-10 px-6 rounded-none text-[11px] font-semibold uppercase tracking-[0.18em]"
+                style={{ background: '#1a1612', color: '#fff', border: '1px solid #1a1612' }}
+                onMouseEnter={darkBtnHover}
+                onMouseLeave={darkBtnLeave}
               >
                 <Code2 size={14} />
                 Go to Repositories
@@ -368,14 +465,18 @@ export default function PullRequestsPage() {
             title="Nothing here"
             description="No pull requests match this filter."
             action={
-              <button onClick={() => setFilter('all')} className="text-brand-400 hover:text-brand-300 text-sm font-medium">
+              <button
+                onClick={() => setFilter('all')}
+                className="text-[11px] font-semibold uppercase tracking-[0.18em] pb-1"
+                style={{ color: '#10b981', borderBottom: '1px solid #10b981' }}
+              >
                 Show all
               </button>
             }
           />
         ) : (
           <div>
-            {filteredPRs.map((pr) => (
+            {filteredPRs.map((pr, i) => (
               <PRRow
                 key={`${pr.repoId}-${pr.number}`}
                 pr={pr}
@@ -383,6 +484,7 @@ export default function PullRequestsPage() {
                 onTriggerReview={handleTriggerReview}
                 reviewingId={reviewingId}
                 timeAgo={timeAgo}
+                delay={Math.min(i * 40, 600)}
               />
             ))}
           </div>
@@ -390,7 +492,7 @@ export default function PullRequestsPage() {
       </div>
 
       {!loading && filteredPRs.length > 0 && (
-        <p className="text-center text-xs t-text-muted mt-4">
+        <p className="text-center text-[11px] t-text-muted mt-6 tracking-[0.18em] uppercase">
           Showing {filteredPRs.length} of {prs.length}
         </p>
       )}
