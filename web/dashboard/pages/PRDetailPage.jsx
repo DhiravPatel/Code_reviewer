@@ -333,6 +333,41 @@ export default function PRDetailPage() {
       {/* ═══ COMPLETED REVIEW SECTIONS ═══ */}
       {review.status === 'completed' && (
         <>
+          {/* Project rules applied banner */}
+          {summary?.projectRules?.ruleCount > 0 && (
+            <div
+              className="mb-10 p-5 flex items-center justify-between gap-6"
+              style={{ background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.25)' }}
+            >
+              <div className="flex items-center gap-4">
+                <span className="rule" />
+                <div>
+                  <div className="eyebrow" style={{ color: '#10b981' }}>Project rules applied</div>
+                  <p
+                    className="page-display t-text mt-1.5"
+                    style={{ fontSize: 18 }}
+                  >
+                    <span className="italic-accent">{summary.projectRules.ruleCount}</span> rule{summary.projectRules.ruleCount === 1 ? '' : 's'} from{' '}
+                    <code style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, fontStyle: 'normal', fontWeight: 500 }}>
+                      {summary.projectRules.sourceFile}
+                    </code>
+                    {summary.projectRules.focus?.length > 0 && (
+                      <span className="t-text-muted" style={{ fontSize: 14 }}>
+                        {' · focus on '}
+                        <span style={{ color: '#10b981' }}>{summary.projectRules.focus.join(', ')}</span>
+                      </span>
+                    )}
+                  </p>
+                  {summary.projectRules.ignoredFiles?.length > 0 && (
+                    <p className="t-text-muted text-[12px] mt-1.5">
+                      Skipped {summary.projectRules.ignoredFiles.length} file{summary.projectRules.ignoredFiles.length === 1 ? '' : 's'} matching ignore patterns.
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Overall Feedback — editorial pull quote */}
           {review.overallFeedback && (
             <div className="mb-12">

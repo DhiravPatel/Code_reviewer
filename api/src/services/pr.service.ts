@@ -3,6 +3,7 @@ import { RepositoryService } from './repository.service';
 import { GroqService } from './groq.service';
 import { GithubService, InlineReviewComment } from './github.service';
 import { buildAnchorIndex, snapToAnchor } from '../utils/diff-parser';
+import { fetchProjectRules, isFileIgnored, renderRulesForPrompt } from '../utils/project-rules';
 
 export class PrService {
   /**
@@ -266,7 +267,21 @@ export class PrService {
     });
 
     // Fetch the files/diff
-    const files = await this.fetchPrFiles(accessToken, repo.owner, repo.name, prNumber);
+    const allFiles = await this.fetchPrFiles(accessToken, repo.owner, repo.name, prNumber);
+
+    // Load project-specific rules from the PR's head branch (best-effort).
+    const branch = prDetail.head?.ref || review.prBranch;
+    const projectRules = await fetchProjectRules(accessToken, repo.owner, repo.name, branch);
+
+    // Filter out files matching the project's ignore patterns.
+    const ignored: string[] = [];
+    const files = allFiles.filter((f: any) => {
+      if (projectRules && isFileIgnored(f.filename, projectRules.ignore)) {
+        ignored.push(f.filename);
+        return false;
+      }
+      return true;
+    });
 
     // Run AI review
     try {
@@ -279,6 +294,7 @@ export class PrService {
           status: f.status,
         })),
         language: repo.language || undefined,
+        projectRulesBlock: renderRulesForPrompt(projectRules),
       });
 
       // ─── Inline review with ```suggestion blocks ─────────────────
@@ -358,13 +374,27 @@ export class PrService {
       }
 
       // Update the review with results
+      const summaryWithRules = {
+        ...aiResult.summary,
+        ...(projectRules
+          ? {
+              projectRules: {
+                sourceFile: projectRules.sourceFile,
+                ruleCount: projectRules.rules.length,
+                focus: projectRules.focus,
+                ignoredFiles: ignored,
+              },
+            }
+          : {}),
+      };
+
       const completedReview = await prisma.prReview.update({
         where: { id: review.id },
         data: {
           status: 'completed',
           score: aiResult.score,
           verdict: aiResult.verdict,
-          summary: aiResult.summary as any,
+          summary: summaryWithRules as any,
           reviewComments: aiResult.comments as any,
           reviewedAt: new Date(),
           ...(githubCommentId ? { githubCommentId } : {}),

@@ -60,8 +60,9 @@ export class GroqService {
     prDescription: string;
     files: { filename: string; patch: string; status: string }[];
     language?: string;
+    projectRulesBlock?: string;
   }): Promise<ReviewResult> {
-    const { prTitle, prDescription, files } = params;
+    const { prTitle, prDescription, files, projectRulesBlock } = params;
 
     const onlyWithDiff = files.filter((f) => f.patch);
 
@@ -91,7 +92,7 @@ Output ONLY a valid JSON object — no markdown, no prose, no code fences. Every
 Title: ${prTitle}
 Description: ${prDescription || '(none)'}
 
-## Files
+${projectRulesBlock && projectRulesBlock.trim() ? projectRulesBlock + '\n\n' : ''}## Files
 ${filesList}
 
 ## Diffs
