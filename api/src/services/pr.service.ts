@@ -572,4 +572,158 @@ export class PrService {
       orderBy: { updatedAt: 'desc' },
     });
   }
+
+  /**
+   * Aggregate dashboard statistics for a user over a time range.
+   *
+   * Pulls one window of reviews and computes everything in-memory — fine at
+   * our scale (a user has at most a few hundred reviews on the free plan).
+   */
+  static async getDashboardStats(userId: string, range: '7d' | '30d' | '90d' | 'all' = '30d') {
+    const now = new Date();
+    const rangeDays: Record<typeof range, number | null> = {
+      '7d': 7,
+      '30d': 30,
+      '90d': 90,
+      'all': null,
+    };
+    const days = rangeDays[range];
+    const rangeStart = days != null ? new Date(now.getTime() - days * 86400_000) : null;
+    const priorStart = days != null ? new Date(now.getTime() - days * 2 * 86400_000) : null;
+
+    // Pull this period + the prior period in one go for delta comparisons.
+    const fetchSince = priorStart || new Date(0);
+    const reviews = await prisma.prReview.findMany({
+      where: {
+        userId,
+        status: 'completed',
+        reviewedAt: { gte: fetchSince },
+      },
+      include: { repo: { select: { id: true, fullName: true, name: true } } },
+      orderBy: { reviewedAt: 'desc' },
+    });
+
+    const inPeriod = (r: typeof reviews[number]) =>
+      rangeStart ? (r.reviewedAt && r.reviewedAt >= rangeStart) : true;
+    const inPrior = (r: typeof reviews[number]) =>
+      rangeStart && priorStart && r.reviewedAt
+        ? r.reviewedAt >= priorStart && r.reviewedAt < rangeStart
+        : false;
+
+    const current = reviews.filter(inPeriod);
+    const prior = reviews.filter(inPrior);
+
+    // ─── Summary metrics ───────────────────────────────────────
+    const avg = (arr: number[]) => (arr.length ? Math.round(arr.reduce((s, n) => s + n, 0) / arr.length) : 0);
+    const sumIssues = (arr: typeof reviews, kind: 'criticalIssues' | 'warnings' | 'suggestions') =>
+      arr.reduce((s, r) => {
+        const v = (r.summary as any)?.[kind];
+        return s + (typeof v === 'number' ? v : 0);
+      }, 0);
+
+    const totalReviews = current.length;
+    const avgScore = avg(current.map((r) => r.score ?? 0).filter((n) => n > 0));
+    const criticalIssues = sumIssues(current, 'criticalIssues');
+    const warnings = sumIssues(current, 'warnings');
+    const suggestions = sumIssues(current, 'suggestions');
+    const approved = current.filter((r) => r.verdict === 'approved').length;
+    const approvalRate = totalReviews > 0 ? Math.round((approved / totalReviews) * 100) : 0;
+
+    // Deltas vs prior period
+    const priorTotal = prior.length;
+    const priorAvgScore = avg(prior.map((r) => r.score ?? 0).filter((n) => n > 0));
+    const priorCritical = sumIssues(prior, 'criticalIssues');
+    const priorApprovalRate =
+      priorTotal > 0 ? Math.round((prior.filter((r) => r.verdict === 'approved').length / priorTotal) * 100) : 0;
+
+    // ─── Reviews per day (last N days of the range) ────────────
+    const bucketDays = days ?? 30;
+    const byDay: Array<{ date: string; reviews: number; avgScore: number }> = [];
+    for (let i = bucketDays - 1; i >= 0; i--) {
+      const day = new Date(now.getTime() - i * 86400_000);
+      day.setHours(0, 0, 0, 0);
+      const next = new Date(day.getTime() + 86400_000);
+      const inDay = current.filter((r) => r.reviewedAt && r.reviewedAt >= day && r.reviewedAt < next);
+      const scoreAvg = avg(inDay.map((r) => r.score ?? 0).filter((n) => n > 0));
+      byDay.push({
+        date: day.toISOString().slice(0, 10),
+        reviews: inDay.length,
+        avgScore: scoreAvg,
+      });
+    }
+
+    // ─── Top repos by review count ─────────────────────────────
+    const repoMap = new Map<string, { repoId: string; name: string; fullName: string; reviews: number; scores: number[] }>();
+    for (const r of current) {
+      if (!r.repo) continue;
+      const key = r.repo.id;
+      const entry = repoMap.get(key) || {
+        repoId: r.repo.id,
+        name: r.repo.name,
+        fullName: r.repo.fullName,
+        reviews: 0,
+        scores: [],
+      };
+      entry.reviews += 1;
+      if (r.score != null) entry.scores.push(r.score);
+      repoMap.set(key, entry);
+    }
+    const topRepos = Array.from(repoMap.values())
+      .map((e) => ({
+        repoId: e.repoId,
+        name: e.name,
+        fullName: e.fullName,
+        reviews: e.reviews,
+        avgScore: avg(e.scores),
+      }))
+      .sort((a, b) => b.reviews - a.reviews)
+      .slice(0, 5);
+
+    // ─── Issue-type breakdown (from reviewComments JSON) ───────
+    const typeCounts: Record<string, number> = {};
+    for (const r of current) {
+      const comments = Array.isArray(r.reviewComments) ? (r.reviewComments as any[]) : [];
+      for (const c of comments) {
+        const t = String(c?.type || 'suggestion').toLowerCase();
+        typeCounts[t] = (typeCounts[t] || 0) + 1;
+      }
+    }
+    const typeBreakdown = Object.entries(typeCounts)
+      .map(([type, count]) => ({ type, count }))
+      .sort((a, b) => b.count - a.count);
+
+    // ─── Recent reviews (latest 6 in this period) ──────────────
+    const recent = current.slice(0, 6).map((r) => ({
+      id: r.id,
+      prNumber: r.prNumber,
+      prTitle: r.prTitle,
+      prAuthor: r.prAuthor,
+      score: r.score,
+      verdict: r.verdict,
+      reviewedAt: r.reviewedAt,
+      repoName: r.repo?.name || '',
+    }));
+
+    return {
+      range,
+      summary: {
+        totalReviews,
+        avgScore,
+        criticalIssues,
+        warnings,
+        suggestions,
+        approvalRate,
+        deltas: {
+          totalReviews: totalReviews - priorTotal,
+          avgScore: avgScore - priorAvgScore,
+          criticalIssues: criticalIssues - priorCritical,
+          approvalRate: approvalRate - priorApprovalRate,
+        },
+      },
+      byDay,
+      topRepos,
+      typeBreakdown,
+      recentReviews: recent,
+    };
+  }
 }
