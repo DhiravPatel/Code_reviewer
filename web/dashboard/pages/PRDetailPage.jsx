@@ -1,6 +1,7 @@
 import {
   ArrowLeft, AlertTriangle, Lightbulb, Shield, FileText, GitBranch, Plus, Minus,
   CheckCircle, Clock, Loader2, Bug, Zap, Wrench, Sparkles, ChevronDown, ChevronRight,
+  ShieldCheck, HelpCircle,
 } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
@@ -61,6 +62,27 @@ const timeAgo = (dateStr) => {
 
 // ─── Components ─────────────────────────────────────────────────
 
+function AdversarialPill({ verdict }) {
+  if (!verdict) return null
+  const config = {
+    confirmed: { Icon: ShieldCheck, label: 'Verified',   color: '#10b981', bg: 'rgba(16,185,129,0.10)', border: 'rgba(16,185,129,0.35)' },
+    refuted:   { Icon: AlertTriangle, label: 'Challenged', color: '#b45309', bg: 'rgba(180,83,9,0.10)',  border: 'rgba(180,83,9,0.35)' },
+    uncertain: { Icon: HelpCircle, label: 'Uncertain',  color: '#64748b', bg: 'rgba(100,116,139,0.10)',border: 'rgba(100,116,139,0.35)' },
+  }[verdict]
+  if (!config) return null
+  const { Icon, label, color, bg, border } = config
+  return (
+    <span
+      className="inline-flex items-center gap-1 px-2 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.2em]"
+      style={{ background: bg, color, border: `1px solid ${border}`, borderRadius: 999 }}
+      title="Result of the adversarial skeptic pass"
+    >
+      <Icon size={9} strokeWidth={2.5} />
+      {label}
+    </span>
+  )
+}
+
 function ReviewCommentCard({ comment }) {
   const [expanded, setExpanded] = useState(true)
   const priority = derivePriority(comment)
@@ -94,8 +116,8 @@ function ReviewCommentCard({ comment }) {
         </div>
 
         <div className="flex-1 min-w-0">
-          {/* Priority pill + type eyebrow + serif title */}
-          <div className="flex items-center gap-3 mb-3">
+          {/* Priority pill + type eyebrow + adversarial verdict + serif title */}
+          <div className="flex items-center gap-3 mb-3 flex-wrap">
             <span
               className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.2em] ${pConf.bg} ${pConf.color} border ${pConf.border}`}
               style={{ borderRadius: 999 }}
@@ -104,6 +126,7 @@ function ReviewCommentCard({ comment }) {
               {pConf.label}
             </span>
             <span className="eyebrow text-[9.5px]">{comment.type || 'suggestion'}</span>
+            <AdversarialPill verdict={comment.adversarial?.verdict} />
           </div>
 
           <h3
@@ -124,6 +147,42 @@ function ReviewCommentCard({ comment }) {
             </div>
           )}
           <p className="t-text-secondary text-[14px] leading-[1.75] mb-4">{comment.description}</p>
+
+          {/* Skeptic-pass note (collapsible-ish — always rendered, low-key) */}
+          {comment.adversarial?.reasoning && (
+            <div
+              className="mb-4 px-4 py-3 flex gap-3"
+              style={{
+                background:
+                  comment.adversarial.verdict === 'refuted' ? 'rgba(180, 83, 9, 0.06)' :
+                  comment.adversarial.verdict === 'uncertain' ? 'rgba(100, 116, 139, 0.06)' :
+                  'rgba(16, 185, 129, 0.05)',
+                borderLeft: `2px solid ${
+                  comment.adversarial.verdict === 'refuted' ? '#b45309' :
+                  comment.adversarial.verdict === 'uncertain' ? '#64748b' :
+                  '#10b981'
+                }`,
+              }}
+            >
+              {comment.adversarial.verdict === 'confirmed' && <ShieldCheck size={14} style={{ color: '#10b981', marginTop: 2, flexShrink: 0 }} />}
+              {comment.adversarial.verdict === 'refuted' && <AlertTriangle size={14} style={{ color: '#b45309', marginTop: 2, flexShrink: 0 }} />}
+              {comment.adversarial.verdict === 'uncertain' && <HelpCircle size={14} style={{ color: '#64748b', marginTop: 2, flexShrink: 0 }} />}
+              <div className="flex-1">
+                <div
+                  className="eyebrow text-[9px] mb-1"
+                  style={{
+                    color:
+                      comment.adversarial.verdict === 'refuted' ? '#b45309' :
+                      comment.adversarial.verdict === 'uncertain' ? '#64748b' :
+                      '#10b981',
+                  }}
+                >
+                  Skeptic pass · {comment.adversarial.verdict}
+                </div>
+                <p className="text-[12.5px] leading-[1.65] t-text-secondary">{comment.adversarial.reasoning}</p>
+              </div>
+            </div>
+          )}
 
           {rationale.length > 0 && (
             <ul className="space-y-2 mb-5">
@@ -364,6 +423,36 @@ export default function PRDetailPage() {
                     </p>
                   )}
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* Adversarial pass banner */}
+          {summary?.adversarial?.total > 0 && (
+            <div
+              className="mb-10 p-5 flex items-center justify-between gap-6 flex-wrap"
+              style={{ background: 'rgba(16,185,129,0.04)', border: '1px solid rgba(16,185,129,0.22)' }}
+            >
+              <div className="flex items-center gap-4">
+                <ShieldCheck size={24} style={{ color: '#10b981' }} />
+                <div>
+                  <div className="eyebrow" style={{ color: '#10b981' }}>Adversarial skeptic pass</div>
+                  <p className="page-display t-text mt-1.5" style={{ fontSize: 22, lineHeight: 1.2 }}>
+                    <span className="italic-accent">{summary.adversarial.verified}</span> of {summary.adversarial.total}{' '}
+                    finding{summary.adversarial.total === 1 ? '' : 's'} verified after a second AI agent challenged each claim.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-6 text-[11px] font-semibold uppercase tracking-[0.2em] flex-shrink-0">
+                <span className="inline-flex items-center gap-1.5" style={{ color: '#10b981' }}>
+                  <ShieldCheck size={11} strokeWidth={2.5} /> {summary.adversarial.verified} verified
+                </span>
+                <span className="inline-flex items-center gap-1.5" style={{ color: '#b45309' }}>
+                  <AlertTriangle size={11} strokeWidth={2.5} /> {summary.adversarial.challenged} challenged
+                </span>
+                <span className="inline-flex items-center gap-1.5" style={{ color: '#64748b' }}>
+                  <HelpCircle size={11} strokeWidth={2.5} /> {summary.adversarial.uncertain} uncertain
+                </span>
               </div>
             </div>
           )}

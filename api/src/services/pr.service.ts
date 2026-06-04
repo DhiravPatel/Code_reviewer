@@ -297,6 +297,44 @@ export class PrService {
         projectRulesBlock: renderRulesForPrompt(projectRules),
       });
 
+      // ─── Adversarial skeptic pass ───────────────────────────────
+      // A second AI agent challenges each finding. Default-to-refute cuts
+      // false positives. Verdicts are stamped on each comment for the
+      // dashboard to render.
+      const verdicts = await GroqService.runSkepticPass(aiResult.comments);
+      const verdictByIndex = new Map<number, typeof verdicts[number]>();
+      for (const v of verdicts) verdictByIndex.set(v.index, v);
+
+      let verifiedCount = 0;
+      let challengedCount = 0;
+      let uncertainCount = 0;
+
+      aiResult.comments = aiResult.comments.map((c, i) => {
+        const v = verdictByIndex.get(i);
+        if (!v) return c; // No verdict — leave as-is
+        if (v.verdict === 'confirmed') verifiedCount++;
+        else if (v.verdict === 'refuted') challengedCount++;
+        else uncertainCount++;
+        return {
+          ...c,
+          adversarial: {
+            verdict: v.verdict,
+            reasoning: v.reasoning,
+          },
+        } as any;
+      });
+
+      // Reorder so confirmed appears first, then uncertain, then refuted.
+      const order: Record<string, number> = { confirmed: 0, uncertain: 1, refuted: 2 };
+      aiResult.comments.sort((a: any, b: any) => {
+        const va = order[a?.adversarial?.verdict] ?? 0;
+        const vb = order[b?.adversarial?.verdict] ?? 0;
+        if (va !== vb) return va - vb;
+        // Then by priority (P1 first)
+        const pri: Record<string, number> = { P1: 0, P2: 1, P3: 2 };
+        return (pri[a.priority] ?? 2) - (pri[b.priority] ?? 2);
+      });
+
       // ─── Inline review with ```suggestion blocks ─────────────────
       // Validate every AI comment against the actual diff hunks; only those
       // anchored to a commentable line can be posted inline. The rest still
@@ -383,6 +421,16 @@ export class PrService {
                 ruleCount: projectRules.rules.length,
                 focus: projectRules.focus,
                 ignoredFiles: ignored,
+              },
+            }
+          : {}),
+        ...(verdicts.length > 0
+          ? {
+              adversarial: {
+                total: aiResult.comments.length,
+                verified: verifiedCount,
+                challenged: challengedCount,
+                uncertain: uncertainCount,
               },
             }
           : {}),

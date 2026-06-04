@@ -458,9 +458,10 @@ export class GithubService {
   static buildInlineCommentBody(c: ReviewComment, useSuggestion: boolean): string {
     const priority = c.priority || derivePriority(c);
     const badge = priorityBadgeFor(priority);
+    const advBadge = adversarialBadgeFor(c);
     const lines: string[] = [];
     lines.push(COMMENT_MARKER);
-    lines.push(`**${badge} ${c.title}**`);
+    lines.push(`**${badge}${advBadge ? ' ' + advBadge : ''} ${c.title}**`);
     lines.push('');
     if (c.description) {
       lines.push(c.description);
@@ -469,6 +470,15 @@ export class GithubService {
     const reasons = (c.rationale && c.rationale.length > 0) ? c.rationale : (c.details || []);
     if (reasons.length > 0) {
       for (const r of reasons) lines.push(`- ${r}`);
+      lines.push('');
+    }
+    const adv = (c as any).adversarial;
+    if (adv && adv.reasoning) {
+      const label =
+        adv.verdict === 'confirmed' ? '🛡️ **Verified by skeptic pass**' :
+        adv.verdict === 'refuted' ? '⚠️ **Challenged by skeptic pass**' :
+        '❔ **Uncertain after skeptic pass**';
+      lines.push(`> ${label}: ${adv.reasoning}`);
       lines.push('');
     }
     if (useSuggestion && c.codeAfter && c.codeAfter.trim()) {
@@ -539,6 +549,10 @@ export class GithubService {
     lines.push(`| **Critical Issues (P1)** | ${review.summary.criticalIssues} |`);
     lines.push(`| **Warnings (P2)** | ${review.summary.warnings} |`);
     lines.push(`| **Suggestions (P3)** | ${review.summary.suggestions} |`);
+    const adv = (review.summary as any).adversarial;
+    if (adv && adv.total > 0) {
+      lines.push(`| **Adversarial pass** | 🛡️ ${adv.verified} verified · ⚠️ ${adv.challenged} challenged · ❔ ${adv.uncertain} uncertain |`);
+    }
     lines.push('');
 
     // ─── Important Files Changed Table ─────────────────────
@@ -637,6 +651,15 @@ function derivePriority(c: ReviewComment): 'P1' | 'P2' | 'P3' {
 
 function stripTrailingNewline(s: string): string {
   return s.replace(/\n+$/, '');
+}
+
+function adversarialBadgeFor(c: ReviewComment): string {
+  const adv = (c as any).adversarial;
+  if (!adv) return '';
+  if (adv.verdict === 'confirmed') return '🛡️ **Verified**';
+  if (adv.verdict === 'refuted') return '⚠️ **Challenged**';
+  if (adv.verdict === 'uncertain') return '❔ **Uncertain**';
+  return '';
 }
 
 function normalize(s: string): string {
