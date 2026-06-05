@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Sidebar from './components/Sidebar'
 import Topbar from './components/Topbar'
+import OverviewPage from './pages/OverviewPage'
 import RepositoriesPage from './pages/RepositoriesPage'
 import PullRequestsPage from './pages/PullRequestsPage'
 import PRDetailPage from './pages/PRDetailPage'
@@ -14,13 +15,14 @@ export default function DashboardApp() {
         <Topbar />
         <main className="flex-1 overflow-auto">
           <Routes>
+            <Route path="/dashboard/overview" element={<OverviewPage />} />
             <Route path="/dashboard/integrations" element={<IntegrationsPage />} />
             <Route path="/dashboard/repositories" element={<RepositoriesPage />} />
             <Route path="/dashboard/pull-requests" element={<PullRequestsPage />} />
             <Route path="/dashboard/pr/:id" element={<PRDetailPage />} />
-            {/* /dashboard and any unknown /dashboard/* → integrations */}
-            <Route path="/dashboard" element={<Navigate to="/dashboard/integrations" replace />} />
-            <Route path="/dashboard/*" element={<Navigate to="/dashboard/integrations" replace />} />
+            {/* /dashboard and any unknown /dashboard/* → overview */}
+            <Route path="/dashboard" element={<Navigate to="/dashboard/overview" replace />} />
+            <Route path="/dashboard/*" element={<Navigate to="/dashboard/overview" replace />} />
           </Routes>
         </main>
       </div>

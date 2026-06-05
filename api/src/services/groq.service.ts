@@ -206,6 +206,84 @@ Return the JSON now.`;
       summary: { criticalIssues, warnings, suggestions },
     };
   }
+
+  /**
+   * Adversarial pass: a second AI agent prompted to REFUTE the first review's
+   * findings. Default-to-refute behavior cuts false positives. Each finding
+   * comes back with a verdict + one-sentence reasoning.
+   *
+   * Kept compact — only sends title, description, and the codeBefore snippet
+   * (not the full patches) so we stay well under the per-minute token cap
+   * even right after a main review call.
+   */
+  static async runSkepticPass(
+    comments: ReviewComment[]
+  ): Promise<Array<{ index: number; verdict: 'confirmed' | 'refuted' | 'uncertain'; reasoning: string }>> {
+    if (comments.length === 0) return [];
+
+    const findingsBlock = comments
+      .map((c, i) => {
+        const lineRef = c.startLine ? `:${c.startLine}` : '';
+        const code = (c.codeBefore || '').slice(0, 320);
+        return `[${i}] ${c.priority} · ${c.type} @ ${c.file}${lineRef}
+title: ${c.title}
+description: ${c.description}
+codeBefore:
+${code}`;
+      })
+      .join('\n---\n');
+
+    const systemPrompt = `You are a skeptical senior engineer auditing AI-generated code-review findings.
+Your job is to CHALLENGE each finding, not validate it. Default to "refuted" if you cannot prove the issue from the code shown.
+For each finding return:
+- "confirmed": the issue is real, accurate, and worth fixing.
+- "refuted": the issue is wrong, doesn't apply, is over-stated, or is contradicted by the code snippet.
+- "uncertain": the snippet is insufficient to decide — neither confirm nor refute.
+Be terse. One-sentence reasoning.
+Output ONLY a JSON object — no markdown, no prose.`;
+
+    const userPrompt = `Audit these findings. For each, decide if the claim is correct given the code shown.
+
+FINDINGS:
+${findingsBlock}
+
+Return JSON matching this schema EXACTLY:
+{
+  "verdicts": [
+    { "index": <number, matches the [N] above>, "verdict": "confirmed"|"refuted"|"uncertain", "reasoning": "<one sentence>" }
+  ]
+}
+
+Return one verdict per finding. Return the JSON now.`;
+
+    try {
+      const completion = await groq.chat.completions.create({
+        model: 'llama-3.3-70b-versatile',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt },
+        ],
+        temperature: 0.1,
+        max_tokens: 1200,
+        response_format: { type: 'json_object' } as any,
+      });
+
+      const text = completion.choices[0]?.message?.content?.trim() || '';
+      const parsed = parseJsonSafely(text);
+      const arr = Array.isArray(parsed?.verdicts) ? parsed.verdicts : [];
+
+      return arr
+        .map((v: any) => ({
+          index: typeof v.index === 'number' ? v.index : -1,
+          verdict: ['confirmed', 'refuted', 'uncertain'].includes(v.verdict) ? v.verdict : 'uncertain',
+          reasoning: String(v.reasoning || '').slice(0, 280),
+        }))
+        .filter((v: any) => v.index >= 0 && v.index < comments.length);
+    } catch (err) {
+      console.error('Skeptic pass failed:', err);
+      return [];
+    }
+  }
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────

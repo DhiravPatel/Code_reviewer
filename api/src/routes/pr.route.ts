@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { listPullRequests, triggerReview, getReview, listReviews, applyFix } from '../controllers/pr.controller';
+import { listPullRequests, triggerReview, getReview, listReviews, applyFix, getDashboardStats } from '../controllers/pr.controller';
 import { authMiddleware } from '../middlewares/auth.middleware';
 
 export async function prRoutes(fastify: FastifyInstance) {
@@ -13,6 +13,9 @@ export async function prRoutes(fastify: FastifyInstance) {
 
   // GET /api/v1/prs/reviews — list all user's reviews
   fastify.get('/reviews', listReviews);
+
+  // GET /api/v1/prs/stats — dashboard statistics
+  fastify.get('/stats', getDashboardStats);
 
   // GET /api/v1/prs/review/:id — get a specific review
   fastify.get('/review/:id', getReview);

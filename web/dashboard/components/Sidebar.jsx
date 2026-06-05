@@ -1,9 +1,10 @@
 import { Link, useLocation } from 'react-router-dom'
-import { GitPullRequest, Code2, LogOut, ChevronLeft, ChevronRight, Blocks } from 'lucide-react'
+import { GitPullRequest, Code2, LogOut, ChevronLeft, ChevronRight, Blocks, BarChart3 } from 'lucide-react'
 import { useState } from 'react'
 import { useAuth } from '../../shared/context/AuthContext'
 
 const menuItems = [
+  { icon: BarChart3, label: 'Overview', path: '/dashboard/overview' },
   { icon: Code2, label: 'Repositories', path: '/dashboard/repositories' },
   { icon: GitPullRequest, label: 'Pull Requests', path: '/dashboard/pull-requests' },
   { icon: Blocks, label: 'Integrations', path: '/dashboard/integrations' },

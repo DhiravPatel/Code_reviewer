@@ -91,6 +91,25 @@ export const applyFix = async (request: FastifyRequest, reply: FastifyReply) => 
 };
 
 /**
+ * GET /api/v1/prs/stats?range=7d|30d|90d|all
+ * Aggregated dashboard statistics for the current user.
+ */
+export const getDashboardStats = async (request: FastifyRequest, reply: FastifyReply) => {
+  try {
+    const authUser = request.user as any;
+    const { range } = (request.query as any) || {};
+    const valid = ['7d', '30d', '90d', 'all'] as const;
+    const safeRange = (valid.includes(range) ? range : '30d') as typeof valid[number];
+
+    const stats = await PrService.getDashboardStats(authUser.id, safeRange);
+    return reply.status(200).send(successResponse(stats, 'Stats fetched'));
+  } catch (error: any) {
+    request.log.error(error, 'Get dashboard stats failed');
+    return reply.status(500).send(errorResponse('Failed to fetch stats', 500));
+  }
+};
+
+/**
  * GET /api/v1/prs/reviews
  * Get all reviews for the current user.
  */
